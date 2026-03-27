@@ -18,34 +18,82 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const business_entity_1 = require("./entities/business.entity");
 const team_member_entity_1 = require("../team-members/entities/team-member.entity");
+const user_entity_1 = require("../users/entities/user.entity");
 let BusinessesService = class BusinessesService {
-    constructor(repo, teamMembersRepo) {
+    constructor(repo, teamMembersRepo, usersRepo) {
         this.repo = repo;
         this.teamMembersRepo = teamMembersRepo;
+        this.usersRepo = usersRepo;
     }
-    findAll() {
-        return this.repo.find({ order: { createdAt: "DESC" } });
+    getOwnerDisplayName(owner, fallbackOwnerId) {
+        return (owner?.name ||
+            owner?.fullName ||
+            owner?.username ||
+            owner?.email ||
+            fallbackOwnerId ||
+            "—");
+    }
+    normalizeBusiness(business, owner) {
+        return {
+            ...business,
+            ownerName: this.getOwnerDisplayName(owner, business.ownerId),
+            status: business?.status ??
+                business?.businessStatus ??
+                business?.accountStatus ??
+                "",
+            plan: business?.plan ??
+                business?.subscriptionPlan ??
+                business?.package ??
+                "",
+        };
+    }
+    async findAll() {
+        const businesses = await this.repo.find({
+            order: { createdAt: "DESC" },
+        });
+        const ownerIds = [...new Set(businesses.map((b) => b.ownerId).filter(Boolean))];
+        const owners = ownerIds.length > 0
+            ? await this.usersRepo.find({
+                where: { id: (0, typeorm_2.In)(ownerIds) },
+            })
+            : [];
+        const ownersMap = new Map(owners.map((o) => [o.id, o]));
+        return businesses.map((b) => this.normalizeBusiness(b, ownersMap.get(b.ownerId)));
     }
     async getByIdForUser(user, businessId) {
         const b = await this.repo.findOne({ where: { id: businessId } });
         if (!b)
             throw new common_1.NotFoundException("Business not found");
-        if (user.role === "platform_admin")
-            return b;
-        if (user.role === "business_owner" && b.ownerId === user.id)
-            return b;
+        if (user.role === "platform_admin") {
+            const owner = b.ownerId
+                ? await this.usersRepo.findOne({ where: { id: b.ownerId } })
+                : null;
+            return this.normalizeBusiness(b, owner);
+        }
+        if (user.role === "business_owner" && b.ownerId === user.id) {
+            const owner = b.ownerId
+                ? await this.usersRepo.findOne({ where: { id: b.ownerId } })
+                : null;
+            return this.normalizeBusiness(b, owner);
+        }
         const m = await this.teamMembersRepo.findOne({
             where: { businessId, email: user.email.toLowerCase() },
         });
         if (!m)
             throw new common_1.ForbiddenException("No access to this business");
-        return b;
+        const owner = b.ownerId
+            ? await this.usersRepo.findOne({ where: { id: b.ownerId } })
+            : null;
+        return this.normalizeBusiness(b, owner);
     }
     async getById(id) {
         const b = await this.repo.findOne({ where: { id } });
         if (!b)
             throw new common_1.NotFoundException("Business not found");
-        return b;
+        const owner = b.ownerId
+            ? await this.usersRepo.findOne({ where: { id: b.ownerId } })
+            : null;
+        return this.normalizeBusiness(b, owner);
     }
     async findOne(id) {
         const b = await this.repo.findOne({ where: { id } });
@@ -69,10 +117,14 @@ let BusinessesService = class BusinessesService {
         return { deleted: true, id };
     }
     async listByOwner(ownerId) {
-        return this.repo.find({
+        const businesses = await this.repo.find({
             where: { ownerId },
             order: { createdAt: "DESC" },
         });
+        const owner = await this.usersRepo.findOne({
+            where: { id: ownerId },
+        });
+        return businesses.map((b) => this.normalizeBusiness(b, owner));
     }
     async findOneForOwner(ownerId, id) {
         const b = await this.repo.findOne({ where: { id, ownerId } });
@@ -97,6 +149,10 @@ let BusinessesService = class BusinessesService {
         const b = await this.findOneForOwner(ownerId, id);
         await this.repo.remove(b);
         return { ok: true };
+    }
+    async removeAll() {
+        await this.repo.clear();
+        return { ok: true, deletedAll: true };
     }
     async completeProfile(businessId, ownerId, dto) {
         const b = await this.repo.findOne({ where: { id: businessId } });
@@ -134,7 +190,9 @@ exports.BusinessesService = BusinessesService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(business_entity_1.BusinessEntity)),
     __param(1, (0, typeorm_1.InjectRepository)(team_member_entity_1.TeamMemberEntity)),
+    __param(2, (0, typeorm_1.InjectRepository)(user_entity_1.UserEntity)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
         typeorm_2.Repository])
 ], BusinessesService);
 //# sourceMappingURL=businesses.service.js.map

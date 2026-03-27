@@ -52,6 +52,22 @@ __decorate([
     __metadata("design:type", String)
 ], BusinessEntity.prototype, "phone", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ default: "active" }),
+    __metadata("design:type", String)
+], BusinessEntity.prototype, "status", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: "timestamptz", nullable: true }),
+    __metadata("design:type", Date)
+], BusinessEntity.prototype, "subscriptionStartDate", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: "timestamptz", nullable: true }),
+    __metadata("design:type", Date)
+], BusinessEntity.prototype, "subscriptionEndDate", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: "starter" }),
+    __metadata("design:type", String)
+], BusinessEntity.prototype, "plan", void 0);
+__decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], BusinessEntity.prototype, "email", void 0);

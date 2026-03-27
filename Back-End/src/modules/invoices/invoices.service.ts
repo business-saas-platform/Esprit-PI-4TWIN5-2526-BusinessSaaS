@@ -99,20 +99,36 @@ export class InvoicesService {
     return this.toApi(inv);
   }
 
-  async update(businessId: string, id: string, dto: UpdateInvoiceDto) {
-    const inv = await this.repo.findOne({ where: { id, businessId } as any });
-    if (!inv) throw new NotFoundException("Invoice not found");
+async update(businessId: string, id: string, dto: UpdateInvoiceDto) {
+  const inv = await this.repo.findOne({ where: { id, businessId } as any });
+  if (!inv) throw new NotFoundException("Invoice not found");
 
-    Object.assign(inv, dto as any);
+  const previousStatus = inv.status;
 
-    const saved: InvoiceEntity = await this.repo.save(inv);
+  Object.assign(inv, dto as any);
 
-    const full = await this.repo.findOne({
-      where: { id: saved.id, businessId } as any,
-    });
-
-    return this.toApi(full ?? saved);
+  // ✅ logique métier des statuts
+  if (dto.status === "paid" && previousStatus !== "paid") {
+    inv.paidAmount = Number(inv.totalAmount ?? 0);
   }
+
+  // si on quitte "paid" vers un autre statut => reset
+  if (
+    dto.status &&
+    dto.status !== "paid" &&
+    previousStatus === "paid"
+  ) {
+    inv.paidAmount = 0;
+  }
+
+  const saved: InvoiceEntity = await this.repo.save(inv);
+
+  const full = await this.repo.findOne({
+    where: { id: saved.id, businessId } as any,
+  });
+
+  return this.toApi(full ?? saved);
+}
 
   async remove(businessId: string, id: string) {
     const res = await this.repo.delete({ id, businessId } as any);

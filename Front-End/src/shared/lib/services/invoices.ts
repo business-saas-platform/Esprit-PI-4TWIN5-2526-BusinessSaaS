@@ -49,4 +49,20 @@ export const InvoicesApi = {
       body: JSON.stringify({ status: "sent" }),
     });
   },
+
+  markPaid: async (id: string) => {
+    return api<Invoice>(`/invoices/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ status: "paid" }),
+    });
+  },
+    updateStatus: async (
+    id: string,
+    status: "draft" | "sent" | "paid" | "overdue" | "cancelled"
+  ) => {
+    return api<Invoice>(`/invoices/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    });
+  },
 };

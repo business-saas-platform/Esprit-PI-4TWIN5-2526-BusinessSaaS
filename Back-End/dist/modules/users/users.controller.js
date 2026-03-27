@@ -21,11 +21,33 @@ let UsersController = class UsersController {
     constructor(s) {
         this.s = s;
     }
-    create(dto) { return this.s.create(dto); }
-    findAll() { return this.s.findAll(); }
-    findOne(id) { return this.s.findOne(id); }
-    update(id, dto) { return this.s.update(id, dto); }
-    remove(id) { return this.s.remove(id); }
+    create(dto) {
+        return this.s.create(dto);
+    }
+    findAll() {
+        return this.s.findAll();
+    }
+    findOne(id) {
+        return this.s.findOne(id);
+    }
+    update(id, dto) {
+        return this.s.update(id, dto);
+    }
+    remove(id) {
+        return this.s.remove(id);
+    }
+    listBusinessOwners() {
+        return this.s.listBusinessOwners();
+    }
+    getBusinessOwnerDetails(id) {
+        return this.s.getBusinessOwnerDetails(id);
+    }
+    updateBusinessOwnerStatus(id, body) {
+        return this.s.updateBusinessOwnerStatus(id, body.status);
+    }
+    createBusinessOwnerWithBusiness(body) {
+        return this.s.createBusinessOwnerWithBusiness(body);
+    }
 };
 exports.UsersController = UsersController;
 __decorate([
@@ -63,6 +85,34 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "remove", null);
+__decorate([
+    (0, common_1.Get)("admin/business-owners/all"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "listBusinessOwners", null);
+__decorate([
+    (0, common_1.Get)("admin/business-owners/:id"),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "getBusinessOwnerDetails", null);
+__decorate([
+    (0, common_1.Patch)("admin/business-owners/:id/status"),
+    __param(0, (0, common_1.Param)("id")),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "updateBusinessOwnerStatus", null);
+__decorate([
+    (0, common_1.Post)("admin/business-owners/create-with-business"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "createBusinessOwnerWithBusiness", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)("users"),
     __metadata("design:paramtypes", [users_service_1.UsersService])

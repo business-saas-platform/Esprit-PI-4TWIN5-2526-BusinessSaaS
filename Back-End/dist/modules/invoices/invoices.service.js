@@ -85,7 +85,16 @@ let InvoicesService = class InvoicesService {
         const inv = await this.repo.findOne({ where: { id, businessId } });
         if (!inv)
             throw new common_1.NotFoundException("Invoice not found");
+        const previousStatus = inv.status;
         Object.assign(inv, dto);
+        if (dto.status === "paid" && previousStatus !== "paid") {
+            inv.paidAmount = Number(inv.totalAmount ?? 0);
+        }
+        if (dto.status &&
+            dto.status !== "paid" &&
+            previousStatus === "paid") {
+            inv.paidAmount = 0;
+        }
         const saved = await this.repo.save(inv);
         const full = await this.repo.findOne({
             where: { id: saved.id, businessId },

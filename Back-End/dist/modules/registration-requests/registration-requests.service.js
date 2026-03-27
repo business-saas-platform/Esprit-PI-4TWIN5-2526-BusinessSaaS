@@ -22,6 +22,7 @@ const user_entity_1 = require("../users/entities/user.entity");
 const business_entity_1 = require("../businesses/entities/business.entity");
 const team_member_entity_1 = require("../team-members/entities/team-member.entity");
 const mail_service_1 = require("../mail/mail.service");
+const registration_request_enums_1 = require("./enums/registration-request.enums");
 let RegistrationRequestsService = class RegistrationRequestsService {
     constructor(dataSource, requests, users, businesses, teamMembers, mail) {
         this.dataSource = dataSource;
@@ -34,48 +35,173 @@ let RegistrationRequestsService = class RegistrationRequestsService {
     }
     async create(dto) {
         const ownerEmail = dto.ownerEmail.toLowerCase().trim();
-        const existsUser = await this.users.findOne({ where: { email: ownerEmail } });
-        if (existsUser)
-            throw new common_1.ConflictException("Account already exists for this email");
-        const pending = await this.requests.findOne({
-            where: { ownerEmail, status: "pending" },
+        const existsUser = await this.users.findOne({
+            where: { email: ownerEmail },
         });
-        if (pending)
+        if (existsUser) {
+            throw new common_1.ConflictException("Account already exists for this email");
+        }
+        const pending = await this.requests.findOne({
+            where: {
+                ownerEmail,
+                status: registration_request_enums_1.RegistrationStatus.PENDING,
+            },
+        });
+        if (pending) {
             throw new common_1.ConflictException("A pending request already exists for this email");
+        }
+        const normalizedPaymentMethod = dto.paymentMethod ?? registration_request_enums_1.PaymentMethod.MANUAL;
+        const initialPaymentStatus = this.getInitialPaymentStatus(normalizedPaymentMethod);
         const req = this.requests.create({
             ownerEmail,
             ownerName: dto.ownerName.trim(),
             companyName: dto.companyName.trim(),
             companyCategory: dto.companyCategory.trim(),
-            companyPhone: dto.companyPhone?.trim(),
-            companyAddress: dto.companyAddress?.trim(),
-            companyTaxId: dto.companyTaxId?.trim(),
-            status: "pending",
+            companyPhone: dto.companyPhone?.trim() || null,
+            companyAddress: dto.companyAddress?.trim() || null,
+            companyTaxId: dto.companyTaxId?.trim() || null,
+            teamSize: dto.teamSize?.trim() || null,
+            message: dto.message?.trim() || null,
+            selectedPlan: dto.selectedPlan ?? null,
+            paymentMethod: normalizedPaymentMethod,
+            paymentStatus: initialPaymentStatus,
+            paymentProvider: normalizedPaymentMethod === registration_request_enums_1.PaymentMethod.MOCK_ONLINE ? "mock" : null,
+            paymentReference: normalizedPaymentMethod === registration_request_enums_1.PaymentMethod.MOCK_ONLINE
+                ? this.generateMockPaymentReference()
+                : null,
+            paymentUrl: null,
+            paidAt: null,
+            status: registration_request_enums_1.RegistrationStatus.PENDING,
+            rejectionReason: null,
+            reviewedByAdminId: null,
+            reviewedAt: null,
         });
-        return this.requests.save(req);
+        const saved = await this.requests.save(req);
+        if (saved.paymentMethod === registration_request_enums_1.PaymentMethod.MOCK_ONLINE) {
+            saved.paymentUrl = `/mock-payment/${saved.id}`;
+            await this.requests.save(saved);
+        }
+        return saved;
     }
-    async list(status = "pending") {
+    async list(status, paymentStatus) {
+        const where = {};
+        if (status) {
+            where.status = status;
+        }
+        if (paymentStatus) {
+            where.paymentStatus = paymentStatus;
+        }
         return this.requests.find({
-            where: { status: status },
+            where,
             order: { createdAt: "DESC" },
         });
     }
-    async approve(requestId, adminUser, dto) {
-        if (adminUser.role !== "platform_admin")
-            throw new common_1.ForbiddenException("Platform admin only");
+    async findOne(id) {
+        const req = await this.requests.findOne({ where: { id } });
+        if (!req)
+            throw new common_1.NotFoundException("Request not found");
+        return req;
+    }
+    async createMockPayment(requestId) {
         const req = await this.requests.findOne({ where: { id: requestId } });
         if (!req)
             throw new common_1.NotFoundException("Request not found");
-        if (req.status !== "pending")
+        if (req.status !== registration_request_enums_1.RegistrationStatus.PENDING) {
+            throw new common_1.BadRequestException("Payment session can only be created for pending requests");
+        }
+        req.paymentMethod = registration_request_enums_1.PaymentMethod.MOCK_ONLINE;
+        req.paymentProvider = "mock";
+        req.paymentStatus = registration_request_enums_1.PaymentStatus.PENDING;
+        req.paymentReference = this.generateMockPaymentReference();
+        req.paymentUrl = `/mock-payment/${req.id}`;
+        req.paidAt = null;
+        return this.requests.save(req);
+    }
+    async mockPaymentSuccess(requestId) {
+        const req = await this.requests.findOne({ where: { id: requestId } });
+        if (!req)
+            throw new common_1.NotFoundException("Request not found");
+        if (req.status !== registration_request_enums_1.RegistrationStatus.PENDING) {
             throw new common_1.BadRequestException("Request already reviewed");
+        }
+        req.paymentMethod = registration_request_enums_1.PaymentMethod.MOCK_ONLINE;
+        req.paymentProvider = "mock";
+        req.paymentStatus = registration_request_enums_1.PaymentStatus.PAID;
+        req.paymentReference = req.paymentReference || this.generateMockPaymentReference();
+        req.paymentUrl = req.paymentUrl || `/mock-payment/${req.id}`;
+        req.paidAt = new Date();
+        return this.requests.save(req);
+    }
+    async mockPaymentFail(requestId) {
+        const req = await this.requests.findOne({ where: { id: requestId } });
+        if (!req)
+            throw new common_1.NotFoundException("Request not found");
+        if (req.status !== registration_request_enums_1.RegistrationStatus.PENDING) {
+            throw new common_1.BadRequestException("Request already reviewed");
+        }
+        req.paymentMethod = registration_request_enums_1.PaymentMethod.MOCK_ONLINE;
+        req.paymentProvider = "mock";
+        req.paymentStatus = registration_request_enums_1.PaymentStatus.FAILED;
+        req.paymentReference = req.paymentReference || this.generateMockPaymentReference();
+        req.paymentUrl = req.paymentUrl || `/mock-payment/${req.id}`;
+        req.paidAt = null;
+        return this.requests.save(req);
+    }
+    async updatePaymentStatus(requestId, adminUser, paymentStatus, paymentReference) {
+        if (adminUser.role !== "platform_admin") {
+            throw new common_1.ForbiddenException("Platform admin only");
+        }
+        const req = await this.requests.findOne({ where: { id: requestId } });
+        if (!req)
+            throw new common_1.NotFoundException("Request not found");
+        req.paymentStatus = paymentStatus;
+        if (paymentReference?.trim()) {
+            req.paymentReference = paymentReference.trim();
+        }
+        if (paymentStatus === registration_request_enums_1.PaymentStatus.PAID) {
+            req.paidAt = new Date();
+        }
+        if (paymentStatus === registration_request_enums_1.PaymentStatus.UNPAID ||
+            paymentStatus === registration_request_enums_1.PaymentStatus.FAILED ||
+            paymentStatus === registration_request_enums_1.PaymentStatus.PENDING ||
+            paymentStatus === registration_request_enums_1.PaymentStatus.PENDING_VERIFICATION) {
+            req.paidAt = null;
+        }
+        return this.requests.save(req);
+    }
+    async approve(requestId, adminUser, dto) {
+        if (adminUser.role !== "platform_admin") {
+            throw new common_1.ForbiddenException("Platform admin only");
+        }
+        const req = await this.requests.findOne({ where: { id: requestId } });
+        if (!req)
+            throw new common_1.NotFoundException("Request not found");
+        if (req.status !== registration_request_enums_1.RegistrationStatus.PENDING) {
+            throw new common_1.BadRequestException("Request already reviewed");
+        }
+        if (req.paymentMethod === registration_request_enums_1.PaymentMethod.MOCK_ONLINE &&
+            req.paymentStatus !== registration_request_enums_1.PaymentStatus.PAID &&
+            req.paymentStatus !== registration_request_enums_1.PaymentStatus.WAIVED) {
+            throw new common_1.BadRequestException("This request cannot be approved before mock payment is completed");
+        }
+        if ((req.paymentMethod === registration_request_enums_1.PaymentMethod.CASH ||
+            req.paymentMethod === registration_request_enums_1.PaymentMethod.BANK_TRANSFER ||
+            req.paymentMethod === registration_request_enums_1.PaymentMethod.MANUAL) &&
+            req.paymentStatus !== registration_request_enums_1.PaymentStatus.PAID &&
+            req.paymentStatus !== registration_request_enums_1.PaymentStatus.WAIVED) {
+            throw new common_1.BadRequestException("This request cannot be approved before payment is confirmed by admin");
+        }
         const result = await this.dataSource.transaction(async (trx) => {
             const requestsRepo = trx.getRepository(registration_request_entity_1.RegistrationRequestEntity);
             const usersRepo = trx.getRepository(user_entity_1.UserEntity);
             const businessesRepo = trx.getRepository(business_entity_1.BusinessEntity);
             const teamMembersRepo = trx.getRepository(team_member_entity_1.TeamMemberEntity);
-            const existsUser = await usersRepo.findOne({ where: { email: req.ownerEmail } });
-            if (existsUser)
+            const existsUser = await usersRepo.findOne({
+                where: { email: req.ownerEmail },
+            });
+            if (existsUser) {
                 throw new common_1.ConflictException("Account already exists for this email");
+            }
             const tempPassword = this.generateTempPassword();
             const passwordHash = await bcrypt.hash(tempPassword, 10);
             const owner = usersRepo.create({
@@ -120,7 +246,7 @@ let RegistrationRequestsService = class RegistrationRequestsService {
                 });
                 await teamMembersRepo.save(ownerMember);
             }
-            req.status = "approved";
+            req.status = registration_request_enums_1.RegistrationStatus.APPROVED;
             req.reviewedByAdminId = adminUser.id;
             req.reviewedAt = new Date();
             await requestsRepo.save(req);
@@ -140,17 +266,23 @@ let RegistrationRequestsService = class RegistrationRequestsService {
             email: result.ownerEmail,
             tempPassword: result.tempPassword,
         });
-        return { ok: true, ownerId: result.ownerId, businessId: result.businessId };
+        return {
+            ok: true,
+            ownerId: result.ownerId,
+            businessId: result.businessId,
+        };
     }
     async reject(requestId, adminUser, dto) {
-        if (adminUser.role !== "platform_admin")
+        if (adminUser.role !== "platform_admin") {
             throw new common_1.ForbiddenException("Platform admin only");
+        }
         const req = await this.requests.findOne({ where: { id: requestId } });
         if (!req)
             throw new common_1.NotFoundException("Request not found");
-        if (req.status !== "pending")
+        if (req.status !== registration_request_enums_1.RegistrationStatus.PENDING) {
             throw new common_1.BadRequestException("Request already reviewed");
-        req.status = "rejected";
+        }
+        req.status = registration_request_enums_1.RegistrationStatus.REJECTED;
         req.rejectionReason = dto.reason.trim();
         req.reviewedByAdminId = adminUser.id;
         req.reviewedAt = new Date();
@@ -163,17 +295,33 @@ let RegistrationRequestsService = class RegistrationRequestsService {
         });
         return { ok: true };
     }
+    getInitialPaymentStatus(paymentMethod) {
+        switch (paymentMethod) {
+            case registration_request_enums_1.PaymentMethod.MOCK_ONLINE:
+                return registration_request_enums_1.PaymentStatus.PENDING;
+            case registration_request_enums_1.PaymentMethod.CASH:
+            case registration_request_enums_1.PaymentMethod.BANK_TRANSFER:
+                return registration_request_enums_1.PaymentStatus.PENDING_VERIFICATION;
+            case registration_request_enums_1.PaymentMethod.MANUAL:
+            default:
+                return registration_request_enums_1.PaymentStatus.UNPAID;
+        }
+    }
+    generateMockPaymentReference() {
+        return `MOCK-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+    }
     generateTempPassword() {
         const upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
         const lower = "abcdefghijkmnpqrstuvwxyz";
         const digits = "23456789";
         const special = "!@#$%";
+        const all = upper + lower + digits;
         const pick = (s) => s[Math.floor(Math.random() * s.length)];
         return (pick(upper) +
             pick(lower) +
             pick(digits) +
             pick(special) +
-            Array.from({ length: 6 }, () => pick(upper + lower + digits)).join(""));
+            Array.from({ length: 6 }, () => pick(all)).join(""));
     }
 };
 exports.RegistrationRequestsService = RegistrationRequestsService;

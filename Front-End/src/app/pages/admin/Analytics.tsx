@@ -1,5 +1,5 @@
+import { useEffect, useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
-import { allBusinesses, mockUsageStats, businessOwners } from "@/app/lib/mockData";
 import {
   BarChart,
   Bar,
@@ -15,84 +15,235 @@ import {
   LineChart,
   Line,
 } from "recharts";
-import { Clock, Activity, TrendingUp, Users } from "lucide-react";
+import { Clock, Activity, TrendingUp, Users, Loader2 } from "lucide-react";
+import { api } from "@/shared/lib/apiClient";
+import {
+  BusinessOwnersApi,
+  type BusinessOwnerRow,
+} from "@/shared/lib/services/businessOwners";
 
 const COLORS = ["#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981"];
 
+type BusinessRow = {
+  id: string;
+  name: string;
+  email?: string;
+  status?: string;
+  plan?: string;
+  createdAt?: string;
+  ownerId?: string;
+  subscriptionStartDate?: string | null;
+  subscriptionEndDate?: string | null;
+};
+
+type UsageByBusinessRow = {
+  name: string;
+  time: number;
+  apiCalls: number;
+};
+
+type DailyUsageRow = {
+  date: string;
+  time: number;
+  users: number;
+  invoices: number;
+};
+
 export function Analytics() {
-  // Calculate metrics
-  const totalUsageTime = mockUsageStats.reduce((sum, stat) => sum + stat.totalLoginTime, 0);
-  const avgUsageTime = (totalUsageTime / mockUsageStats.length).toFixed(0);
-  const totalApiCalls = mockUsageStats.reduce((sum, stat) => sum + stat.apiCalls, 0);
-  const activeUsers = new Set(mockUsageStats.map((stat) => stat.businessId)).size;
+  const [loading, setLoading] = useState(true);
+  const [businesses, setBusinesses] = useState<BusinessRow[]>([]);
+  const [owners, setOwners] = useState<BusinessOwnerRow[]>([]);
 
-  // Usage by business
-  const usageByBusiness = allBusinesses.map((business) => {
-    const businessStats = mockUsageStats.filter((stat) => stat.businessId === business.id);
-    const totalTime = businessStats.reduce((sum, stat) => sum + stat.totalLoginTime, 0);
-    const totalCalls = businessStats.reduce((sum, stat) => sum + stat.apiCalls, 0);
+  useEffect(() => {
+    loadAnalytics();
+  }, []);
+
+  const getStoredUser = () => {
+    try {
+      return JSON.parse(localStorage.getItem("auth_user") || "{}");
+    } catch {
+      return {};
+    }
+  };
+
+  const getBusinessId = () => {
+    const user = getStoredUser();
+
+    return (
+      localStorage.getItem("current_business_id") ||
+      localStorage.getItem("businessId") ||
+      user?.businessId ||
+      ""
+    );
+  };
+
+  const normalizeBusiness = (business: any): BusinessRow => {
     return {
-      name: business.name.length > 15 ? business.name.substring(0, 15) + "..." : business.name,
-      time: totalTime,
-      apiCalls: totalCalls,
+      ...business,
+      name: business?.name || "Untitled business",
+      email: business?.email || "",
+      status: business?.status || "unassigned",
+      plan: business?.plan || "custom",
+      createdAt: business?.createdAt || "",
+      subscriptionStartDate: business?.subscriptionStartDate || null,
+      subscriptionEndDate: business?.subscriptionEndDate || null,
     };
-  }).filter((item) => item.time > 0);
+  };
 
-  // Plan distribution
-  const planDistribution = allBusinesses.reduce((acc, business) => {
-    const existing = acc.find((item) => item.name === business.plan);
-    if (existing) {
-      existing.value += 1;
-    } else {
-      acc.push({ name: business.plan, value: 1 });
+  const loadAnalytics = async () => {
+    try {
+      setLoading(true);
+
+      const businessId = getBusinessId();
+
+      const [businessesData, ownersData] = await Promise.all([
+        api<BusinessRow[]>("/businesses/all", {
+          method: "GET",
+          headers: {
+            ...(businessId ? { "x-business-id": businessId } : {}),
+          },
+        }),
+        BusinessOwnersApi.listAll(),
+      ]);
+
+      setBusinesses(
+        Array.isArray(businessesData)
+          ? businessesData.map(normalizeBusiness)
+          : []
+      );
+
+      setOwners(Array.isArray(ownersData) ? ownersData : []);
+    } catch (error) {
+      console.error("Failed to load analytics:", error);
+      setBusinesses([]);
+      setOwners([]);
+    } finally {
+      setLoading(false);
     }
-    return acc;
-  }, [] as { name: string; value: number }[]);
+  };
 
-  // Status distribution
-  const statusDistribution = allBusinesses.reduce((acc, business) => {
-    const existing = acc.find((item) => item.name === business.status);
-    if (existing) {
-      existing.value += 1;
-    } else {
-      acc.push({ name: business.status, value: 1 });
-    }
-    return acc;
-  }, [] as { name: string; value: number }[]);
+  const totalUsageTime = owners.reduce(
+    (sum, owner: any) => sum + Number(owner.totalUsageMinutes || 0),
+    0
+  );
 
-  // Daily usage trend
-  const dailyUsage = mockUsageStats.reduce((acc, stat) => {
-    const existing = acc.find((item) => item.date === stat.date);
-    if (existing) {
-      existing.time += stat.totalLoginTime;
-      existing.users += stat.activeUsers;
-      existing.invoices += stat.invoicesCreated;
-    } else {
-      acc.push({
-        date: stat.date,
-        time: stat.totalLoginTime,
-        users: stat.activeUsers,
-        invoices: stat.invoicesCreated,
-      });
-    }
-    return acc;
-  }, [] as { date: string; time: number; users: number; invoices: number }[]);
+  const avgUsageTime =
+    owners.length > 0 ? (totalUsageTime / owners.length).toFixed(0) : "0";
 
-  // Top businesses by usage
-  const topBusinesses = usageByBusiness
+  const totalApiCalls = owners.reduce(
+    (sum, owner: any) => sum + Number(owner.totalApiCalls || 0),
+    0
+  );
+
+  const activeUsers = owners.filter(
+    (owner) => Number(owner.businessCount || 0) > 0
+  ).length;
+
+  const usageByBusiness = useMemo(() => {
+    return businesses
+      .map((business) => {
+        const owner = owners.find((o) => o.id === business.ownerId);
+
+        return {
+          name:
+            business.name.length > 15
+              ? `${business.name.substring(0, 15)}...`
+              : business.name,
+          time: Number((owner as any)?.totalUsageMinutes || 0),
+          apiCalls: Number((owner as any)?.totalApiCalls || 0),
+        };
+      })
+      .filter((item) => item.time > 0 || item.apiCalls > 0);
+  }, [businesses, owners]);
+
+  const planDistribution = useMemo(() => {
+    return businesses.reduce((acc, business) => {
+      const key = business.plan || "custom";
+      const existing = acc.find((item) => item.name === key);
+
+      if (existing) {
+        existing.value += 1;
+      } else {
+        acc.push({ name: key, value: 1 });
+      }
+
+      return acc;
+    }, [] as { name: string; value: number }[]);
+  }, [businesses]);
+
+  const statusDistribution = useMemo(() => {
+    return businesses.reduce((acc, business) => {
+      const key = business.status || "unassigned";
+      const existing = acc.find((item) => item.name === key);
+
+      if (existing) {
+        existing.value += 1;
+      } else {
+        acc.push({ name: key, value: 1 });
+      }
+
+      return acc;
+    }, [] as { name: string; value: number }[]);
+  }, [businesses]);
+
+  const dailyUsage = useMemo(() => {
+    const rows = owners.reduce((acc, owner: any) => {
+      const date = owner.joinedAt
+        ? new Date(owner.joinedAt).toLocaleDateString("en-CA")
+        : "Unknown";
+
+      const existing = acc.find((item) => item.date === date);
+
+      if (existing) {
+        existing.time += Number(owner.totalUsageMinutes || 0);
+        existing.users += 1;
+        existing.invoices += Number(owner.totalInvoices || 0);
+      } else {
+        acc.push({
+          date,
+          time: Number(owner.totalUsageMinutes || 0),
+          users: 1,
+          invoices: Number(owner.totalInvoices || 0),
+        });
+      }
+
+      return acc;
+    }, [] as DailyUsageRow[]);
+
+    return rows.sort((a, b) => a.date.localeCompare(b.date));
+  }, [owners]);
+
+  const topBusinesses = [...usageByBusiness]
     .sort((a, b) => b.time - a.time)
     .slice(0, 5);
 
+  if (loading) {
+    return (
+      <div className="flex min-h-[320px] items-center justify-center text-gray-500">
+        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+        Loading analytics...
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Platform Analytics</h1>
-        <p className="mt-2 text-gray-600">
-          Comprehensive usage analytics and insights
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Platform Analytics</h1>
+          <p className="mt-2 text-gray-600">
+            Comprehensive usage analytics and insights
+          </p>
+        </div>
+
+        <button
+          onClick={loadAnalytics}
+          className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-gray-50"
+        >
+          Refresh
+        </button>
       </div>
 
-      {/* Key Metrics */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -103,8 +254,8 @@ export function Analytics() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-gray-900">{totalUsageTime} min</div>
-            <p className="text-xs text-gray-500 mt-1">
-              Avg: {avgUsageTime} min/session
+            <p className="mt-1 text-xs text-gray-500">
+              Avg: {avgUsageTime} min/owner
             </p>
           </CardContent>
         </Card>
@@ -120,7 +271,7 @@ export function Analytics() {
             <div className="text-2xl font-bold text-gray-900">
               {totalApiCalls.toLocaleString()}
             </div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="mt-1 text-xs text-gray-500">
               Platform-wide requests
             </p>
           </CardContent>
@@ -135,8 +286,8 @@ export function Analytics() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-gray-900">{activeUsers}</div>
-            <p className="text-xs text-gray-500 mt-1">
-              With recent activity
+            <p className="mt-1 text-xs text-gray-500">
+              With linked owners/businesses
             </p>
           </CardContent>
         </Card>
@@ -149,15 +300,14 @@ export function Analytics() {
             <Users className="h-4 w-4 text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-gray-900">{businessOwners.length}</div>
-            <p className="text-xs text-gray-500 mt-1">
+            <div className="text-2xl font-bold text-gray-900">{owners.length}</div>
+            <p className="mt-1 text-xs text-gray-500">
               Platform users
             </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Charts Row 1 */}
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
@@ -171,8 +321,20 @@ export function Analytics() {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="time" stroke="#6366f1" strokeWidth={2} name="Usage Time (min)" />
-                <Line type="monotone" dataKey="users" stroke="#8b5cf6" strokeWidth={2} name="Active Users" />
+                <Line
+                  type="monotone"
+                  dataKey="time"
+                  stroke="#6366f1"
+                  strokeWidth={2}
+                  name="Usage Time (min)"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="users"
+                  stroke="#8b5cf6"
+                  strokeWidth={2}
+                  name="Active Users"
+                />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -196,7 +358,6 @@ export function Analytics() {
         </Card>
       </div>
 
-      {/* Charts Row 2 */}
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
@@ -210,13 +371,18 @@ export function Analytics() {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) =>
+                    `${name}: ${((percent || 0) * 100).toFixed(0)}%`
+                  }
                   outerRadius={100}
                   fill="#8884d8"
                   dataKey="value"
                 >
                   {planDistribution.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell
+                      key={`plan-cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
                   ))}
                 </Pie>
                 <Tooltip />
@@ -237,13 +403,18 @@ export function Analytics() {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) =>
+                    `${name}: ${((percent || 0) * 100).toFixed(0)}%`
+                  }
                   outerRadius={100}
                   fill="#8884d8"
                   dataKey="value"
                 >
                   {statusDistribution.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell
+                      key={`status-cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
                   ))}
                 </Pie>
                 <Tooltip />
@@ -253,7 +424,6 @@ export function Analytics() {
         </Card>
       </div>
 
-      {/* API Calls by Business */}
       <Card>
         <CardHeader>
           <CardTitle>API Calls by Business</CardTitle>

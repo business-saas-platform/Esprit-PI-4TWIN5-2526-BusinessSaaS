@@ -1,4 +1,3 @@
-
 import type { Business } from "@/shared/lib/mockData";
 import { api } from "@/shared/lib/apiClient";
 
@@ -69,5 +68,41 @@ export const BusinessesApi = {
     api<Business>(`/businesses/${id}/profile`, {
       method: "PATCH",
       body: JSON.stringify(payload),
+    }),
+
+  // =========================
+  // ✅ ADMIN ACTIONS
+  // =========================
+
+  // ✅ GET /businesses/all
+  listAll: () => api<Business[]>("/businesses/all"),
+
+  // ✅ POST /businesses/admin
+  createAsAdmin: (payload: Partial<Business>) =>
+    api<Business>("/businesses/admin", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  // ✅ PATCH /businesses/admin/:id
+  updateAsAdmin: (id: string, payload: Partial<Business>) =>
+    api<Business>(`/businesses/admin/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    }),
+
+  // ✅ DELETE /businesses/admin/:id
+  removeAsAdmin: (id: string) =>
+    api<{ ok?: boolean; deleted?: boolean; id?: string }>(
+      `/businesses/admin/${id}`,
+      {
+        method: "DELETE",
+      }
+    ),
+
+  // ✅ DELETE /businesses/admin/all
+  removeAllAsAdmin: () =>
+    api<{ ok?: boolean; deletedAll?: boolean }>("/businesses/admin/all", {
+      method: "DELETE",
     }),
 };

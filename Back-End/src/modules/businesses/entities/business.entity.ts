@@ -16,6 +16,15 @@ export class BusinessEntity {
   @Column() country!: string;
   @Column() taxId!: string;
   @Column() phone!: string;
+  @Column({ default: "active" })
+status!: string;
+@Column({ type: "timestamptz", nullable: true })
+subscriptionStartDate?: Date;
+
+@Column({ type: "timestamptz", nullable: true })
+subscriptionEndDate?: Date;
+@Column({ default: "starter" })
+plan!: string;
   @Column() email!: string;
   @Column({ nullable: true }) website?: string;
   @Column() currency!: string;

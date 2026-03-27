@@ -1,4 +1,15 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from "class-validator";
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+} from "class-validator";
+import {
+  PaymentMethod,
+  SelectedPlan,
+} from "../enums/registration-request.enums";
 
 export class CreateRegistrationRequestDto {
   @IsEmail()
@@ -27,4 +38,20 @@ export class CreateRegistrationRequestDto {
   @IsOptional()
   @IsString()
   companyTaxId?: string;
+
+  @IsOptional()
+  @IsString()
+  teamSize?: string;
+
+  @IsOptional()
+  @IsString()
+  message?: string;
+
+  @IsOptional()
+  @IsEnum(SelectedPlan)
+  selectedPlan?: SelectedPlan;
+
+  @IsOptional()
+  @IsEnum(PaymentMethod)
+  paymentMethod?: PaymentMethod;
 }

@@ -53,12 +53,12 @@ export const AuthApi = {
   },
 
   // ✅ Force change password on first login
-  changePasswordFirst: (newPassword: string) =>
-    api<{ ok: boolean; access_token: string; user: User }>(
-      "/auth/change-password-first",
-      {
-        method: "POST",
-        body: JSON.stringify({ newPassword }),
-      }
-    ),
+changePasswordFirst: (data: { newPassword: string }) =>
+  api<{ ok: boolean; access_token: string; user: User }>(
+    "/auth/change-password-first",
+    {
+      method: "POST",
+      body: JSON.stringify(data),
+    }
+  ),
 };

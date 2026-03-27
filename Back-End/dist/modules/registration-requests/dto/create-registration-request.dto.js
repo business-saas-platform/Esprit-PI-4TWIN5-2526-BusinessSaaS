@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateRegistrationRequestDto = void 0;
 const class_validator_1 = require("class-validator");
+const registration_request_enums_1 = require("../enums/registration-request.enums");
 class CreateRegistrationRequestDto {
 }
 exports.CreateRegistrationRequestDto = CreateRegistrationRequestDto;
@@ -48,4 +49,24 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateRegistrationRequestDto.prototype, "companyTaxId", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateRegistrationRequestDto.prototype, "teamSize", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateRegistrationRequestDto.prototype, "message", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEnum)(registration_request_enums_1.SelectedPlan),
+    __metadata("design:type", String)
+], CreateRegistrationRequestDto.prototype, "selectedPlan", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEnum)(registration_request_enums_1.PaymentMethod),
+    __metadata("design:type", String)
+], CreateRegistrationRequestDto.prototype, "paymentMethod", void 0);
 //# sourceMappingURL=create-registration-request.dto.js.map

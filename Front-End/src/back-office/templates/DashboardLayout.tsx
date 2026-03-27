@@ -1,5 +1,5 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   LayoutDashboard,
   FileText,
@@ -12,6 +12,10 @@ import {
   X,
   LogOut,
   Sparkles,
+  ChevronRight,
+  Building2,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
 
 import { Button, Avatar, AvatarFallback } from "@/shared/ui";
@@ -24,12 +28,13 @@ type NavItem = {
   name: string;
   href: string;
   icon: any;
-  perm?: string; // ✅ permission required to see this menu item
+  perm?: string;
+  badge?: string;
 };
 
 const navigation: NavItem[] = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "AI Insights", href: "/dashboard/ai-insights", icon: Sparkles, perm: "ai.read" },
+  { name: "AI Insights", href: "/dashboard/ai-insights", icon: Sparkles, perm: "ai.read", badge: "AI" },
   { name: "Invoices", href: "/dashboard/invoices", icon: FileText, perm: "invoices.read" },
   { name: "Expenses", href: "/dashboard/expenses", icon: Receipt, perm: "expenses.read" },
   { name: "Clients", href: "/dashboard/clients", icon: Users, perm: "clients.read" },
@@ -46,11 +51,20 @@ function initials(name?: string) {
   return (a + b).toUpperCase();
 }
 
+function getPageTitle(pathname: string) {
+  const match = navigation.find(
+    (item) => pathname === item.href || pathname.startsWith(item.href + "/")
+  );
+  return match?.name || "Dashboard";
+}
+
 export function DashboardLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const userMenuRef = useRef<HTMLDivElement | null>(null);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const { currentBusiness, setCurrentBusiness, businesses, isReady } = useBusinessContext();
@@ -58,10 +72,17 @@ export function DashboardLayout() {
 
   const isOnSetupPage = location.pathname.startsWith("/dashboard/company/setup");
 
-  // ✅ Brand title: show company name if exists, otherwise fallback
   const brandTitle = useMemo(() => {
     return (currentBusiness as any)?.name || "BizManager";
   }, [currentBusiness]);
+
+  const pageTitle = useMemo(() => getPageTitle(location.pathname), [location.pathname]);
+
+  const filteredNavigation = useMemo(() => {
+    if (!user) return [];
+    if (user.role === "platform_admin" || user.role === "business_owner") return navigation;
+    return navigation.filter((item) => !item.perm || hasPermission(item.perm));
+  }, [user, hasPermission]);
 
   const handleLogout = () => {
     logout();
@@ -76,20 +97,26 @@ export function DashboardLayout() {
     }
   };
 
-  // ✅ close the user menu when route changes
   useEffect(() => {
     setUserMenuOpen(false);
   }, [location.pathname]);
 
-  // ✅ Filter menu by permissions (owner/admin sees all)
-  const filteredNavigation = useMemo(() => {
-    if (!user) return [];
-    if (user.role === "platform_admin" || user.role === "business_owner") return navigation;
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    }
 
-    return navigation.filter((item) => !item.perm || hasPermission(item.perm));
-  }, [user, hasPermission]);
+    if (userMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
 
-  // ✅ HARD FIX: redirect to setup ONLY when needed (no loop)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [userMenuOpen]);
+
   useEffect(() => {
     if (!authReady || !isReady) return;
 
@@ -120,42 +147,48 @@ export function DashboardLayout() {
     navigate,
   ]);
 
-  // ✅ Route guard (if user tries to open URL without permission => redirect)
   useEffect(() => {
-    if (!authReady) return;
-    if (!user) return;
-
+    if (!authReady || !user) return;
     if (user.role === "platform_admin" || user.role === "business_owner") return;
 
-    // find matching nav item for current path
     const currentNav = navigation.find(
       (n) => location.pathname === n.href || location.pathname.startsWith(n.href + "/")
     );
 
-    // If this route requires permission and user doesn't have it => redirect
     if (currentNav?.perm && !hasPermission(currentNav.perm)) {
       navigate("/dashboard", { replace: true });
     }
   }, [authReady, user, location.pathname, hasPermission, navigate]);
 
+  const desktopSidebarWidth = sidebarCollapsed ? "lg:pl-24" : "lg:pl-72";
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Mobile sidebar */}
+    <div className="min-h-screen bg-slate-50 text-slate-900">
+      {/* Mobile Sidebar */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
-            className="fixed inset-0 bg-gray-900/50"
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"
             onClick={() => setSidebarOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 w-64 bg-white">
-            <div className="flex h-16 items-center justify-between px-4 border-b">
-              <span className="text-xl font-bold truncate">{brandTitle}</span>
-              <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(false)}>
+          <div className="fixed inset-y-0 left-0 w-[88%] max-w-[320px] overflow-y-auto border-r border-slate-200 bg-white shadow-2xl">
+            <div className="flex h-20 items-center justify-between border-b border-slate-200 px-5">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-600 text-white shadow-md">
+                  <Building2 className="h-5 w-5" />
+                </div>
+                <div className="min-w-0">
+                  <p className="truncate text-base font-bold text-slate-900">{brandTitle}</p>
+                  <p className="text-xs text-slate-500">Business Workspace</p>
+                </div>
+              </div>
+
+              <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(false)} className="rounded-xl">
                 <X className="h-5 w-5" />
               </Button>
             </div>
 
-            <div className="px-4 py-4">
+            <div className="border-b border-slate-100 px-4 py-4">
               <BusinessSwitcher
                 businesses={businesses}
                 currentBusiness={currentBusiness}
@@ -163,135 +196,245 @@ export function DashboardLayout() {
               />
             </div>
 
-            <nav className="flex-1 space-y-1 px-2 py-2">
+            <nav className="space-y-2 px-3 py-4">
               {filteredNavigation.map((item) => {
                 const isActive =
                   location.pathname === item.href ||
                   location.pathname.startsWith(item.href + "/");
+
                 return (
-                  <Button
+                  <button
                     key={item.name}
-                    variant={isActive ? "secondary" : "ghost"}
-                    className="w-full justify-start"
                     onClick={() => {
                       navigate(item.href);
                       setSidebarOpen(false);
                     }}
+                    className={[
+                      "group flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition-all",
+                      isActive
+                        ? "bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md"
+                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
+                    ].join(" ")}
                   >
-                    <item.icon className="mr-3 h-5 w-5" />
-                    {item.name}
-                  </Button>
+                    <item.icon className="h-5 w-5 shrink-0" />
+                    <span className="flex-1 font-medium">{item.name}</span>
+                    {item.badge && (
+                      <span
+                        className={[
+                          "rounded-full px-2 py-0.5 text-[10px] font-semibold",
+                          isActive ? "bg-white/20 text-white" : "bg-indigo-100 text-indigo-700",
+                        ].join(" ")}
+                      >
+                        {item.badge}
+                      </span>
+                    )}
+                  </button>
                 );
               })}
             </nav>
+
+            <div className="border-t border-slate-100 p-4">
+              <button
+                onClick={handleLogout}
+                className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-red-600 transition hover:bg-red-50"
+              >
+                <LogOut className="h-5 w-5" />
+                <span className="font-medium">Logout</span>
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Desktop sidebar */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex flex-col flex-grow border-r border-gray-200 bg-white">
-          <div className="flex h-16 items-center px-4 border-b">
-            <span className="text-xl font-bold truncate">{brandTitle}</span>
+      {/* Desktop Sidebar */}
+      <aside
+        className={[
+          "hidden lg:fixed lg:inset-y-0 lg:flex lg:flex-col border-r border-slate-200 bg-white/95 backdrop-blur-sm transition-all duration-300",
+          sidebarCollapsed ? "lg:w-24" : "lg:w-72",
+        ].join(" ")}
+      >
+        <div className="flex h-20 items-center justify-between border-b border-slate-200 px-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-600 text-white shadow-lg">
+              <Building2 className="h-5 w-5" />
+            </div>
+
+            {!sidebarCollapsed && (
+              <div className="min-w-0">
+                <p className="truncate text-base font-bold text-slate-900">{brandTitle}</p>
+                <p className="text-xs text-slate-500">Business Workspace</p>
+              </div>
+            )}
           </div>
 
-          <div className="px-4 py-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setSidebarCollapsed((v) => !v)}
+            className="rounded-xl"
+          >
+            {sidebarCollapsed ? (
+              <PanelLeftOpen className="h-5 w-5" />
+            ) : (
+              <PanelLeftClose className="h-5 w-5" />
+            )}
+          </Button>
+        </div>
+
+        {!sidebarCollapsed && (
+          <div className="border-b border-slate-100 px-4 py-4">
             <BusinessSwitcher
               businesses={businesses}
               currentBusiness={currentBusiness}
               onBusinessChange={handleBusinessChange}
             />
           </div>
+        )}
 
-          <nav className="flex-1 space-y-1 px-2 py-2">
+        <div className="flex-1 overflow-y-auto px-3 py-4">
+          <nav className="space-y-2">
             {filteredNavigation.map((item) => {
               const isActive =
                 location.pathname === item.href ||
                 location.pathname.startsWith(item.href + "/");
+
               return (
-                <Button
+                <button
                   key={item.name}
-                  variant={isActive ? "secondary" : "ghost"}
-                  className="w-full justify-start"
                   onClick={() => navigate(item.href)}
+                  className={[
+                    "group flex w-full items-center rounded-2xl transition-all duration-200",
+                    sidebarCollapsed
+                      ? "justify-center px-2 py-3"
+                      : "gap-3 px-4 py-3",
+                    isActive
+                      ? "bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
+                  ].join(" ")}
+                  title={item.name}
                 >
-                  <item.icon className="mr-3 h-5 w-5" />
-                  {item.name}
-                </Button>
+                  <item.icon className="h-5 w-5 shrink-0" />
+
+                  {!sidebarCollapsed && (
+                    <>
+                      <span className="flex-1 text-left font-medium">{item.name}</span>
+                      {item.badge ? (
+                        <span
+                          className={[
+                            "rounded-full px-2 py-0.5 text-[10px] font-semibold",
+                            isActive ? "bg-white/20 text-white" : "bg-indigo-100 text-indigo-700",
+                          ].join(" ")}
+                        >
+                          {item.badge}
+                        </span>
+                      ) : (
+                        <ChevronRight
+                          className={[
+                            "h-4 w-4 transition-transform",
+                            isActive ? "text-white/80" : "text-slate-400 group-hover:translate-x-0.5",
+                          ].join(" ")}
+                        />
+                      )}
+                    </>
+                  )}
+                </button>
               );
             })}
           </nav>
         </div>
-      </div>
 
-      {/* Main content */}
-      <div className="lg:pl-64">
-        {/* Top navigation */}
-        <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 border-b border-gray-200 bg-white">
-          <Button
-            variant="ghost"
-            className="px-4 lg:hidden"
-            onClick={() => setSidebarOpen(true)}
+        <div className="border-t border-slate-100 p-3">
+          <button
+            onClick={handleLogout}
+            className={[
+              "flex w-full items-center rounded-2xl text-red-600 transition hover:bg-red-50",
+              sidebarCollapsed ? "justify-center px-2 py-3" : "gap-3 px-4 py-3",
+            ].join(" ")}
+            title="Logout"
           >
-            <Menu className="h-6 w-6" />
-          </Button>
+            <LogOut className="h-5 w-5" />
+            {!sidebarCollapsed && <span className="font-medium">Logout</span>}
+          </button>
+        </div>
+      </aside>
 
-          <div className="flex flex-1 justify-between px-4 lg:px-8">
-            <div className="flex flex-1 items-center">{/* Search */}</div>
+      {/* Main Area */}
+      <div className={desktopSidebarWidth}>
+        {/* Topbar */}
+        <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur-md">
+          <div className="flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                className="rounded-xl lg:hidden"
+                onClick={() => setSidebarOpen(true)}
+              >
+                <Menu className="h-6 w-6" />
+              </Button>
 
-            {/* User menu */}
-            <div className="relative flex items-center">
+              <div>
+                <h1 className="text-xl font-bold tracking-tight text-slate-900">
+                  {pageTitle}
+                </h1>
+                <p className="text-sm text-slate-500">
+                  Welcome back{user?.name ? `, ${user.name}` : ""}
+                </p>
+              </div>
+            </div>
+
+            <div ref={userMenuRef} className="relative flex items-center">
               <button
                 type="button"
                 onClick={() => setUserMenuOpen((v) => !v)}
-                className="flex items-center gap-2 rounded-full px-2 py-1 hover:bg-gray-100 transition"
+                className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm transition hover:border-slate-300 hover:shadow-md"
               >
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback>{initials(user?.name)}</AvatarFallback>
+                <Avatar className="h-10 w-10 ring-2 ring-slate-100">
+                  <AvatarFallback className="bg-gradient-to-br from-slate-800 to-slate-600 text-white">
+                    {initials(user?.name)}
+                  </AvatarFallback>
                 </Avatar>
 
                 <div className="hidden md:flex flex-col items-start leading-tight">
-                  <span className="text-sm font-medium text-gray-900">
+                  <span className="max-w-[160px] truncate text-sm font-semibold text-slate-900">
                     {user?.name ?? "User"}
                   </span>
-                  <span className="text-xs text-gray-500">{user?.email ?? ""}</span>
+                  <span className="max-w-[160px] truncate text-xs text-slate-500">
+                    {user?.email ?? ""}
+                  </span>
                 </div>
               </button>
 
               {userMenuOpen && (
-                <>
-                  <button
-                    type="button"
-                    className="fixed inset-0 z-40 cursor-default"
-                    onClick={() => setUserMenuOpen(false)}
-                    aria-label="Close menu"
-                  />
-
-                  <div className="absolute right-0 top-full mt-2 z-50 w-56 rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden">
-                    <div className="px-4 py-3 border-b border-gray-100">
-                      <div className="text-sm font-semibold text-gray-900">
-                        {user?.name ?? "User"}
-                      </div>
-                      <div className="text-xs text-gray-500">{user?.email ?? ""}</div>
-                      {/* ✅ show role */}
-                      <div className="mt-1 text-[11px] text-gray-500">
-                        Role: <span className="font-medium">{user?.role ?? "-"}</span>
+                <div className="absolute right-0 top-full mt-3 z-50 w-72 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
+                  <div className="bg-gradient-to-r from-indigo-600 to-violet-600 p-5 text-white">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-12 w-12 ring-2 ring-white/30">
+                        <AvatarFallback className="bg-white/20 text-white">
+                          {initials(user?.name)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0">
+                        <div className="truncate text-sm font-bold">{user?.name ?? "User"}</div>
+                        <div className="truncate text-xs text-white/80">{user?.email ?? ""}</div>
+                        <div className="mt-1 inline-flex rounded-full bg-white/15 px-2 py-1 text-[11px] font-medium">
+                          {user?.role ?? "-"}
+                        </div>
                       </div>
                     </div>
+                  </div>
 
+                  <div className="p-2">
                     <button
                       type="button"
                       onClick={() => {
                         setUserMenuOpen(false);
                         navigate("/dashboard/settings");
                       }}
-                      className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
+                      className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:bg-slate-100"
                     >
                       <Settings className="h-4 w-4" />
                       Settings
                     </button>
-
-                    <div className="h-px bg-gray-100" />
 
                     <button
                       type="button"
@@ -299,27 +442,28 @@ export function DashboardLayout() {
                         setUserMenuOpen(false);
                         handleLogout();
                       }}
-                      className="w-full px-4 py-2 text-left text-sm hover:bg-red-50 text-red-600 flex items-center gap-2"
+                      className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50"
                     >
                       <LogOut className="h-4 w-4" />
                       Logout
                     </button>
                   </div>
-                </>
+                </div>
               )}
             </div>
           </div>
-        </div>
+        </header>
 
-        {/* Page content */}
-        <main className="flex-1">
-          <div className="py-6 px-4 sm:px-6 lg:px-8">
-            <Outlet />
+        {/* Content */}
+        <main className="min-h-[calc(100vh-5rem)] bg-slate-50">
+          <div className="px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+            <div className="min-h-[calc(100vh-9rem)] rounded-[28px] border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:p-8">
+              <Outlet />
+            </div>
           </div>
         </main>
       </div>
 
-      {/* AI Assistant */}
       <AIAssistant />
     </div>
   );

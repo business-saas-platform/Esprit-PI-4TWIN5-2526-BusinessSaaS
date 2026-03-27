@@ -19,6 +19,7 @@ const create_registration_request_dto_1 = require("./dto/create-registration-req
 const review_request_dto_1 = require("./dto/review-request.dto");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 const platform_admin_db_guard_1 = require("../../common/guards/platform-admin-db.guard");
+const registration_request_enums_1 = require("./enums/registration-request.enums");
 let RegistrationRequestsController = class RegistrationRequestsController {
     constructor(service) {
         this.service = service;
@@ -26,14 +27,29 @@ let RegistrationRequestsController = class RegistrationRequestsController {
     create(dto) {
         return this.service.create(dto);
     }
-    list(status) {
-        return this.service.list(status ?? "pending");
+    list(status, paymentStatus) {
+        return this.service.list(status, paymentStatus);
+    }
+    findOne(id) {
+        return this.service.findOne(id);
     }
     approve(id, req, dto) {
         return this.service.approve(id, { id: req.user.sub, role: req.user.role }, dto);
     }
     reject(id, req, dto) {
         return this.service.reject(id, { id: req.user.sub, role: req.user.role }, dto);
+    }
+    createMockPayment(id) {
+        return this.service.createMockPayment(id);
+    }
+    mockPaymentSuccess(id) {
+        return this.service.mockPaymentSuccess(id);
+    }
+    mockPaymentFail(id) {
+        return this.service.mockPaymentFail(id);
+    }
+    updatePaymentStatus(id, req, body) {
+        return this.service.updatePaymentStatus(id, { id: req.user.sub, role: req.user.role }, body.paymentStatus, body.paymentReference);
     }
 };
 exports.RegistrationRequestsController = RegistrationRequestsController;
@@ -48,10 +64,19 @@ __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, platform_admin_db_guard_1.PlatformAdminDbGuard),
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)("status")),
+    __param(1, (0, common_1.Query)("paymentStatus")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", void 0)
+], RegistrationRequestsController.prototype, "list", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, platform_admin_db_guard_1.PlatformAdminDbGuard),
+    (0, common_1.Get)(":id"),
+    __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], RegistrationRequestsController.prototype, "list", null);
+], RegistrationRequestsController.prototype, "findOne", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, platform_admin_db_guard_1.PlatformAdminDbGuard),
     (0, common_1.Post)(":id/approve"),
@@ -72,6 +97,38 @@ __decorate([
     __metadata("design:paramtypes", [String, Object, review_request_dto_1.RejectRequestDto]),
     __metadata("design:returntype", void 0)
 ], RegistrationRequestsController.prototype, "reject", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, platform_admin_db_guard_1.PlatformAdminDbGuard),
+    (0, common_1.Post)(":id/mock-payment/create"),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], RegistrationRequestsController.prototype, "createMockPayment", null);
+__decorate([
+    (0, common_1.Post)(":id/mock-payment/success"),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], RegistrationRequestsController.prototype, "mockPaymentSuccess", null);
+__decorate([
+    (0, common_1.Post)(":id/mock-payment/fail"),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], RegistrationRequestsController.prototype, "mockPaymentFail", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, platform_admin_db_guard_1.PlatformAdminDbGuard),
+    (0, common_1.Patch)(":id/payment-status"),
+    __param(0, (0, common_1.Param)("id")),
+    __param(1, (0, common_1.Req)()),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object, Object]),
+    __metadata("design:returntype", void 0)
+], RegistrationRequestsController.prototype, "updatePaymentStatus", null);
 exports.RegistrationRequestsController = RegistrationRequestsController = __decorate([
     (0, common_1.Controller)("registration-requests"),
     __metadata("design:paramtypes", [registration_requests_service_1.RegistrationRequestsService])

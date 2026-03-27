@@ -7,7 +7,7 @@ import { RequireCompanySetup } from "@/shared/components/RequireCompanySetup";
 
 // Front-office
 import { LandingPage } from "@/front-office/pages/LandingPage";
-
+import { MockPaymentPage } from "@/front-office/pages/MockPaymentPage";
 // Layouts
 import { AuthLayout } from "@/back-office/templates/AuthLayout";
 import { DashboardLayout } from "@/back-office/templates/DashboardLayout";
@@ -103,7 +103,7 @@ export const router = createBrowserRouter([
   ],
 },
     
-
+{ path: "/mock-payment/:id", element: <MockPaymentPage /> },
   // PLATFORM ADMIN
   {
     path: "/admin",

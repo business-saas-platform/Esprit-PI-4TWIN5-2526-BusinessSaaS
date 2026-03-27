@@ -34,7 +34,8 @@ export class UserEntity {
   @Index()
   @Column({ type: "uuid", nullable: true })
   businessId?: string;
-
+@Column({ default: "active" })
+status!: string;
   // ✅ NEW
   @Column({ type: "text", array: true, default: () => "ARRAY[]::text[]" })
   permissions!: string[];

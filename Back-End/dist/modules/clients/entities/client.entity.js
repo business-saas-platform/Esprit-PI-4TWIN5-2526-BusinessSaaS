@@ -24,35 +24,35 @@ __decorate([
     __metadata("design:type", String)
 ], ClientEntity.prototype, "businessId", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ type: "varchar", length: 120 }),
     __metadata("design:type", String)
 ], ClientEntity.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ type: "varchar", length: 150 }),
     __metadata("design:type", String)
 ], ClientEntity.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ type: "varchar", length: 30, default: "" }),
     __metadata("design:type", String)
 ], ClientEntity.prototype, "phone", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ type: "varchar", length: 180, default: "" }),
     __metadata("design:type", String)
 ], ClientEntity.prototype, "address", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ type: "varchar", length: 80, default: "" }),
     __metadata("design:type", String)
 ], ClientEntity.prototype, "city", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ type: "varchar", length: 20, default: "" }),
     __metadata("design:type", String)
 ], ClientEntity.prototype, "postalCode", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ type: "varchar", length: 80, default: "Tunisia" }),
     __metadata("design:type", String)
 ], ClientEntity.prototype, "country", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, typeorm_1.Column)({ type: "varchar", length: 30, nullable: true }),
     __metadata("design:type", String)
 ], ClientEntity.prototype, "taxId", void 0);
 __decorate([
@@ -60,7 +60,11 @@ __decorate([
     __metadata("design:type", String)
 ], ClientEntity.prototype, "type", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "enum", enum: ["active", "inactive"], default: "active" }),
+    (0, typeorm_1.Column)({
+        type: "enum",
+        enum: ["active", "inactive"],
+        default: "active",
+    }),
     __metadata("design:type", String)
 ], ClientEntity.prototype, "status", void 0);
 __decorate([
@@ -76,13 +80,21 @@ __decorate([
     __metadata("design:type", Date)
 ], ClientEntity.prototype, "createdAt", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, typeorm_1.Column)({ type: "varchar", length: 50, nullable: true }),
     __metadata("design:type", String)
 ], ClientEntity.prototype, "lastContactDate", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: "text", nullable: true }),
     __metadata("design:type", String)
 ], ClientEntity.prototype, "notes", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: "varchar", length: 120, nullable: true }),
+    __metadata("design:type", String)
+], ClientEntity.prototype, "companyName", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: "varchar", length: 120, nullable: true }),
+    __metadata("design:type", String)
+], ClientEntity.prototype, "contactPerson", void 0);
 exports.ClientEntity = ClientEntity = __decorate([
     (0, typeorm_1.Entity)("clients")
 ], ClientEntity);

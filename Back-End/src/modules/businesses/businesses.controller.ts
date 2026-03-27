@@ -8,6 +8,7 @@ import {
   Post,
   Req,
   UseGuards,
+  ForbiddenException,
 } from "@nestjs/common";
 import { BusinessesService } from "./businesses.service";
 import { CreateBusinessDto } from "./dto/create-business.dto";
@@ -20,43 +21,82 @@ import { BusinessAccessGuard } from "../../common/guards/business-access.guard";
 export class BusinessesController {
   constructor(private readonly s: BusinessesService) {}
 
-  // ✅ Owner: list only his businesses
   @Get()
   listMine(@Req() req: any) {
-    return this.s.listByOwner(req.user.id); // ✅ id not sub
+    return this.s.listByOwner(req.user.id);
   }
 
-  // ✅ Owner: create business
+  @Get("all")
+  findAll(@Req() req: any) {
+    if (req.user.role !== "platform_admin") {
+      throw new ForbiddenException("Only platform admin can access all businesses");
+    }
+    return this.s.findAll();
+  }
+
+  // ADMIN CREATE
+  @Post("admin")
+  createAsAdmin(@Req() req: any, @Body() dto: CreateBusinessDto) {
+    if (req.user.role !== "platform_admin") {
+      throw new ForbiddenException("Only platform admin can create businesses");
+    }
+    return this.s.create(dto);
+  }
+
+  // ADMIN UPDATE
+  @Patch("admin/:id")
+  updateAsAdmin(
+    @Req() req: any,
+    @Param("id") id: string,
+    @Body() dto: UpdateBusinessDto
+  ) {
+    if (req.user.role !== "platform_admin") {
+      throw new ForbiddenException("Only platform admin can update businesses");
+    }
+    return this.s.update(id, dto);
+  }
+
+  // ADMIN DELETE ONE
+  @Delete("admin/:id")
+  removeAsAdmin(@Req() req: any, @Param("id") id: string) {
+    if (req.user.role !== "platform_admin") {
+      throw new ForbiddenException("Only platform admin can delete businesses");
+    }
+    return this.s.remove(id);
+  }
+
+  // ADMIN DELETE ALL
+  @Delete("admin/all")
+  removeAllAsAdmin(@Req() req: any) {
+    if (req.user.role !== "platform_admin") {
+      throw new ForbiddenException("Only platform admin can delete all businesses");
+    }
+    return this.s.removeAll();
+  }
+
   @Post()
   create(@Req() req: any, @Body() dto: CreateBusinessDto) {
     return this.s.createForOwner(req.user.id, dto);
   }
 
-  // ✅ Owner: complete profile (owner only)
   @Patch(":id/profile")
   completeProfile(@Param("id") id: string, @Req() req: any, @Body() dto: any) {
     return this.s.completeProfile(id, req.user.id, dto);
   }
 
-  // ✅ Get business by id for ANY user that has access
-  // Team/accountant -> must send x-business-id == :id (frontend already does)
+  @UseGuards(BusinessAccessGuard)
+  @Get("current/one")
+  current(@Req() req: any) {
+    return this.s.getById(req.businessId);
+  }
+
   @UseGuards(BusinessAccessGuard)
   @Get(":id")
   getById(@Req() req: any, @Param("id") id: string) {
-    // guard already validated access; enforce same business
     req.businessId = id;
     return this.s.getById(req.businessId);
   }
 
-  // ✅ Optional: "current business" endpoint (nice for non-owner)
-  @UseGuards(BusinessAccessGuard)
-  @Get("current/one")
-  current(@Req() req: any) {
-    // uses x-business-id
-    return this.s.getById(req.businessId);
-  }
-
-  // ✅ Owner update/delete stay owner-only
   @Patch(":id")
   update(@Req() req: any, @Param("id") id: string, @Body() dto: UpdateBusinessDto) {
     return this.s.updateForOwner(req.user.id, id, dto);

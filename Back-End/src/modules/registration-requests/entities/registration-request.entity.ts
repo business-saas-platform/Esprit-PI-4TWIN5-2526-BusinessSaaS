@@ -1,6 +1,16 @@
-import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
-
-export type RegistrationStatus = "pending" | "approved" | "rejected";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import {
+  PaymentMethod,
+  PaymentStatus,
+  RegistrationStatus,
+  SelectedPlan,
+} from "../enums/registration-request.enums";
 
 @Entity("registration_requests")
 export class RegistrationRequestEntity {
@@ -9,29 +19,72 @@ export class RegistrationRequestEntity {
 
   // owner info
   @Index()
-  @Column()
+  @Column({ type: "varchar", length: 150 })
   ownerEmail!: string;
 
-  @Column()
+  @Column({ type: "varchar", length: 150 })
   ownerName!: string;
 
-  // company basic info
-  @Column()
+  // company info
+  @Column({ type: "varchar", length: 150 })
   companyName!: string;
 
-  @Column()
-  companyCategory!: string; // or industry
+  @Column({ type: "varchar", length: 100 })
+  companyCategory!: string;
 
-  @Column({ nullable: true })
-  companyPhone?: string;
+  @Column({ type: "varchar", length: 30, nullable: true })
+  companyPhone?: string | null;
 
-  @Column({ nullable: true })
-  companyAddress?: string;
+  @Column({ type: "varchar", length: 255, nullable: true })
+  companyAddress?: string | null;
 
-  @Column({ nullable: true })
-  companyTaxId?: string; // matricule
+  @Column({ type: "varchar", length: 100, nullable: true })
+  companyTaxId?: string | null;
 
-  @Column({ type: "enum", enum: ["pending","approved","rejected"], default: "pending" })
+  @Column({ type: "varchar", length: 50, nullable: true })
+  teamSize?: string | null;
+
+  @Column({ type: "text", nullable: true })
+  message?: string | null;
+
+  @Column({
+    type: "enum",
+    enum: SelectedPlan,
+    nullable: true,
+  })
+  selectedPlan?: SelectedPlan | null;
+
+  @Column({
+    type: "enum",
+    enum: PaymentMethod,
+    default: PaymentMethod.MANUAL,
+  })
+  paymentMethod!: PaymentMethod;
+
+  @Column({
+    type: "enum",
+    enum: PaymentStatus,
+    default: PaymentStatus.UNPAID,
+  })
+  paymentStatus!: PaymentStatus;
+
+  @Column({ type: "varchar", length: 50, nullable: true })
+  paymentProvider?: string | null;
+
+  @Column({ type: "varchar", length: 120, nullable: true })
+  paymentReference?: string | null;
+
+  @Column({ type: "text", nullable: true })
+  paymentUrl?: string | null;
+
+  @Column({ type: "timestamptz", nullable: true })
+  paidAt?: Date | null;
+
+  @Column({
+    type: "enum",
+    enum: RegistrationStatus,
+    default: RegistrationStatus.PENDING,
+  })
   status!: RegistrationStatus;
 
   @Column({ type: "text", nullable: true })
@@ -43,6 +96,6 @@ export class RegistrationRequestEntity {
   @Column({ type: "timestamptz", nullable: true })
   reviewedAt?: Date | null;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 }

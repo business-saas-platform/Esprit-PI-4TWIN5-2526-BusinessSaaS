@@ -24,7 +24,14 @@ __decorate([
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "name", void 0);
 __decorate([
-    (0, class_validator_1.IsIn)(["platform_admin", "business_owner", "business_admin", "accountant", "team_member", "client"]),
+    (0, class_validator_1.IsIn)([
+        "platform_admin",
+        "business_owner",
+        "business_admin",
+        "accountant",
+        "team_member",
+        "client",
+    ]),
     __metadata("design:type", Object)
 ], CreateUserDto.prototype, "role", void 0);
 __decorate([
@@ -37,4 +44,9 @@ __decorate([
     (0, class_validator_1.IsUUID)(),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "businessId", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "status", void 0);
 //# sourceMappingURL=create-user.dto.js.map

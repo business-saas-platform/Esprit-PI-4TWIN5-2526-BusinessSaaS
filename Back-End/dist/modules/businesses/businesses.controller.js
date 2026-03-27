@@ -26,17 +26,47 @@ let BusinessesController = class BusinessesController {
     listMine(req) {
         return this.s.listByOwner(req.user.id);
     }
+    findAll(req) {
+        if (req.user.role !== "platform_admin") {
+            throw new common_1.ForbiddenException("Only platform admin can access all businesses");
+        }
+        return this.s.findAll();
+    }
+    createAsAdmin(req, dto) {
+        if (req.user.role !== "platform_admin") {
+            throw new common_1.ForbiddenException("Only platform admin can create businesses");
+        }
+        return this.s.create(dto);
+    }
+    updateAsAdmin(req, id, dto) {
+        if (req.user.role !== "platform_admin") {
+            throw new common_1.ForbiddenException("Only platform admin can update businesses");
+        }
+        return this.s.update(id, dto);
+    }
+    removeAsAdmin(req, id) {
+        if (req.user.role !== "platform_admin") {
+            throw new common_1.ForbiddenException("Only platform admin can delete businesses");
+        }
+        return this.s.remove(id);
+    }
+    removeAllAsAdmin(req) {
+        if (req.user.role !== "platform_admin") {
+            throw new common_1.ForbiddenException("Only platform admin can delete all businesses");
+        }
+        return this.s.removeAll();
+    }
     create(req, dto) {
         return this.s.createForOwner(req.user.id, dto);
     }
     completeProfile(id, req, dto) {
         return this.s.completeProfile(id, req.user.id, dto);
     }
-    getById(req, id) {
-        req.businessId = id;
+    current(req) {
         return this.s.getById(req.businessId);
     }
-    current(req) {
+    getById(req, id) {
+        req.businessId = id;
         return this.s.getById(req.businessId);
     }
     update(req, id, dto) {
@@ -54,6 +84,45 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], BusinessesController.prototype, "listMine", null);
+__decorate([
+    (0, common_1.Get)("all"),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], BusinessesController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Post)("admin"),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, create_business_dto_1.CreateBusinessDto]),
+    __metadata("design:returntype", void 0)
+], BusinessesController.prototype, "createAsAdmin", null);
+__decorate([
+    (0, common_1.Patch)("admin/:id"),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Param)("id")),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String, update_business_dto_1.UpdateBusinessDto]),
+    __metadata("design:returntype", void 0)
+], BusinessesController.prototype, "updateAsAdmin", null);
+__decorate([
+    (0, common_1.Delete)("admin/:id"),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", void 0)
+], BusinessesController.prototype, "removeAsAdmin", null);
+__decorate([
+    (0, common_1.Delete)("admin/all"),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], BusinessesController.prototype, "removeAllAsAdmin", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Req)()),
@@ -73,6 +142,14 @@ __decorate([
 ], BusinessesController.prototype, "completeProfile", null);
 __decorate([
     (0, common_1.UseGuards)(business_access_guard_1.BusinessAccessGuard),
+    (0, common_1.Get)("current/one"),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], BusinessesController.prototype, "current", null);
+__decorate([
+    (0, common_1.UseGuards)(business_access_guard_1.BusinessAccessGuard),
     (0, common_1.Get)(":id"),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Param)("id")),
@@ -80,14 +157,6 @@ __decorate([
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", void 0)
 ], BusinessesController.prototype, "getById", null);
-__decorate([
-    (0, common_1.UseGuards)(business_access_guard_1.BusinessAccessGuard),
-    (0, common_1.Get)("current/one"),
-    __param(0, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], BusinessesController.prototype, "current", null);
 __decorate([
     (0, common_1.Patch)(":id"),
     __param(0, (0, common_1.Req)()),

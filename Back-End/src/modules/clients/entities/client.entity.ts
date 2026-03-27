@@ -1,4 +1,10 @@
-import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { ClientStatus, ClientType } from "../../../common/enums";
 
 @Entity("clients")
@@ -10,27 +16,58 @@ export class ClientEntity {
   @Column({ type: "uuid" })
   businessId!: string;
 
-  @Column() name!: string;
-  @Column() email!: string;
-  @Column() phone!: string;
-  @Column() address!: string;
-  @Column() city!: string;
-  @Column() postalCode!: string;
-  @Column() country!: string;
+  @Column({ type: "varchar", length: 120 })
+  name!: string;
 
-  @Column({ nullable: true }) taxId?: string;
+  @Column({ type: "varchar", length: 150 })
+  email!: string;
 
-  @Column({ type: "enum", enum: ["individual","company"] })
+  @Column({ type: "varchar", length: 30, default: "" })
+  phone!: string;
+
+  @Column({ type: "varchar", length: 180, default: "" })
+  address!: string;
+
+  @Column({ type: "varchar", length: 80, default: "" })
+  city!: string;
+
+  @Column({ type: "varchar", length: 20, default: "" })
+  postalCode!: string;
+
+  @Column({ type: "varchar", length: 80, default: "Tunisia" })
+  country!: string;
+
+  @Column({ type: "varchar", length: 30, nullable: true })
+  taxId?: string;
+
+  @Column({ type: "enum", enum: ["individual", "company"] })
   type!: ClientType;
 
-  @Column({ type: "enum", enum: ["active","inactive"], default: "active" })
+  @Column({
+    type: "enum",
+    enum: ["active", "inactive"],
+    default: "active",
+  })
   status!: ClientStatus;
 
-  @Column({ type: "double precision", default: 0 }) totalRevenue!: number;
-  @Column({ type: "double precision", default: 0 }) outstandingBalance!: number;
+  @Column({ type: "double precision", default: 0 })
+  totalRevenue!: number;
 
-  @CreateDateColumn() createdAt!: Date;
+  @Column({ type: "double precision", default: 0 })
+  outstandingBalance!: number;
 
-  @Column({ nullable: true }) lastContactDate?: string;
-  @Column({ type: "text", nullable: true }) notes?: string;
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @Column({ type: "varchar", length: 50, nullable: true })
+  lastContactDate?: string;
+
+  @Column({ type: "text", nullable: true })
+  notes?: string;
+
+  @Column({ type: "varchar", length: 120, nullable: true })
+  companyName?: string;
+
+  @Column({ type: "varchar", length: 120, nullable: true })
+  contactPerson?: string;
 }
