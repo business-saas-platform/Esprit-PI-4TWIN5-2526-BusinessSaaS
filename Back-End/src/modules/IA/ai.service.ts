@@ -1,3 +1,7 @@
+//Ton système fait juste ça :
+.0
+//Observer le comportement d’un client → donner un score → dire s’il est risqué ou non
+
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -46,6 +50,7 @@ export class AiService {
     // 🎯 MACHINE LEARNING SCORE (TensorFlow)
     let score = await this.aiModel.predictScore(unpaidRatio, lateRatio, debtRatio);
     score = Math.max(0, Math.min(1, score)); // clamp 0 → 1 just in case
+    score = Number(score.toFixed(2)); // Round BEFORE classification to align UX
 
     // 🎯 CLASSIFICATION
     let risk: "LOW" | "MEDIUM" | "HIGH";
@@ -54,19 +59,31 @@ export class AiService {
       risk = "HIGH";
     } else if (score >= 0.4) {
       risk = "MEDIUM";
-    } else {
+    } else {  
       risk = "LOW";
     }
 
     // 🎯 EXPLANATION (important for prof 🔥)
     let reason = "Client is reliable";
 
-    if (lateRatio > 0.5) {
-      reason = "Frequent late payments";
-    } else if (debtRatio > 0.5) {
-      reason = "High unpaid balance compared to revenue";
-    } else if (unpaidRatio > 0.5) {
-      reason = "Many unpaid invoices";
+    if (risk === "HIGH" || risk === "MEDIUM") {
+      if (lateRatio > 0.5) {
+        reason = "Frequent late payments";
+      } else if (debtRatio > 0.5) {
+        reason = "High unpaid balance compared to revenue";
+      } else if (unpaidRatio > 0.5) {
+        reason = "Many unpaid invoices";
+      } else {
+        reason = "Payment behavior needs attention";
+      }
+    } else {
+      // 🟢 IF LOW RISK
+      if (unpaidRatio > 0.5) {
+        // Just pending invoices without being overdue or huge debt
+        reason = "Reliable client, but has several pending invoices";
+      } else {
+        reason = "Client is reliable with a solid payment history";
+      }
     }
 
     return {

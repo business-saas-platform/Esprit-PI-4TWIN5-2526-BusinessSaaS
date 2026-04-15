@@ -13,6 +13,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AiService = void 0;
+.0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
@@ -40,6 +41,7 @@ let AiService = class AiService {
         const debtRatio = revenue > 0 ? outstanding / revenue : 0;
         let score = await this.aiModel.predictScore(unpaidRatio, lateRatio, debtRatio);
         score = Math.max(0, Math.min(1, score));
+        score = Number(score.toFixed(2));
         let risk;
         if (score >= 0.7) {
             risk = "HIGH";
@@ -51,14 +53,27 @@ let AiService = class AiService {
             risk = "LOW";
         }
         let reason = "Client is reliable";
-        if (lateRatio > 0.5) {
-            reason = "Frequent late payments";
+        if (risk === "HIGH" || risk === "MEDIUM") {
+            if (lateRatio > 0.5) {
+                reason = "Frequent late payments";
+            }
+            else if (debtRatio > 0.5) {
+                reason = "High unpaid balance compared to revenue";
+            }
+            else if (unpaidRatio > 0.5) {
+                reason = "Many unpaid invoices";
+            }
+            else {
+                reason = "Payment behavior needs attention";
+            }
         }
-        else if (debtRatio > 0.5) {
-            reason = "High unpaid balance compared to revenue";
-        }
-        else if (unpaidRatio > 0.5) {
-            reason = "Many unpaid invoices";
+        else {
+            if (unpaidRatio > 0.5) {
+                reason = "Reliable client, but has several pending invoices";
+            }
+            else {
+                reason = "Client is reliable with a solid payment history";
+            }
         }
         return {
             clientId,
