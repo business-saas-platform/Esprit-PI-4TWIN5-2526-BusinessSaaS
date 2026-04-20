@@ -28,7 +28,11 @@ spec:
               value: "0000"
             - name: DB_NAME
               value: saas_db
-
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: JWT_SECRET
 
 
 
