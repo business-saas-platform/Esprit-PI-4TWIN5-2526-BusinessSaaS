@@ -1,5 +1,4 @@
-# ===== BUILD STAGE =====
-FROM node:18-alpine AS builder
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -8,22 +7,6 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
+EXPOSE 5173
 
-
-# ===== PRODUCTION STAGE =====
-FROM node:18-alpine
-
-WORKDIR /app
-
-COPY package*.json ./
-
-# uniquement dépendances prod
-RUN npm install --omit=dev
-
-# copier build
-COPY --from=builder /app/dist ./dist
-
-EXPOSE 3000
-
-CMD ["node", "dist/main"]
+CMD ["npm", "run", "dev", "--", "--host"]
