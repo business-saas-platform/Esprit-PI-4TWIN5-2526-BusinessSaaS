@@ -1,0 +1,17 @@
+# Front-End
+Front-End/node_modules/
+Front-End/dist/
+Front-End/.vite/
+Front-End/__pycache__/
+Front-End/**/*.tsbuildinfo
+Front-End/.env
+Front-End/.env.*
+
+# Back-End
+Back-End/node_modules/
+Back-End/dist/
+Back-End/.vite/
+Back-End/__pycache__/
+Back-End/**/*.tsbuildinfo
+Back-End/.env
+Back-End/.env.*
