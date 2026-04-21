@@ -7,6 +7,8 @@ import { InvoiceItemEntity } from "../modules/invoices/entities/invoice-item.ent
 import { ExpenseEntity } from "../modules/expenses/entities/expense.entity";
 import { TeamMemberEntity } from "../modules/team-members/entities/team-member.entity";
 import { AIInsightEntity } from "../modules/ai-insights/entities/ai-insight.entity";
+import { SupportTicketEntity } from "../modules/support-chat/entities/support-ticket.entity";
+import { SupportMessageEntity } from "../modules/support-chat/entities/support-message.entity";
 
 export const typeOrmConfig = (): TypeOrmModuleOptions => ({
   type: "postgres",
@@ -24,6 +26,8 @@ export const typeOrmConfig = (): TypeOrmModuleOptions => ({
     ExpenseEntity,
     TeamMemberEntity,
     AIInsightEntity,
+    SupportTicketEntity,
+    SupportMessageEntity,
   ],
   autoLoadEntities: true,
 

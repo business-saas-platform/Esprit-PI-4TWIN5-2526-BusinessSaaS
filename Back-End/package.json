@@ -25,6 +25,7 @@
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "face-api.js": "^0.22.2",
     "multer": "^2.0.2",
     "nodemailer": "^8.0.1",
     "passport": "^0.7.0",

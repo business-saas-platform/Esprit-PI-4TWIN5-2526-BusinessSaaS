@@ -12,13 +12,14 @@ import { JwtStrategy } from "./jwt.strategy";
 import { UserEntity } from "../users/entities/user.entity";
 import { TeamInvitationEntity } from "../team-members/entities/team-invitation.entity";
 import { TeamMemberEntity } from "../team-members/entities/team-member.entity";
+import { BusinessEntity } from "../businesses/entities/business.entity";
 
 import { JwtAuthGuard } from "./jwt-auth.guard";
 import { OwnerGuard } from "./owner.guard";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity, TeamInvitationEntity, TeamMemberEntity]),
+    TypeOrmModule.forFeature([UserEntity, TeamInvitationEntity, TeamMemberEntity, BusinessEntity]),
     PassportModule.register({ defaultStrategy: "jwt" }),
     JwtModule.registerAsync({
       imports: [ConfigModule],

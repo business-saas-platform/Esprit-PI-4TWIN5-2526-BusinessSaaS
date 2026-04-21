@@ -6,7 +6,7 @@ import {
   BadRequestException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeepPartial, Repository } from "typeorm";
+import { DeepPartial, Repository, IsNull, Not } from "typeorm";
 import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
 
@@ -16,6 +16,7 @@ import { LoginDto } from "./dto/login.dto";
 import { TeamInvitationEntity } from "../team-members/entities/team-invitation.entity";
 import { AcceptInviteDto } from "./dto/accept-invite.dto";
 import { TeamMemberEntity } from "../team-members/entities/team-member.entity";
+import { BusinessEntity } from "../businesses/entities/business.entity";
 
 @Injectable()
 export class AuthService {
@@ -28,6 +29,9 @@ export class AuthService {
 
     @InjectRepository(UserEntity)
     private readonly users: Repository<UserEntity>,
+
+    @InjectRepository(BusinessEntity)
+    private readonly businesses: Repository<BusinessEntity>,
 
     private readonly jwt: JwtService
   ) {}
@@ -326,11 +330,24 @@ export class AuthService {
   // INTERNAL HELPERS
   // =====================================================
   private async sign(user: UserEntity) {
+    let businessId = user.businessId;
+
+    // ✅ If no businessId but user is business_owner, find their business
+    if (!businessId && user.role === "business_owner") {
+      const business = await this.businesses.findOne({
+        where: { ownerId: user.id },
+      });
+      businessId = business?.id || undefined;
+      console.log(
+        `[Auth] User ${user.id} is business_owner, found businessId: ${businessId}`
+      );
+    }
+
     return this.jwt.signAsync({
       sub: user.id,
       email: user.email,
       role: user.role,
-      businessId: user.businessId,
+      businessId: businessId,
       permissions: user.permissions ?? [], // ✅ in JWT
     });
   }
@@ -374,5 +391,85 @@ export class AuthService {
 
   return { ok: true, message: "Password changed successfully." };
 }
+
+  // =====================================================
+  // FACE RECOGNITION
+  // =====================================================
+  async saveFaceDescriptor(userId: string, descriptor: string | null) {
+    if (descriptor === null) {
+      // Delete face descriptor
+      await this.users.update(userId, { 
+        faceDescriptor: null as any
+      });
+    } else {
+      // Save face descriptor
+      await this.users.update(userId, { 
+        faceDescriptor: descriptor 
+      });
+    }
+  }
+
+  async loginWithFace(inputDescriptor: number[]) {
+    // Get all users who have face registered
+    const users = await this.users.find({
+      where: { 
+        faceDescriptor: Not(IsNull()),
+      },
+    });
+
+    // All users from this query have faceDescriptor
+    const usersWithFace = users;
+
+    if (usersWithFace.length === 0) {
+      throw new UnauthorizedException(
+        "Aucun utilisateur avec Face ID configuré"
+      );
+    }
+
+    let bestMatch = null;
+    let bestDistance = 1.0;
+
+    for (const user of usersWithFace) {
+      const stored = JSON.parse(user.faceDescriptor!) as number[];
+      
+      // Calculate Euclidean distance between descriptors
+      const distance = Math.sqrt(
+        inputDescriptor.reduce((sum, val, i) => 
+          sum + Math.pow(val - stored[i], 2), 0)
+      );
+
+      console.log(`[Face Match] User: ${user.email}, Distance: ${distance.toFixed(4)}`);
+
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        bestMatch = user;
+      }
+    }
+
+    // 0.6 is the standard threshold for face-api.js
+    if (bestMatch && bestDistance < 0.6) {
+      console.log(`[Face Login Success] User: ${bestMatch.email}, Distance: ${bestDistance.toFixed(4)}`);
+      
+      // Reset login attempts
+      bestMatch.loginAttempts = 0;
+      bestMatch.lockedUntil = null;
+      await this.users.save(bestMatch);
+
+      // Generate JWT token same as normal login
+      const token = await this.sign(bestMatch);
+
+      return {
+        access_token: token,
+        user: this.toPublic(bestMatch),
+        mustChangePassword: !!bestMatch.mustChangePassword,
+      };
+    }
+
+    console.log(`[Face Login Failed] Best distance: ${bestDistance.toFixed(4)} (threshold: 0.6)`);
+    
+    throw new UnauthorizedException(
+      "Visage non reconnu. Veuillez réessayer."
+    );
+  }
 
 }

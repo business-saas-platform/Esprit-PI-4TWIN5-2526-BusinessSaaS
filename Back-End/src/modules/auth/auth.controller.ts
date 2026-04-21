@@ -1,5 +1,5 @@
 // src/modules/auth/auth.controller.ts
-import { Body, Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, Res, UseGuards, Delete } from "@nestjs/common";
 import { Response } from "express";
 import { AuthGuard } from "@nestjs/passport";
 import { ConfigService } from "@nestjs/config";
@@ -90,4 +90,33 @@ changePasswordFirst(@Req() req: any, @Body() dto: ChangePasswordDto) {
  changePassword(@Req() req: any, @Body() dto: { currentPassword: string; newPassword: string }) {
    return this.authService.changePassword(req.user.sub, dto.currentPassword, dto.newPassword);
  }
+
+  // =========================
+  // FACE RECOGNITION
+  // =========================
+  @UseGuards(JwtAuthGuard)
+  @Post("register-face")
+  async registerFace(
+    @Body() body: { descriptor: number[] },
+    @Req() req: any
+  ) {
+    const userId = req.user.sub;
+    await this.authService.saveFaceDescriptor(
+      userId,
+      JSON.stringify(body.descriptor)
+    );
+    return { message: "Face ID enregistré avec succès" };
+  }
+
+  @Post("face-login")
+  async faceLogin(@Body() body: { descriptor: number[] }) {
+    return this.authService.loginWithFace(body.descriptor);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete("remove-face")
+  async removeFace(@Req() req: any) {
+    await this.authService.saveFaceDescriptor(req.user.sub, null);
+    return { message: "Face ID supprimé" };
+  }
 }

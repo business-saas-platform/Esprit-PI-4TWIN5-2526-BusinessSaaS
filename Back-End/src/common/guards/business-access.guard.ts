@@ -22,10 +22,12 @@ export class BusinessAccessGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const req = context.switchToHttp().getRequest<TenantRequest & { user?: any }>();
     const user = req.user;
-    const businessId = req.businessId;
+    
+    // Get businessId from header, middleware, or JWT
+    const businessId = req.businessId || (user && user.businessId);
 
     if (!user) throw new ForbiddenException("Not authenticated");
-    if (!businessId) throw new ForbiddenException("Missing x-business-id");
+    if (!businessId) throw new ForbiddenException("Missing business context");
 
     // Platform admin => full access
     if (user.role === "platform_admin") return true;

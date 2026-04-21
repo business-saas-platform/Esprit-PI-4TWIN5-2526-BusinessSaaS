@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/app/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
 import { Input } from "@/app/components/ui/input";
@@ -45,6 +46,7 @@ import {
   CheckCircle2,
   AlertCircle,
   Lock,
+  Brain,
 } from "lucide-react";
 import { roleLabels } from "@/app/lib/mockData";
 import type { TeamMember } from "@/shared/lib/mockData";
@@ -180,6 +182,7 @@ type InviteErrors = {
 };
 
 export function Team() {
+  const navigate = useNavigate();
   const { currentBusiness } = useBusinessContext();
   const { user } = useAuth();
 
@@ -458,24 +461,34 @@ export function Team() {
           </p>
         </div>
 
-        <Dialog
-          open={isDialogOpen}
-          onOpenChange={(open) => {
-            setIsDialogOpen(open);
-            if (!open) resetInviteForm();
-          }}
-        >
-          <DialogTrigger asChild>
-            <Button
-              disabled={!isOwner || !currentBusiness?.id}
-              className="shadow-sm"
-            >
-              <UserPlus className="mr-2 h-4 w-4" />
-              Invite Member
-            </Button>
-          </DialogTrigger>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Button
+            onClick={() => navigate('/dashboard/team/ai-insights')}
+            variant="outline"
+            className="shadow-sm"
+          >
+            <Brain className="mr-2 h-4 w-4" />
+            AI Insights
+          </Button>
 
-          <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => {
+              setIsDialogOpen(open);
+              if (!open) resetInviteForm();
+            }}
+          >
+            <DialogTrigger asChild>
+              <Button
+                disabled={!isOwner || !currentBusiness?.id}
+                className="shadow-sm"
+              >
+                <UserPlus className="mr-2 h-4 w-4" />
+                Invite Member
+              </Button>
+            </DialogTrigger>
+
+            <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2 text-xl">
                 <div className="rounded-lg bg-primary/10 p-2 text-primary">
@@ -710,8 +723,9 @@ export function Team() {
                 )}
               </Button>
             </DialogFooter>
-          </DialogContent>
-        </Dialog>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -908,5 +922,5 @@ export function Team() {
         </CardContent>
       </Card>
     </div>
-  );
+  );      
 }

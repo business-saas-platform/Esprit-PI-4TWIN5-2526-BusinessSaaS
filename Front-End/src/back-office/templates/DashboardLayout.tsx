@@ -1,6 +1,6 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 
-import { MessageSquare } from 'lucide-react'; // add to existing lucide import
+import { MessageSquare, HelpCircle } from 'lucide-react'; // add to existing lucide import
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   LayoutDashboard,
@@ -40,6 +40,7 @@ const navigation: NavItem[] = [
 
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "AI Insights", href: "/dashboard/ai-insights", icon: Sparkles, perm: "ai.read", badge: "AI" },
+  { name: "Support", href: "/dashboard/support", icon: HelpCircle, perm: "support.read" },
   { name: "Invoices", href: "/dashboard/invoices", icon: FileText, perm: "invoices.read" },
   { name: "Expenses", href: "/dashboard/expenses", icon: Receipt, perm: "expenses.read" },
   { name: "Clients", href: "/dashboard/clients", icon: Users, perm: "clients.read" },

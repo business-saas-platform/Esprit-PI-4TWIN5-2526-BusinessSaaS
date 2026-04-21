@@ -1,112 +1,89 @@
 import React, { useEffect, useRef, useState } from "react";
-import { io, Socket } from "socket.io-client";
+import { api } from "@/shared/lib/apiClient";
 
-type Message = {
+type ChatMessage = {
   id: string;
-  channelId: string;
-  senderId: string;
-  senderName: string;
+  sender: "user" | "ai" | "admin";
   content: string;
   createdAt: string;
+  isAIResponse?: boolean;
 };
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const OLLAMA_URL = "http://localhost:11434";
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
-  const [channelId, setChannelId] = useState<string | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
-  const [errorStatus, setErrorStatus] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState<"idle" | "connecting" | "connected" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [escalated, setEscalated] = useState(false);
   
-  const socketRef = useRef<Socket | null>(null);
   const messagesRef = useRef<HTMLDivElement | null>(null);
 
-  // Détection dynamique de l'URL API
-  const API_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:3000';
-  const SOCKET_URL = API_URL.replace('/api', '');
-
+  // Load messages when widget opens
   useEffect(() => {
     if (!open) return;
 
     const token = localStorage.getItem("access_token");
     if (!token) {
-      setErrorStatus("Token manquant");
+      setStatus("error");
+      setErrorMsg("Token manquant");
       return;
     }
 
-    let mounted = true;
+    loadMessages();
+  }, [open]);
 
-    const initChat = async () => {
-      try {
-        // 1. Appel au backend pour avoir le canal "reclamation"
-        const res = await fetch(`${API_URL}/communication/reclamation`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+  async function loadMessages() {
+    try {
+      setStatus("connecting");
+      console.log("[ChatWidget] Loading tickets...");
+
+      const tickets = await api<any[]>(`/support-chat/tickets`);
+      console.log("[ChatWidget] Loaded tickets:", tickets);
+
+      if (tickets.length === 0) {
+        setStatus("connected");
+        // Start with welcome message
+        setMessages([
+          {
+            id: `welcome-${Date.now()}`,
+            sender: "ai",
+            content:
+              "Bonjour ! 👋 Je suis ARIA, votre assistant business expert. Comment puis-je vous aider aujourd'hui ?\n\nJe peux vous aider avec:\n• 📈 Plans marketing personnalisés\n• 💼 Conseils business stratégiques\n• 📊 Analyses financières\n• 🎯 Recommandations d'actions\n\nOu demandez-moi à parler à un humain!",
+            createdAt: new Date().toISOString(),
           },
-        });
-
-        if (!res.ok) {
-          const err = await res.text();
-          throw new Error(`Erreur ${res.status}`);
-        }
-        
-        const ch = await res.json();
-        if (!mounted || !ch?.id) return;
-        
-        setChannelId(ch.id);
-        setErrorStatus(null);
-
-        // 2. Connexion Socket.io
-        const socket = io(`${SOCKET_URL}/communication`, { 
-          auth: { token }, 
-          transports: ['websocket'] 
-        });
-        
-        socketRef.current = socket;
-
-        socket.on("connect", () => {
-          setIsConnected(true);
-          // On rejoint la room NestJS
-          socket.emit("channel:join", { channelId: ch.id });
-          // Notification admin
-          socket.emit("reclamation:notify", { channelId: ch.id });
-        });
-
-        socket.on("disconnect", () => setIsConnected(false));
-
-        // Historique
-        socket.on("channel:history", (history: Message[]) => {
-          setMessages(history || []);
-          setTimeout(scrollBottom, 100);
-        });
-
-        // Nouveau message
-        socket.on("message:new", (m: Message) => {
-          setMessages((prev) => {
-            const exists = prev.some(msg => msg.id === m.id);
-            return exists ? prev : [...prev, m];
-          });
-          setTimeout(scrollBottom, 50);
-        });
-
-      } catch (e: any) {
-        console.error("ChatWidget Error:", e.message);
-        setErrorStatus("Indisponible (404/Connexion)");
+        ]);
+        return;
       }
-    };
 
-    initChat();
+      // Use the most recent ticket
+      const latestTicket = tickets[0];
+      setMessages(latestTicket.messages || []);
+      setEscalated(latestTicket.escalatedToAdmin || false);
+      setStatus("connected");
+      setErrorMsg(null);
 
-    return () => {
-      mounted = false;
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
-      }
-    };
-  }, [open, API_URL]);
+      setTimeout(scrollBottom, 100);
+    } catch (e: any) {
+      console.error("[ChatWidget] Error loading messages:", e.message);
+      // Start fresh conversation on error instead of showing error
+      setStatus("connected");
+      setMessages([
+        {
+          id: `welcome-${Date.now()}`,
+          sender: "ai",
+          content:
+            "Bonjour ! 👋 Je suis ARIA, votre assistant business expert. Comment puis-je vous aider aujourd'hui ?\n\nJe peux vous aider avec:\n• 📈 Plans marketing personnalisés\n• 💼 Conseils business stratégiques\n• 📊 Analyses financières\n• 🎯 Recommandations d'actions\n\nOu demandez-moi à parler à un humain!",
+          createdAt: new Date().toISOString(),
+        },
+      ]);
+      setErrorMsg(null);
+    }
+  }
 
   function scrollBottom() {
     if (messagesRef.current) {
@@ -114,31 +91,134 @@ export default function ChatWidget() {
     }
   }
 
-  function sendMessage() {
-    const s = socketRef.current;
-    if (!s || !isConnected || !channelId || !input.trim()) return;
+  async function sendMessage() {
+    if (!input.trim() || isLoading || status !== "connected") return;
 
-    const content = input.trim();
+    const userMessage = input.trim();
+    setInput("");
+    setIsLoading(true);
 
-    // UI Optimiste
-    const tmpMsg: Message = {
-      id: `tmp-${Date.now()}`,
-      channelId,
-      senderId: 'me',
-      senderName: 'Vous',
-      content: content,
-      createdAt: new Date().toISOString(),
-    };
-    
-    setMessages((prev) => [...prev, tmpMsg]);
-    setInput(""); 
+    try {
+      // 🚨 Check for ESCALATION KEYWORDS FIRST
+      const ESCALATION_TRIGGERS = [
+        "contacter l'admin",
+        "je veux l'admin",
+        "parler à un humain",
+        "parler à quelqu'un",
+        "agent humain",
+        "support humain",
+        "je veux parler",
+        "un être humain",
+        "responsable",
+        "escalader",
+        "transmettre",
+        "humain",
+      ];
 
-    // Envoi réel vers le Gateway NestJS
-    s.emit("message:send", { channelId, content });
+      const needsEscalation = ESCALATION_TRIGGERS.some((t) =>
+        userMessage.toLowerCase().includes(t)
+      );
+
+      // Add user message to UI
+      const userMsg: ChatMessage = {
+        id: `user-${Date.now()}`,
+        sender: "user",
+        content: userMessage,
+        createdAt: new Date().toISOString(),
+      };
+      setMessages((prev) => [...prev, userMsg]);
+      scrollBottom();
+
+      if (needsEscalation) {
+        // 👤 ESCALATE TO ADMIN
+        console.log("[ChatWidget] Escalation triggered");
+        const escalationMsg: ChatMessage = {
+          id: `escalation-${Date.now()}`,
+          sender: "ai",
+          content: `👤 Transfert vers un administrateur en cours...
+
+✅ Votre conversation a été transmise à notre équipe.
+Un administrateur humain vous répondra directement très bientôt.
+
+📋 Résumé transmis:
+- ${messages.length + 1} messages
+- Date: ${new Date().toLocaleDateString("fr-FR")}
+
+En attendant, y a-t-il autre chose que je peux faire ?`,
+          createdAt: new Date().toISOString(),
+        };
+        setMessages((prev) => [...prev, escalationMsg]);
+        setEscalated(true);
+
+        // Send to backend
+        try {
+          const result = await api(`/support-chat/escalate`, {
+            method: "POST",
+            body: JSON.stringify({
+              message: userMessage,
+              conversationHistory: [...messages, userMsg],
+            }),
+          });
+          console.log("[ChatWidget] Escalation result:", result);
+        } catch (err) {
+          console.error("[ChatWidget] Escalation API error:", err);
+        }
+
+        scrollBottom();
+        return;
+      }
+
+      // 🤖 TRY AI RESPONSE (Ollama)
+      console.log("[ChatWidget] Sending message to AI");
+      const result = await api(`/support-chat/messages`, {
+        method: "POST",
+        body: JSON.stringify({
+          content: userMessage,
+          title: "Support Chat",
+        }),
+      });
+
+      console.log("[ChatWidget] AI Response:", result);
+
+      if (result.escalated) {
+        setEscalated(true);
+        const escalationMsg: ChatMessage = {
+          id: `system-${Date.now()}`,
+          sender: "ai",
+          content:
+            result.message ||
+            "Votre demande a été transmise à l'administrateur.",
+          createdAt: new Date().toISOString(),
+        };
+        setMessages((prev) => [...prev, escalationMsg]);
+      } else if (result.aiResponse) {
+        const aiMsg: ChatMessage = {
+          id: `ai-${Date.now()}`,
+          sender: "ai",
+          content: result.aiResponse,
+          createdAt: new Date().toISOString(),
+          isAIResponse: true,
+        };
+        setMessages((prev) => [...prev, aiMsg]);
+      }
+
+      scrollBottom();
+    } catch (e: any) {
+      console.error("[ChatWidget] Send message error:", e.message);
+      const errorMsgObj: ChatMessage = {
+        id: `error-${Date.now()}`,
+        sender: "ai",
+        content: "Erreur lors du traitement. Veuillez réessayer.",
+        createdAt: new Date().toISOString(),
+      };
+      setMessages((prev) => [...prev, errorMsgObj]);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
-    <div style={{ position: "fixed", right: 24, bottom: 24, zIndex: 9999, fontFamily: 'sans-serif' }}>
+    <div style={{ position: "fixed", right: 24, bottom: 24, zIndex: 9999, fontFamily: "sans-serif" }}>
       <button
         onClick={() => setOpen((o) => !o)}
         style={{
@@ -150,59 +230,169 @@ export default function ChatWidget() {
           border: "none",
           cursor: "pointer",
           fontWeight: "bold",
+          fontSize: "14px",
         }}
       >
-        {open ? "✖ Fermer" : "💬 Support Technique"}
+        {open ? "✖ Fermer" : "💬 Assistance Directe"}
       </button>
 
       {open && (
-        <div style={{
-          width: 350, height: 500, background: "white", borderRadius: 20, marginTop: 12,
-          boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1)", display: "flex", flexDirection: "column",
-          overflow: "hidden", border: "1px solid #e2e8f0"
-        }}>
+        <div
+          style={{
+            width: 380,
+            height: 550,
+            background: "white",
+            borderRadius: 20,
+            marginTop: 12,
+            boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1)",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            border: "1px solid #e2e8f0",
+          }}
+        >
           {/* Header */}
-          <div style={{ padding: "20px", background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)", color: "white" }}>
-            <div style={{ fontWeight: "bold" }}>Assistance Directe</div>
-            <div style={{ fontSize: "12px", opacity: 0.9 }}>
-               {channelId ? (isConnected ? "● Mariem est en ligne" : "○ Reconnexion...") : `❌ ${errorStatus || 'Chargement...'}`}
+          <div
+            style={{
+              padding: "20px",
+              background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+              color: "white",
+            }}
+          >
+            <div style={{ fontWeight: "bold", fontSize: "16px" }}>
+              Assistance Directe
+            </div>
+            <div style={{ fontSize: "12px", opacity: 0.9, marginTop: 4 }}>
+              {status === "error" ? (
+                <span>❌ {errorMsg}</span>
+              ) : status === "connecting" ? (
+                <span>⏳ Connexion...</span>
+              ) : escalated ? (
+                <span>✅ En attente d'une réponse admin</span>
+              ) : (
+                <span>🤖 Assistant IA prêt</span>
+              )}
             </div>
           </div>
 
           {/* Messages */}
-          <div ref={messagesRef} style={{ flex: 1, padding: 15, overflowY: "auto", background: "#f8fafc", display: 'flex', flexDirection: 'column' }}>
-            {messages.map((m) => (
-              <div key={m.id} style={{ marginBottom: 12, alignSelf: m.senderId === 'me' ? 'flex-end' : 'flex-start', maxWidth: "80%" }}>
-                <div style={{ fontSize: 10, color: "#64748b", textAlign: m.senderId === 'me' ? 'right' : 'left' }}>{m.senderName}</div>
-                <div style={{
-                    background: m.senderId === 'me' ? "#4f46e5" : "white",
-                    color: m.senderId === 'me' ? "white" : "#1e293b",
-                    padding: "10px 14px", borderRadius: "12px", fontSize: "14px", border: "1px solid #e2e8f0"
-                }}>
-                  {m.content}
-                </div>
+          <div
+            ref={messagesRef}
+            style={{
+              flex: 1,
+              padding: 16,
+              overflowY: "auto",
+              background: "#f8fafc",
+              display: "flex",
+              flexDirection: "column",
+              gap: 12,
+            }}
+          >
+            {messages.length === 0 ? (
+              <div
+                style={{
+                  textAlign: "center",
+                  color: "#94a3b8",
+                  fontSize: "14px",
+                  margin: "auto",
+                }}
+              >
+                Bonjour 👋 Comment puis-je vous aider ?
               </div>
-            ))}
+            ) : (
+              messages.map((m) => {
+                const isUser = m.sender === "user";
+                const isAdmin = m.sender === "admin";
+
+                return (
+                  <div
+                    key={m.id}
+                    style={{
+                      alignSelf: isUser ? "flex-end" : "flex-start",
+                      maxWidth: "85%",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "10px",
+                        color: "#64748b",
+                        marginBottom: 4,
+                        textAlign: isUser ? "right" : "left",
+                      }}
+                    >
+                      {isUser ? "Vous" : isAdmin ? "Admin 👨‍💼" : "IA 🤖"}
+                    </div>
+                    <div
+                      style={{
+                        background: isUser ? "#4f46e5" : isAdmin ? "#10b981" : "white",
+                        color: isUser || isAdmin ? "white" : "#1e293b",
+                        padding: "10px 14px",
+                        borderRadius: "12px",
+                        fontSize: "13px",
+                        border: isUser || isAdmin ? "none" : "1px solid #e2e8f0",
+                        wordWrap: "break-word",
+                      }}
+                    >
+                      {m.content}
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
 
           {/* Input */}
-          <div style={{ padding: 16, borderTop: "1px solid #f1f5f9", display: "flex", gap: 10 }}>
+          <div
+            style={{
+              padding: 16,
+              borderTop: "1px solid #f1f5f9",
+              display: "flex",
+              gap: 10,
+              background: "#fff",
+            }}
+          >
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-              placeholder="Décrivez votre problème..."
-              style={{ flex: 1, padding: "12px", borderRadius: 12, border: "1px solid #e2e8f0", outline: 'none' }}
+              onKeyDown={(e) => e.key === "Enter" && !isLoading && sendMessage()}
+              placeholder={
+                escalated
+                  ? "Message en attente d'un admin..."
+                  : "Votre question..."
+              }
+              disabled={isLoading || status !== "connected"}
+              style={{
+                flex: 1,
+                padding: "12px",
+                borderRadius: 12,
+                border: "1px solid #e2e8f0",
+                outline: "none",
+                fontSize: "13px",
+                opacity: isLoading || status !== "connected" ? 0.6 : 1,
+              }}
             />
-            <button 
-              disabled={!channelId || !input.trim() || !isConnected} 
-              onClick={sendMessage} 
-              style={{ 
-                background: (channelId && input.trim() && isConnected) ? "#4f46e5" : "#cbd5e1", 
-                color: "white", border: "none", padding: "0 18px", borderRadius: 12, cursor: "pointer"
+            <button
+              disabled={
+                !input.trim() ||
+                isLoading ||
+                status !== "connected"
+              }
+              onClick={sendMessage}
+              style={{
+                background:
+                  !input.trim() || isLoading || status !== "connected"
+                    ? "#cbd5e1"
+                    : "#4f46e5",
+                color: "white",
+                border: "none",
+                padding: "0 18px",
+                borderRadius: 12,
+                cursor: isLoading ? "wait" : "pointer",
+                fontSize: "12px",
+                fontWeight: "bold",
               }}
             >
-              Envoyer
+              {isLoading ? "⏳" : "Envoyer"}
             </button>
           </div>
         </div>

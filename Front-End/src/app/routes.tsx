@@ -6,8 +6,9 @@ import { RequireCompanySetup } from "@/shared/components/RequireCompanySetup";
 
 // Communication
 import { Communication } from '@/back-office/pages/communication/Communication';
-// --- AJOUT : Import du composant PlatformSupport pour l'admin ---
-import PlatformSupport from "@/back-office/pages/admin/PlatformSupport"; 
+// Support Chat (Separate from Communication)
+import { BusinessOwnerSupport } from '@/app/pages/support/BusinessOwnerSupport';
+import { AdminSupportTickets } from '@/back-office/pages/admin/AdminSupportTickets'; 
 
 // Front-office
 import { LandingPage } from "@/front-office/pages/LandingPage";
@@ -39,6 +40,7 @@ import { CreateExpense } from "@/app/pages/expenses/CreateExpense";
 import { Clients } from "@/app/pages/clients/Clients";
 import { ClientDetails } from "@/app/pages/clients/ClientDetails";
 import { Team } from "@/app/pages/team/Team";
+import { TeamAIInsights } from "@/app/pages/team/TeamAIInsights";
 import { Reports } from "@/app/pages/reports/Reports";
 import { Settings } from "@/app/pages/settings/Settings";
 
@@ -109,8 +111,7 @@ export const router = createBrowserRouter([
       { path: "analytics", element: <Analytics /> },
       { path: "settings", element: <Settings /> },
       { path: "registration-requests", element: <RegistrationRequestsAdmin /> },
-      // --- AJOUT : Route pour répondre aux tickets support côté Admin ---
-      { path: "support", element: <PlatformSupport /> }, 
+      { path: "support", element: <AdminSupportTickets /> },
     ],
   },
 
@@ -135,6 +136,15 @@ export const router = createBrowserRouter([
       { path: "company/setup", element: <CompanySetup /> },
       // Chat interne au business
       { path: 'communication', element: <Communication /> },
+      // Support Chat avec IA
+      {
+        path: "support",
+        element: (
+          <RequireCompanySetup>
+            <BusinessOwnerSupport />
+          </RequireCompanySetup>
+        ),
+      },
 
       {
         index: true,
@@ -251,6 +261,18 @@ export const router = createBrowserRouter([
           <RequireCompanySetup>
             <RequirePermission permission="team:read">
               <Team />
+            </RequirePermission>
+          </RequireCompanySetup>
+        ),
+      },
+
+      // TEAM AI INSIGHTS
+      {
+        path: "team/ai-insights",
+        element: (
+          <RequireCompanySetup>
+            <RequirePermission permission="team:read">
+              <TeamAIInsights />
             </RequirePermission>
           </RequireCompanySetup>
         ),

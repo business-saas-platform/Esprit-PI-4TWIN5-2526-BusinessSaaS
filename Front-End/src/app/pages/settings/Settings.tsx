@@ -31,7 +31,10 @@ import {
   Mail,
   BadgeCheck,
   Building2,
+  ShieldCheck,
 } from "lucide-react";
+import { FaceIdModal } from "@/shared/components/FaceIdModal";
+import { api, apiDelete } from "@/shared/lib/apiClient";
 
 const API_BASE =
   (import.meta as any).env?.VITE_API_URL || "http://localhost:3000/api";
@@ -141,7 +144,7 @@ const PRESET_QUESTIONS = [
   "What was your childhood nickname?",
 ];
 
-type Tab = "profile" | "password" | "security" | "account";
+type Tab = "profile" | "password" | "security" | "biometric" | "account";
 
 // ─────────────────────────────────────────────────────────
 // MAIN SETTINGS PAGE
@@ -173,6 +176,12 @@ export function Settings() {
       label: "Security Questions",
       icon: <Shield className="h-4 w-4" />,
       description: "Recovery and verification setup",
+    },
+    {
+      id: "biometric",
+      label: "Biometric",
+      icon: <ShieldCheck className="h-4 w-4" />,
+      description: "Face ID & biometric authentication",
     },
     {
       id: "account",
@@ -301,6 +310,7 @@ export function Settings() {
         {tab === "profile" && <ProfileSection />}
         {tab === "password" && <PasswordSection />}
         {tab === "security" && <SecurityQuestionsSection />}
+        {tab === "biometric" && <BiometricSection user={user} />}
         {tab === "account" && <AccountStatusSection user={user} />}
       </section>
     </div>
@@ -898,6 +908,214 @@ function TipBox({
           </p>
         </div>
       </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// SECTION 5: Biometric Security (Face ID)
+// ─────────────────────────────────────────────────────────
+function BiometricSection({ user }: { user: any }) {
+  const [faceIdConfigured, setFaceIdConfigured] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [faceModalOpen, setFaceModalOpen] = useState(false);
+
+  // Check if user has face descriptor on mount
+  useEffect(() => {
+    const checkFaceId = async () => {
+      try {
+        setLoading(true);
+        const response = await api<any>("/auth/me", { method: "GET" });
+        setFaceIdConfigured(!!response.faceDescriptor);
+      } catch (err) {
+        console.error("Error checking Face ID:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkFaceId();
+  }, []);
+
+  const handleRegisterFace = async () => {
+    setFaceModalOpen(true);
+  };
+
+  const handleRemoveFace = async () => {
+    if (!confirm("Êtes-vous sûr de vouloir supprimer votre Face ID?")) {
+      return;
+    }
+
+    try {
+      await apiDelete("/auth/remove-face");
+      setFaceIdConfigured(false);
+      toast.success("✅ Face ID supprimé avec succès");
+    } catch (err: any) {
+      console.error("Error removing Face ID:", err);
+      toast.error(err.response?.data?.message || "Erreur lors de la suppression");
+    }
+  };
+
+  const handleFaceSuccess = () => {
+    setFaceIdConfigured(true);
+  };
+
+  return (
+    <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+      <Card className="rounded-[30px] border-slate-200 shadow-sm">
+        <CardHeader className="border-b border-slate-100 pb-5">
+          <CardTitle className="text-xl text-slate-900">
+            🔐 Authentification Biométrique
+          </CardTitle>
+          <CardDescription>
+            Connectez-vous rapidement avec votre visage (Face ID)
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="p-6">
+          <div className="space-y-6">
+            {/* STATUS CARD */}
+            <div
+              className={`rounded-[20px] border-2 p-4 ${
+                faceIdConfigured
+                  ? "border-green-200 bg-green-50"
+                  : "border-slate-200 bg-slate-50"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                {faceIdConfigured ? (
+                  <>
+                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                    <div>
+                      <p className="font-semibold text-green-900">
+                        ✅ Face ID Activé
+                      </p>
+                      <p className="text-sm text-green-700">
+                        Vous pouvez maintenant vous connecter avec votre visage
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <AlertTriangle className="h-5 w-5 text-slate-500" />
+                    <div>
+                      <p className="font-semibold text-slate-900">
+                        ❌ Non configuré
+                      </p>
+                      <p className="text-sm text-slate-600">
+                        Configurez Face ID pour une connexion rapide
+                      </p>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* FEATURES */}
+            <div className="space-y-3">
+              <p className="text-sm font-semibold text-slate-700">Avantages:</p>
+              <ul className="space-y-2 text-sm text-slate-600">
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5" />
+                  <span>Connexion sécurisée et rapide</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5" />
+                  <span>Pas de mot de passe à taper</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5" />
+                  <span>Données biométriques chiffrées localement</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* ACTIONS */}
+            <div className="flex gap-3 pt-3">
+              {faceIdConfigured ? (
+                <>
+                  <Button
+                    onClick={handleRemoveFace}
+                    variant="destructive"
+                    className="h-11 flex-1 rounded-2xl"
+                  >
+                    Supprimer Face ID
+                  </Button>
+                  <Button
+                    onClick={handleRegisterFace}
+                    className="h-11 flex-1 rounded-2xl bg-indigo-600 hover:bg-indigo-700"
+                  >
+                    Mettre à jour
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  onClick={handleRegisterFace}
+                  disabled={loading}
+                  className="h-11 w-full rounded-2xl bg-indigo-600 hover:bg-indigo-700"
+                >
+                  {loading ? "Vérification..." : "🔐 Configurer Face ID"}
+                </Button>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* INFO CARD */}
+      <Card className="rounded-[30px] border-slate-200 shadow-sm">
+        <CardHeader className="border-b border-slate-100 pb-5">
+          <CardTitle className="text-lg text-slate-900">Comment ça marche?</CardTitle>
+        </CardHeader>
+
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            <div>
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-600">
+                1
+              </div>
+              <p className="mt-2 text-sm font-semibold text-slate-900">
+                Scannez votre visage
+              </p>
+              <p className="mt-1 text-sm text-slate-600">
+                Positionnez votre visage dans le cadre oval
+              </p>
+            </div>
+
+            <div>
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-600">
+                2
+              </div>
+              <p className="mt-2 text-sm font-semibold text-slate-900">
+                Enregistrement sécurisé
+              </p>
+              <p className="mt-1 text-sm text-slate-600">
+                Votre signature faciale est stockée localement
+              </p>
+            </div>
+
+            <div>
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-600">
+                3
+              </div>
+              <p className="mt-2 text-sm font-semibold text-slate-900">
+                Connexion future
+              </p>
+              <p className="mt-1 text-sm text-slate-600">
+                Cliquez "Face ID" sur la page de connexion
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* FACE ID MODAL */}
+      <FaceIdModal
+        open={faceModalOpen}
+        mode="register"
+        onClose={() => setFaceModalOpen(false)}
+        onSuccess={handleFaceSuccess}
+      />
     </div>
   );
 }

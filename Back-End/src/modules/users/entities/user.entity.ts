@@ -49,6 +49,10 @@ status!: string;
   @Column({ type: "timestamptz", nullable: true })
   lockedUntil!: Date | null;
 
+  // ✅ Face Recognition
+  @Column({ type: "text", nullable: true })
+  faceDescriptor?: string; // stored as JSON string of number[]
+
   //@CreateDateColumn()
   //createdAt!: Date;
   // ────────────────────────────────────────────────

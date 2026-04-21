@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 
 import { useAuth } from "@/shared/contexts/AuthContext";
+import { FaceIdModal } from "@/shared/components/FaceIdModal";
 
 type Role =
   | "platform_admin"
@@ -101,6 +102,7 @@ export function Login() {
   const [oauthLoading, setOauthLoading] = useState<"google" | "github" | null>(
     null
   );
+  const [faceModalOpen, setFaceModalOpen] = useState(false);
 
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [formError, setFormError] = useState("");
@@ -321,6 +323,16 @@ export function Login() {
             )}
             Continue with GitHub
           </Button>
+
+          <Button
+            type="button"
+            className="h-11 w-full rounded-xl bg-indigo-600 text-white shadow-md transition hover:bg-indigo-700"
+            onClick={() => setFaceModalOpen(true)}
+            disabled={isSubmitting}
+          >
+            <ShieldCheck className="mr-2 h-4 w-4" />
+            🔐 Se connecter avec Face ID
+          </Button>
         </div>
 
         <div className="relative">
@@ -486,6 +498,20 @@ export function Login() {
           </div>
         </form>
       </CardContent>
+
+      {/* FACE ID MODAL */}
+      <FaceIdModal
+        open={faceModalOpen}
+        mode="login"
+        onClose={() => setFaceModalOpen(false)}
+        onSuccess={(token) => {
+          if (token) {
+            navigate(getRedirectPath("business_owner", fromPath), {
+              replace: true,
+            });
+          }
+        }}
+      />
     </Card>
   );
 }

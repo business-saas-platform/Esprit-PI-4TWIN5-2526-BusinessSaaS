@@ -1,0 +1,57 @@
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# Build Artifacts & Dependencies
+dist/
+build/
+*.js.map
+*.ts.map
+*.css.map
+
+# Node Modules (if not already ignored)
+node_modules/
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS Files
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Temporary Files
+temp/
+tmp/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# AI Service Pro Files (if needed)
+AI-Service-Pro-v4-fixed/output/
+AI-Service-Pro-v4-fixed/data/
+
+# Uploads
+uploads/
+
+# Mac
+.AppleDouble
+.LSOverride
