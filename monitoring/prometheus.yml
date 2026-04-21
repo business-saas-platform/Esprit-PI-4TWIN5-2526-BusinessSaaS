@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'nestjs-backend'
+    metrics_path: '/metrics'
+    static_configs:
+      # Use host.docker.internal to reach the Windows host.
+      # Port 30082 is the NodePort exposed by the Minikube cluster for the backend service.
+      - targets: ['host.docker.internal:30082']
+  - job_name: 'react-frontend'
+    static_configs:
+      # Port 30080 is the NodePort for the frontend service.
+      # Note: React apps don't typically expose /metrics natively unless configured.
+      - targets: ['host.docker.internal:30080']
