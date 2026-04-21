@@ -116,39 +116,57 @@ Entreprise: ${businessName}`;
 
       console.log("[Ollama] Payload:", JSON.stringify(payload).substring(0, 200));
 
-      const response = await fetch(`${OLLAMA_API_URL}/api/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      // Add timeout for Ollama request
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
-      console.log(`[Ollama] Response status: ${response.status}`);
+      try {
+        const response = await fetch(`${OLLAMA_API_URL}/api/chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          signal: controller.signal,
+        });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`[Ollama] Error response: ${errorText}`);
-        throw new Error(`Ollama returned ${response.status}: ${errorText}`);
+        clearTimeout(timeoutId);
+
+        console.log(`[Ollama] Response status: ${response.status}`);
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(`[Ollama] Error response: ${errorText}`);
+          throw new Error(`Ollama returned ${response.status}: ${errorText}`);
+        }
+
+        const data = await response.json();
+        console.log("[Ollama] Raw response:", JSON.stringify(data).substring(0, 500));
+
+        // Handle multiple possible response formats
+        const content =
+          data.message?.content ||
+          data.response ||
+          data.choices?.[0]?.message?.content ||
+          data.text ||
+          "Je n'ai pas pu générer une réponse.";
+
+        if (!content || content.length === 0) {
+          throw new Error("Empty response from Ollama");
+        }
+
+        console.log("[Ollama] Extracted content:", content.substring(0, 200));
+        return content;
+      } finally {
+        clearTimeout(timeoutId);
       }
-
-      const data = await response.json();
-      console.log("[Ollama] Raw response:", JSON.stringify(data).substring(0, 500));
-
-      // Handle multiple possible response formats
-      const content =
-        data.message?.content ||
-        data.response ||
-        data.choices?.[0]?.message?.content ||
-        data.text ||
-        "Je n'ai pas pu générer une réponse.";
-
-      if (!content || content.length === 0) {
-        throw new Error("Empty response from Ollama");
-      }
-
-      console.log("[Ollama] Extracted content:", content.substring(0, 200));
-      return content;
     } catch (error: any) {
       console.error("[Ollama] Call failed:", error.message);
+      
+      // FALLBACK: Return mock response for testing if Ollama is slow/unavailable
+      if (error.name === "AbortError") {
+        console.warn("[Ollama] Request timeout - using fallback mock response");
+        return "Je suis en train de traiter votre demande. Le service IA est actuellement occupé. Veuillez réessayer dans quelques secondes.";
+      }
+      
       throw new Error(`Ollama API error: ${error.message}`);
     }
   }
@@ -157,23 +175,23 @@ Entreprise: ${businessName}`;
    * Detect if user wants to escalate to human
    */
   private shouldEscalate(userMessage: string, failedCount: number): boolean {
+    // Only escalate if explicitly requested for human/admin
     const escalationKeywords = [
       "parler à un humain",
       "contacter admin",
-      "problème technique",
-      "humain",
-      "agent",
-      "support",
-      "aide",
+      "parlez avec un agent",
+      "agent humain",
     ];
 
     const lowerMessage = userMessage.toLowerCase();
-    const hasKeyword = escalationKeywords.some((kw) =>
+    const hasEscalationKeyword = escalationKeywords.some((kw) =>
       lowerMessage.includes(kw)
     );
 
-    // Escalate if keyword found or after 3 failed AI responses
-    return hasKeyword || failedCount >= 3;
+    // Escalate if:
+    // 1. User explicitly requested a human/agent
+    // 2. After 3 consecutive failed AI responses
+    return hasEscalationKeyword || failedCount >= 3;
   }
 
   /**
