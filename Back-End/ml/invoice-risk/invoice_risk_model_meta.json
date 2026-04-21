@@ -1,0 +1,7 @@
+{
+  "accuracy": 0.6072144288577155,
+  "logloss": 0.6681194100201627,
+  "train_rows": 5984,
+  "test_rows": 1497,
+  "positive_rate_test": 0.3667334669338677
+}

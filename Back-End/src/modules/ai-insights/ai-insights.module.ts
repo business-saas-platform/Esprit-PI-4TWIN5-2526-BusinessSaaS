@@ -7,6 +7,7 @@ import { AIInsightsService } from './ai-insights.service';
 import { InvoiceEntity } from '../invoices/entities/invoice.entity';
 import { ExpenseEntity } from '../expenses/entities/expense.entity';
 import { CashFlowForecastService } from './cash-flow-forecast.service';
+import { InvoiceLateRiskService } from './invoice-late-risk.service';
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { CashFlowForecastService } from './cash-flow-forecast.service';
     TypeOrmModule.forFeature([AIInsightEntity, InvoiceEntity, ExpenseEntity]),
   ],
   controllers: [AIInsightsController],
-  providers: [AIInsightsService, CashFlowForecastService],
+  providers: [AIInsightsService, CashFlowForecastService, InvoiceLateRiskService],
 })
 export class AIInsightsModule {}
