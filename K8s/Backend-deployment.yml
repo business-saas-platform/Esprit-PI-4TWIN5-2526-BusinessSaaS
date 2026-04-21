@@ -14,10 +14,11 @@ spec:
     spec:
       containers:
         - name: backend
-          image: rihabcht/nest_img:82
+          image: rihabcht/nest_img:83
           ports:
             - containerPort: 3000
           env:
+            # Database
             - name: DB_HOST
               value: postgres
             - name: DB_PORT
@@ -28,13 +29,60 @@ spec:
               value: "0000"
             - name: DB_NAME
               value: saas_db
+
+            # Server
+            - name: PORT
+              value: "3000"
+            - name: CORS_ORIGINS
+              value: "http://192.168.49.2:30080"
+
+            # JWT
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: backend-secret
                   key: JWT_SECRET
+            - name: JWT_EXPIRES_IN
+              value: "1d"
 
+            # Google OAuth
+            - name: GOOGLE_CLIENT_ID
+              value: "139367425386-adode57vimn2u5t7d7c3pvm1nkpbjtce.apps.googleusercontent.com"
+            - name: GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: GOOGLE_CLIENT_SECRET
+            - name: GOOGLE_CALLBACK_URL
+              value: "http://192.168.49.2:30082/api/auth/google/callback"
 
+            # GitHub OAuth
+            - name: GITHUB_CLIENT_ID
+              value: "Ov23liNcYt110QwMbEfh"
+            - name: GITHUB_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: GITHUB_CLIENT_SECRET
+            - name: GITHUB_CALLBACK_URL
+              value: "http://192.168.49.2:30082/api/auth/github/callback"
+
+            # Mail
+            - name: MAIL_HOST
+              value: "smtp.gmail.com"
+            - name: MAIL_PORT
+              value: "587"
+            - name: MAIL_USER
+              value: "rahouejaziz3@gmail.com"
+            - name: MAIL_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: MAIL_PASS
+
+            # Frontend
+            - name: FRONTEND_URL
+              value: "http://192.168.49.2:30080"
 
 --- 
 apiVersion: v1

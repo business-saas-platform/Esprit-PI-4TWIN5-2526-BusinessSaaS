@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: rihabcht/react_frontend:10
+          image: rihabcht/react_frontend:11
           ports:
             - containerPort: 5173
 
