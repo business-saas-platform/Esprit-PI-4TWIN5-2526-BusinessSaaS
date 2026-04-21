@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Plus,
   Search,
   Eye,
   Download,
   Send,
+  ShieldAlert,
   RefreshCw,
   FileText,
   CheckCircle,
@@ -16,12 +17,12 @@ import {
   ChevronRight,
   RotateCcw,
   FileDown,
-} from "lucide-react";
-import { toast } from "sonner";
+} from 'lucide-react';
+import { toast } from 'sonner';
 
-import { Button } from "@/app/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
-import { Input } from "@/app/components/ui/input";
+import { Button } from '@/app/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
+import { Input } from '@/app/components/ui/input';
 import {
   Table,
   TableBody,
@@ -29,78 +30,69 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/app/components/ui/table";
+} from '@/app/components/ui/table';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/app/components/ui/select";
-import { Badge } from "@/app/components/ui/badge";
+} from '@/app/components/ui/select';
+import { Badge } from '@/app/components/ui/badge';
 
-import type { Invoice } from "@/shared/lib/services/invoices";
-import { useBusinessContext } from "@/shared/contexts/BusinessContext";
-import { InvoicesApi } from "@/shared/lib/services/invoices";
+import type { Invoice } from '@/shared/lib/services/invoices';
+import { useBusinessContext } from '@/shared/contexts/BusinessContext';
+import { InvoicesApi } from '@/shared/lib/services/invoices';
 
-type InvoiceStatus =
-  | "draft"
-  | "sent"
-  | "viewed"
-  | "paid"
-  | "overdue"
-  | "cancelled";
+type InvoiceStatus = 'draft' | 'sent' | 'viewed' | 'paid' | 'overdue' | 'cancelled';
 
 type AuthUser = {
   id: string;
   email: string;
   role:
-    | "platform_admin"
-    | "business_owner"
-    | "business_admin"
-    | "accountant"
-    | "team_member"
-    | "client";
+    | 'platform_admin'
+    | 'business_owner'
+    | 'business_admin'
+    | 'accountant'
+    | 'team_member'
+    | 'client';
   businessId?: string | null;
 };
 
 type SortOption =
-  | "newest"
-  | "oldest"
-  | "amount_desc"
-  | "amount_asc"
-  | "due_asc"
-  | "due_desc"
-  | "client_asc"
-  | "client_desc";
+  | 'newest'
+  | 'oldest'
+  | 'amount_desc'
+  | 'amount_asc'
+  | 'due_asc'
+  | 'due_desc'
+  | 'client_asc'
+  | 'client_desc';
 
-const STATUS_CONFIG: Record<
-  InvoiceStatus,
-  { label: string; className: string }
-> = {
+const STATUS_CONFIG: Record<InvoiceStatus, { label: string; className: string }> = {
   draft: {
-    label: "Draft",
-    className: "bg-gray-100 text-gray-800 border-gray-200",
+    label: 'Draft',
+    className: 'bg-gray-100 text-gray-800 border-gray-200',
   },
   sent: {
-    label: "Sent",
-    className: "bg-blue-100 text-blue-800 border-blue-200",
+    label: 'Sent',
+    className: 'bg-blue-100 text-blue-800 border-blue-200',
   },
   viewed: {
-    label: "Viewed",
-    className: "bg-purple-100 text-purple-800 border-purple-200",
+    label: 'Viewed',
+    className: 'bg-purple-100 text-purple-800 border-purple-200',
   },
   paid: {
-    label: "Paid",
-    className: "bg-green-100 text-green-800 border-green-200",
+    label: 'Paid',
+    className: 'bg-green-100 text-green-800 border-green-200',
   },
   overdue: {
-    label: "Overdue",
-    className: "bg-red-100 text-red-800 border-red-200",
+    label: 'Overdue',
+    className: 'bg-red-100 text-red-800 border-red-200',
   },
   cancelled: {
-    label: "Cancelled",
-    className: "bg-yellow-100 text-yellow-800 border-yellow-200",
+    label: 'Cancelled',
+    className: 'bg-yellow-100 text-yellow-800 border-yellow-200',
   },
 };
 
@@ -113,19 +105,19 @@ export function Invoices() {
   const [refreshing, setRefreshing] = useState(false);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<SortOption>("newest");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<SortOption>('newest');
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState("10");
+  const [pageSize, setPageSize] = useState('10');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  const currency = currentBusiness?.currency ?? "TND";
+  const currency = currentBusiness?.currency ?? 'TND';
 
   const authUser: AuthUser | null = useMemo(() => {
     try {
-      return JSON.parse(localStorage.getItem("auth_user") || "null");
+      return JSON.parse(localStorage.getItem('auth_user') || 'null');
     } catch {
       return null;
     }
@@ -133,9 +125,7 @@ export function Invoices() {
 
   const canManageInvoices = useMemo(() => {
     if (!authUser) return false;
-    return ["business_owner", "business_admin", "accountant"].includes(
-      authUser.role
-    );
+    return ['business_owner', 'business_admin', 'accountant'].includes(authUser.role);
   }, [authUser]);
 
   useEffect(() => {
@@ -156,10 +146,10 @@ export function Invoices() {
   );
 
   const formatDate = (value?: string | Date | null) => {
-    if (!value) return "-";
+    if (!value) return '-';
     const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return "-";
-    return date.toLocaleDateString("fr-FR");
+    if (Number.isNaN(date.getTime())) return '-';
+    return date.toLocaleDateString('fr-FR');
   };
 
   const toTimestamp = (value?: string | Date | null) => {
@@ -177,11 +167,11 @@ export function Invoices() {
   };
 
   const getDisplayStatus = useCallback((invoice: Invoice): InvoiceStatus => {
-    if (invoice.status === "sent" && isPastDue(invoice.dueDate)) {
-      return "overdue";
+    if (invoice.status === 'sent' && isPastDue(invoice.dueDate)) {
+      return 'overdue';
     }
-    if (invoice.status === "viewed" && isPastDue(invoice.dueDate)) {
-      return "overdue";
+    if (invoice.status === 'viewed' && isPastDue(invoice.dueDate)) {
+      return 'overdue';
     }
     return invoice.status as InvoiceStatus;
   }, []);
@@ -219,10 +209,10 @@ export function Invoices() {
         const list = await InvoicesApi.list(bid);
         setInvoices(list ?? []);
       } catch (error) {
-        console.error("Failed to load invoices:", error);
+        console.error('Failed to load invoices:', error);
         setInvoices([]);
-        toast.error("Erreur", {
-          description: "Impossible de charger les factures",
+        toast.error('Erreur', {
+          description: 'Impossible de charger les factures',
         });
       } finally {
         setLoading(false);
@@ -238,8 +228,8 @@ export function Invoices() {
 
   const filteredAndSortedInvoices = useMemo(() => {
     const result = invoices.filter((invoice) => {
-      const invoiceNumber = invoice.invoiceNumber?.toLowerCase() ?? "";
-      const clientName = invoice.clientName?.toLowerCase() ?? "";
+      const invoiceNumber = invoice.invoiceNumber?.toLowerCase() ?? '';
+      const clientName = invoice.clientName?.toLowerCase() ?? '';
       const displayStatus = getDisplayStatus(invoice);
 
       const matchesSearch =
@@ -247,30 +237,29 @@ export function Invoices() {
         invoiceNumber.includes(debouncedSearch) ||
         clientName.includes(debouncedSearch);
 
-      const matchesStatus =
-        statusFilter === "all" || displayStatus === statusFilter;
+      const matchesStatus = statusFilter === 'all' || displayStatus === statusFilter;
 
       return matchesSearch && matchesStatus;
     });
 
     result.sort((a, b) => {
       switch (sortBy) {
-        case "newest":
+        case 'newest':
           return toTimestamp(b.issueDate) - toTimestamp(a.issueDate);
-        case "oldest":
+        case 'oldest':
           return toTimestamp(a.issueDate) - toTimestamp(b.issueDate);
-        case "amount_desc":
+        case 'amount_desc':
           return Number(b.totalAmount ?? 0) - Number(a.totalAmount ?? 0);
-        case "amount_asc":
+        case 'amount_asc':
           return Number(a.totalAmount ?? 0) - Number(b.totalAmount ?? 0);
-        case "due_asc":
+        case 'due_asc':
           return toTimestamp(a.dueDate) - toTimestamp(b.dueDate);
-        case "due_desc":
+        case 'due_desc':
           return toTimestamp(b.dueDate) - toTimestamp(a.dueDate);
-        case "client_asc":
-          return (a.clientName ?? "").localeCompare(b.clientName ?? "");
-        case "client_desc":
-          return (b.clientName ?? "").localeCompare(a.clientName ?? "");
+        case 'client_asc':
+          return (a.clientName ?? '').localeCompare(b.clientName ?? '');
+        case 'client_desc':
+          return (b.clientName ?? '').localeCompare(a.clientName ?? '');
         default:
           return 0;
       }
@@ -280,10 +269,7 @@ export function Invoices() {
   }, [invoices, debouncedSearch, statusFilter, sortBy, getDisplayStatus]);
 
   const pageSizeNumber = Number(pageSize);
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredAndSortedInvoices.length / pageSizeNumber)
-  );
+  const totalPages = Math.max(1, Math.ceil(filteredAndSortedInvoices.length / pageSizeNumber));
 
   const paginatedInvoices = useMemo(() => {
     const start = (page - 1) * pageSizeNumber;
@@ -302,29 +288,23 @@ export function Invoices() {
   }, [filteredAndSortedInvoices]);
 
   const totals = useMemo(() => {
-    const totalInvoiced = invoices.reduce(
-      (sum, inv) => sum + Number(inv.totalAmount ?? 0),
-      0
-    );
+    const totalInvoiced = invoices.reduce((sum, inv) => sum + Number(inv.totalAmount ?? 0), 0);
 
-    const totalPaid = invoices.reduce(
-      (sum, inv) => sum + Number(inv.paidAmount ?? 0),
-      0
-    );
+    const totalPaid = invoices.reduce((sum, inv) => sum + Number(inv.paidAmount ?? 0), 0);
 
     const pending = invoices
       .filter((inv) => {
         const s = getDisplayStatus(inv);
-        return s === "sent" || s === "viewed";
+        return s === 'sent' || s === 'viewed';
       })
       .reduce((sum, inv) => sum + getRemainingAmount(inv), 0);
 
     const overdue = invoices
-      .filter((inv) => getDisplayStatus(inv) === "overdue")
+      .filter((inv) => getDisplayStatus(inv) === 'overdue')
       .reduce((sum, inv) => sum + getRemainingAmount(inv), 0);
 
-    const draftCount = invoices.filter((inv) => getDisplayStatus(inv) === "draft").length;
-    const overdueCount = invoices.filter((inv) => getDisplayStatus(inv) === "overdue").length;
+    const draftCount = invoices.filter((inv) => getDisplayStatus(inv) === 'draft').length;
+    const overdueCount = invoices.filter((inv) => getDisplayStatus(inv) === 'overdue').length;
 
     return {
       totalInvoiced,
@@ -341,29 +321,29 @@ export function Invoices() {
   };
 
   const resetFilters = () => {
-    setSearchTerm("");
-    setDebouncedSearch("");
-    setStatusFilter("all");
-    setSortBy("newest");
+    setSearchTerm('');
+    setDebouncedSearch('');
+    setStatusFilter('all');
+    setSortBy('newest');
     setPage(1);
   };
 
   const exportToCSV = () => {
     try {
       const headers = [
-        "Invoice Number",
-        "Client",
-        "Issue Date",
-        "Due Date",
-        "Status",
-        "Total Amount",
-        "Paid Amount",
-        "Remaining Amount",
+        'Invoice Number',
+        'Client',
+        'Issue Date',
+        'Due Date',
+        'Status',
+        'Total Amount',
+        'Paid Amount',
+        'Remaining Amount',
       ];
 
       const rows = filteredAndSortedInvoices.map((invoice) => [
-        invoice.invoiceNumber ?? "",
-        invoice.clientName ?? "",
+        invoice.invoiceNumber ?? '',
+        invoice.clientName ?? '',
         formatDate(invoice.issueDate),
         formatDate(invoice.dueDate),
         getDisplayStatus(invoice),
@@ -373,28 +353,26 @@ export function Invoices() {
       ]);
 
       const csvContent = [headers, ...rows]
-        .map((row) =>
-          row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")
-        )
-        .join("\n");
+        .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+        .join('\n');
 
       const blob = new Blob([csvContent], {
-        type: "text/csv;charset=utf-8;",
+        type: 'text/csv;charset=utf-8;',
       });
 
       const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
+      const link = document.createElement('a');
       link.href = url;
-      link.setAttribute("download", "invoices-export.csv");
+      link.setAttribute('download', 'invoices-export.csv');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
 
-      toast.success("Export CSV effectué avec succès");
+      toast.success('Export CSV effectué avec succès');
     } catch (error) {
       console.error(error);
-      toast.error("Erreur", {
-        description: "Impossible d’exporter les factures",
+      toast.error('Erreur', {
+        description: 'Impossible d’exporter les factures',
       });
     }
   };
@@ -402,31 +380,31 @@ export function Invoices() {
   const handleDownloadPDF = async (invoiceId: string) => {
     try {
       // Ici plus tard: await InvoicesApi.downloadPdf(invoiceId)
-      console.log("Download PDF for invoice:", invoiceId);
-      toast.success("PDF généré avec succès");
+      console.log('Download PDF for invoice:', invoiceId);
+      toast.success('PDF généré avec succès');
     } catch (error) {
       console.error(error);
-      toast.error("Erreur", {
-        description: "Impossible de télécharger le PDF",
+      toast.error('Erreur', {
+        description: 'Impossible de télécharger le PDF',
       });
     }
   };
 
   const handleChangeStatus = async (
     invoiceId: string,
-    newStatus: "sent" | "paid" | "cancelled"
+    newStatus: 'sent' | 'paid' | 'cancelled'
   ) => {
     try {
       setUpdatingId(invoiceId);
 
-      if (newStatus === "sent") {
+      if (newStatus === 'sent') {
         await InvoicesApi.markSent(invoiceId);
-      } else if (newStatus === "paid") {
+      } else if (newStatus === 'paid') {
         await InvoicesApi.markPaid(invoiceId);
-      } else if (newStatus === "cancelled") {
-        const ok = window.confirm("Annuler cette facture ?");
+      } else if (newStatus === 'cancelled') {
+        const ok = window.confirm('Annuler cette facture ?');
         if (!ok) return;
-        await InvoicesApi.updateStatus(invoiceId, "cancelled");
+        await InvoicesApi.updateStatus(invoiceId, 'cancelled');
       }
 
       setInvoices((prev) =>
@@ -435,56 +413,49 @@ export function Invoices() {
             ? {
                 ...inv,
                 status: newStatus,
-                paidAmount:
-                  newStatus === "paid"
-                    ? Number(inv.totalAmount ?? 0)
-                    : inv.paidAmount,
+                paidAmount: newStatus === 'paid' ? Number(inv.totalAmount ?? 0) : inv.paidAmount,
               }
             : inv
         )
       );
 
       const successText =
-        newStatus === "sent"
-          ? "Facture envoyée avec succès ✅"
-          : newStatus === "paid"
-          ? "Facture marquée comme payée ✅"
-          : "Facture annulée ✅";
+        newStatus === 'sent'
+          ? 'Facture envoyée avec succès ✅'
+          : newStatus === 'paid'
+            ? 'Facture marquée comme payée ✅'
+            : 'Facture annulée ✅';
 
       toast.success(successText);
     } catch (error) {
       console.error(error);
-      toast.error("Erreur", {
-        description: "Impossible de mettre à jour le statut",
+      toast.error('Erreur', {
+        description: 'Impossible de mettre à jour le statut',
       });
     } finally {
       setUpdatingId(null);
     }
   };
 
-  const handleBulkStatusUpdate = async (
-    newStatus: "sent" | "paid" | "cancelled"
-  ) => {
+  const handleBulkStatusUpdate = async (newStatus: 'sent' | 'paid' | 'cancelled') => {
     if (!selectedIds.length) {
-      toast.error("Aucune facture sélectionnée");
+      toast.error('Aucune facture sélectionnée');
       return;
     }
 
-    if (newStatus === "cancelled") {
-      const ok = window.confirm(
-        `Annuler ${selectedIds.length} facture(s) ?`
-      );
+    if (newStatus === 'cancelled') {
+      const ok = window.confirm(`Annuler ${selectedIds.length} facture(s) ?`);
       if (!ok) return;
     }
 
     try {
       for (const invoiceId of selectedIds) {
-        if (newStatus === "sent") {
+        if (newStatus === 'sent') {
           await InvoicesApi.markSent(invoiceId);
-        } else if (newStatus === "paid") {
+        } else if (newStatus === 'paid') {
           await InvoicesApi.markPaid(invoiceId);
         } else {
-          await InvoicesApi.updateStatus(invoiceId, "cancelled");
+          await InvoicesApi.updateStatus(invoiceId, 'cancelled');
         }
       }
 
@@ -494,10 +465,7 @@ export function Invoices() {
             ? {
                 ...inv,
                 status: newStatus,
-                paidAmount:
-                  newStatus === "paid"
-                    ? Number(inv.totalAmount ?? 0)
-                    : inv.paidAmount,
+                paidAmount: newStatus === 'paid' ? Number(inv.totalAmount ?? 0) : inv.paidAmount,
               }
             : inv
         )
@@ -507,8 +475,8 @@ export function Invoices() {
       toast.success(`Mise à jour groupée terminée ✅`);
     } catch (error) {
       console.error(error);
-      toast.error("Erreur", {
-        description: "Impossible de terminer l’action groupée",
+      toast.error('Erreur', {
+        description: 'Impossible de terminer l’action groupée',
       });
     }
   };
@@ -526,26 +494,29 @@ export function Invoices() {
 
   const toggleSelectOne = (invoiceId: string) => {
     setSelectedIds((prev) =>
-      prev.includes(invoiceId)
-        ? prev.filter((id) => id !== invoiceId)
-        : [...prev, invoiceId]
+      prev.includes(invoiceId) ? prev.filter((id) => id !== invoiceId) : [...prev, invoiceId]
     );
   };
 
   const canSendInvoice = (invoice: Invoice) => {
-    return canManageInvoices && invoice.status === "draft";
+    return canManageInvoices && invoice.status === 'draft';
   };
 
   const canMarkPaid = (invoice: Invoice) => {
     if (!canManageInvoices) return false;
     const displayStatus = getDisplayStatus(invoice);
-    return ["sent", "viewed", "overdue"].includes(displayStatus);
+    return ['sent', 'viewed', 'overdue'].includes(displayStatus);
   };
 
   const canCancelInvoice = (invoice: Invoice) => {
     if (!canManageInvoices) return false;
     const displayStatus = getDisplayStatus(invoice);
-    return ["draft", "sent", "viewed", "overdue"].includes(displayStatus);
+    return ['draft', 'sent', 'viewed', 'overdue'].includes(displayStatus);
+  };
+
+  const canViewRisk = (invoice: Invoice) => {
+    const displayStatus = getDisplayStatus(invoice);
+    return ['sent', 'viewed', 'overdue'].includes(displayStatus);
   };
 
   return (
@@ -553,9 +524,7 @@ export function Invoices() {
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Invoices</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Manage, track and monitor all your invoices
-          </p>
+          <p className="mt-1 text-sm text-gray-500">Manage, track and monitor all your invoices</p>
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -564,9 +533,7 @@ export function Invoices() {
             onClick={() => loadInvoices(true)}
             disabled={refreshing || loading}
           >
-            <RefreshCw
-              className={`mr-2 h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
-            />
+            <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
 
@@ -576,7 +543,7 @@ export function Invoices() {
           </Button>
 
           {canManageInvoices && (
-            <Button onClick={() => navigate("/dashboard/invoices/create")}>
+            <Button onClick={() => navigate('/dashboard/invoices/create')}>
               <Plus className="mr-2 h-4 w-4" />
               New Invoice
             </Button>
@@ -588,9 +555,7 @@ export function Invoices() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-sm text-gray-500">Total Invoiced</div>
-            <div className="mt-1 text-2xl font-bold">
-              {formatCurrency(totals.totalInvoiced)}
-            </div>
+            <div className="mt-1 text-2xl font-bold">{formatCurrency(totals.totalInvoiced)}</div>
           </CardContent>
         </Card>
 
@@ -624,18 +589,14 @@ export function Invoices() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-sm text-gray-500">Drafts</div>
-            <div className="mt-1 text-2xl font-bold text-gray-800">
-              {totals.draftCount}
-            </div>
+            <div className="mt-1 text-2xl font-bold text-gray-800">{totals.draftCount}</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="pt-6">
             <div className="text-sm text-gray-500">Overdue Count</div>
-            <div className="mt-1 text-2xl font-bold text-red-600">
-              {totals.overdueCount}
-            </div>
+            <div className="mt-1 text-2xl font-bold text-red-600">{totals.overdueCount}</div>
           </CardContent>
         </Card>
       </div>
@@ -675,10 +636,7 @@ export function Invoices() {
               </SelectContent>
             </Select>
 
-            <Select
-              value={sortBy}
-              onValueChange={(value) => setSortBy(value as SortOption)}
-            >
+            <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
               <SelectTrigger className="w-full xl:w-[220px]">
                 <ArrowUpDown className="mr-2 h-4 w-4" />
                 <SelectValue placeholder="Sort by" />
@@ -724,22 +682,20 @@ export function Invoices() {
       {canManageInvoices && selectedIds.length > 0 && (
         <Card>
           <CardContent className="flex flex-col gap-3 pt-6 md:flex-row md:items-center md:justify-between">
-            <div className="text-sm text-gray-600">
-              {selectedIds.length} invoice(s) selected
-            </div>
+            <div className="text-sm text-gray-600">{selectedIds.length} invoice(s) selected</div>
 
             <div className="flex flex-wrap gap-2">
-              <Button variant="outline" onClick={() => handleBulkStatusUpdate("sent")}>
+              <Button variant="outline" onClick={() => handleBulkStatusUpdate('sent')}>
                 <Send className="mr-2 h-4 w-4" />
                 Mark Sent
               </Button>
 
-              <Button variant="outline" onClick={() => handleBulkStatusUpdate("paid")}>
+              <Button variant="outline" onClick={() => handleBulkStatusUpdate('paid')}>
                 <CheckCircle className="mr-2 h-4 w-4" />
                 Mark Paid
               </Button>
 
-              <Button variant="outline" onClick={() => handleBulkStatusUpdate("cancelled")}>
+              <Button variant="outline" onClick={() => handleBulkStatusUpdate('cancelled')}>
                 <XCircle className="mr-2 h-4 w-4" />
                 Cancel
               </Button>
@@ -750,9 +706,7 @@ export function Invoices() {
 
       <Card>
         <CardHeader>
-          <CardTitle>
-            All Invoices ({loading ? "..." : filteredAndSortedInvoices.length})
-          </CardTitle>
+          <CardTitle>All Invoices ({loading ? '...' : filteredAndSortedInvoices.length})</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -766,9 +720,7 @@ export function Invoices() {
                         type="checkbox"
                         checked={
                           paginatedInvoices.length > 0 &&
-                          paginatedInvoices.every((inv) =>
-                            selectedIds.includes(inv.id)
-                          )
+                          paginatedInvoices.every((inv) => selectedIds.includes(inv.id))
                         }
                         onChange={toggleSelectAllCurrentPage}
                       />
@@ -801,16 +753,14 @@ export function Invoices() {
                     <TableCell colSpan={canManageInvoices ? 10 : 9} className="py-10">
                       <div className="flex flex-col items-center justify-center text-center">
                         <FileText className="mb-3 h-10 w-10 text-gray-300" />
-                        <div className="text-lg font-medium text-gray-700">
-                          No invoices found
-                        </div>
+                        <div className="text-lg font-medium text-gray-700">No invoices found</div>
                         <div className="mt-1 text-sm text-gray-500">
                           Try changing filters or create a new invoice.
                         </div>
                         {canManageInvoices && (
                           <Button
                             className="mt-4"
-                            onClick={() => navigate("/dashboard/invoices/create")}
+                            onClick={() => navigate('/dashboard/invoices/create')}
                           >
                             <Plus className="mr-2 h-4 w-4" />
                             Create Invoice
@@ -829,7 +779,7 @@ export function Invoices() {
                     return (
                       <TableRow
                         key={invoice.id}
-                        className={displayStatus === "overdue" ? "bg-red-50/40" : ""}
+                        className={displayStatus === 'overdue' ? 'bg-red-50/40' : ''}
                       >
                         {canManageInvoices && (
                           <TableCell>
@@ -842,10 +792,10 @@ export function Invoices() {
                         )}
 
                         <TableCell className="font-medium">
-                          {invoice.invoiceNumber || "-"}
+                          {invoice.invoiceNumber || '-'}
                         </TableCell>
 
-                        <TableCell>{invoice.clientName || "-"}</TableCell>
+                        <TableCell>{invoice.clientName || '-'}</TableCell>
 
                         <TableCell>{formatDate(invoice.issueDate)}</TableCell>
 
@@ -869,9 +819,7 @@ export function Invoices() {
                                 style={{ width: `${progress}%` }}
                               />
                             </div>
-                            <div className="text-xs text-gray-500">
-                              {progress.toFixed(0)}%
-                            </div>
+                            <div className="text-xs text-gray-500">{progress.toFixed(0)}%</div>
                           </div>
                         </TableCell>
 
@@ -880,9 +828,7 @@ export function Invoices() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() =>
-                                navigate(`/dashboard/invoices/${invoice.id}`)
-                              }
+                              onClick={() => navigate(`/dashboard/invoices/${invoice.id}`)}
                               title="View invoice"
                             >
                               <Eye className="h-4 w-4" />
@@ -897,12 +843,27 @@ export function Invoices() {
                               <Download className="h-4 w-4" />
                             </Button>
 
+                            {canViewRisk(invoice) && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() =>
+                                  navigate(
+                                    `/dashboard/invoice-late-risk?invoiceId=${encodeURIComponent(invoice.id)}`
+                                  )
+                                }
+                                title="View invoice risk"
+                              >
+                                <ShieldAlert className="h-4 w-4" />
+                              </Button>
+                            )}
+
                             {canSendInvoice(invoice) && (
                               <Button
                                 variant="ghost"
                                 size="sm"
                                 disabled={updatingId === invoice.id}
-                                onClick={() => handleChangeStatus(invoice.id, "sent")}
+                                onClick={() => handleChangeStatus(invoice.id, 'sent')}
                                 title="Send invoice"
                               >
                                 <Send className="h-4 w-4" />
@@ -914,7 +875,7 @@ export function Invoices() {
                                 variant="ghost"
                                 size="sm"
                                 disabled={updatingId === invoice.id}
-                                onClick={() => handleChangeStatus(invoice.id, "paid")}
+                                onClick={() => handleChangeStatus(invoice.id, 'paid')}
                                 title="Mark as paid"
                               >
                                 <CheckCircle className="h-4 w-4" />
@@ -926,9 +887,7 @@ export function Invoices() {
                                 variant="ghost"
                                 size="sm"
                                 disabled={updatingId === invoice.id}
-                                onClick={() =>
-                                  handleChangeStatus(invoice.id, "cancelled")
-                                }
+                                onClick={() => handleChangeStatus(invoice.id, 'cancelled')}
                                 title="Cancel invoice"
                               >
                                 <XCircle className="h-4 w-4" />

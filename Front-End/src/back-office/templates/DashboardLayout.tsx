@@ -15,6 +15,7 @@ import {
   LogOut,
   Sparkles,
   Activity,
+  ShieldAlert,
   ChevronRight,
   Building2,
   PanelLeftClose,
@@ -53,6 +54,12 @@ const navigation: NavItem[] = [
     badge: 'AI',
   },
   { name: 'Cash Flow', href: '/dashboard/cash-flow-forecast', icon: Activity, perm: 'ai.read' },
+  {
+    name: 'Invoice Risk',
+    href: '/dashboard/invoice-late-risk',
+    icon: ShieldAlert,
+    perm: 'ai.read',
+  },
   { name: 'Invoices', href: '/dashboard/invoices', icon: FileText, perm: 'invoices.read' },
   { name: 'Expenses', href: '/dashboard/expenses', icon: Receipt, perm: 'expenses.read' },
   { name: 'Clients', href: '/dashboard/clients', icon: Users, perm: 'clients.read' },
@@ -204,11 +211,7 @@ export function DashboardLayout() {
             </div>
 
             <div className="border-b border-slate-100 px-4 py-4">
-              <BusinessSwitcher
-                businesses={businesses}
-                currentBusiness={currentBusiness}
-                onBusinessChange={handleBusinessChange}
-              />
+              <BusinessSwitcher />
             </div>
 
             <nav className="space-y-2 px-3 py-4">
@@ -297,11 +300,7 @@ export function DashboardLayout() {
 
         {!sidebarCollapsed && (
           <div className="border-b border-slate-100 px-4 py-4">
-            <BusinessSwitcher
-              businesses={businesses}
-              currentBusiness={currentBusiness}
-              onBusinessChange={handleBusinessChange}
-            />
+            <BusinessSwitcher />
           </div>
         )}
 

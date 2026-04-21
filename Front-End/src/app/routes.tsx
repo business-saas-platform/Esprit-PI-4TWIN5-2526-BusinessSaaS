@@ -53,6 +53,7 @@ import RegistrationRequestsAdmin from '@/app/pages/admin/RegistrationRequestsAdm
 // AI
 import { AIInsights } from '@/app/pages/ai/AIInsights';
 import { CashFlowForecast } from '@/app/pages/ai/CashFlowForecast';
+import { InvoiceLateRisk } from '@/app/pages/ai/InvoiceLateRisk';
 
 // Company setup
 import CompanySetup from '@/app/pages/businesses/CompanySetup';
@@ -175,6 +176,16 @@ export const router = createBrowserRouter([
           <RequireCompanySetup>
             <RequirePermission permission="ai:read">
               <CashFlowForecast />
+            </RequirePermission>
+          </RequireCompanySetup>
+        ),
+      },
+      {
+        path: 'invoice-late-risk',
+        element: (
+          <RequireCompanySetup>
+            <RequirePermission permission="ai:read">
+              <InvoiceLateRisk />
             </RequirePermission>
           </RequireCompanySetup>
         ),
