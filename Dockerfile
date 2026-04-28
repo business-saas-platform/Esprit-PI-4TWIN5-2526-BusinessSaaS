@@ -31,8 +31,8 @@ ENV NODE_ENV=production
 
 # Multitenancy environment variables
 ENV TENANT_ID="" \
-	TENANT_REGION="" \
-	TENANT_TIER=""
+    TENANT_REGION="" \
+    TENANT_TIER=""
 
 # This containerized setup fulfills the portability requirement for Tunisian Data Sovereignty compliance.
 

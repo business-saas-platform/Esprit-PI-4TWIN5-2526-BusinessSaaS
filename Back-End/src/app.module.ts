@@ -4,6 +4,8 @@ import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { typeOrmConfig } from "./config/typeorm.config";
 import { CommunicationModule } from './modules/communication/communication.module';
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { join } from "path";
 
 import { BusinessesModule } from "./modules/businesses/businesses.module";
 import { UsersModule } from "./modules/users/users.module";
@@ -20,6 +22,10 @@ import { SecurityQuestionsModule } from "./modules/security-questions/security-q
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), "public"),
+      exclude: ["/api*"],
+    }),
     TypeOrmModule.forRootAsync({ useFactory: typeOrmConfig }),
     BusinessesModule,
     UsersModule,
