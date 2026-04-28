@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AIInsightsController = void 0;
 const common_1 = require("@nestjs/common");
@@ -22,13 +21,18 @@ const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 const business_access_guard_1 = require("../../common/guards/business-access.guard");
 const business_id_decorator_1 = require("../../common/decorators/business-id.decorator");
 const cash_flow_forecast_service_1 = require("./cash-flow-forecast.service");
+const invoice_late_risk_service_1 = require("./invoice-late-risk.service");
 let AIInsightsController = class AIInsightsController {
-    constructor(s, cashFlowForecast) {
+    constructor(s, cashFlowForecast, invoiceLateRisk) {
         this.s = s;
         this.cashFlowForecast = cashFlowForecast;
+        this.invoiceLateRisk = invoiceLateRisk;
     }
     forecastCashFlow(businessId, horizon) {
         return this.cashFlowForecast.forecast(businessId, Number(horizon || 30));
+    }
+    getInvoiceLatePaymentRisk(businessId) {
+        return this.invoiceLateRisk.scoreLatePaymentRisk(businessId);
     }
     create(businessId, dto) {
         return this.s.create(businessId, dto);
@@ -55,6 +59,13 @@ __decorate([
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", void 0)
 ], AIInsightsController.prototype, "forecastCashFlow", null);
+__decorate([
+    (0, common_1.Get)('invoices/late-payment-risk'),
+    __param(0, (0, business_id_decorator_1.BusinessId)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], AIInsightsController.prototype, "getInvoiceLatePaymentRisk", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, business_id_decorator_1.BusinessId)()),
@@ -98,6 +109,8 @@ __decorate([
 exports.AIInsightsController = AIInsightsController = __decorate([
     (0, common_1.Controller)('ai-insights'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, business_access_guard_1.BusinessAccessGuard),
-    __metadata("design:paramtypes", [ai_insights_service_1.AIInsightsService, typeof (_a = typeof cash_flow_forecast_service_1.CashFlowForecastService !== "undefined" && cash_flow_forecast_service_1.CashFlowForecastService) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [ai_insights_service_1.AIInsightsService,
+        cash_flow_forecast_service_1.CashFlowForecastService,
+        invoice_late_risk_service_1.InvoiceLateRiskService])
 ], AIInsightsController);
 //# sourceMappingURL=ai-insights.controller.js.map

@@ -1,7 +1,7 @@
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 
-import { MessageSquare } from 'lucide-react'; // add to existing lucide import
-import { useEffect, useMemo, useRef, useState } from "react";
+import { MessageSquare } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   LayoutDashboard,
   FileText,
@@ -14,18 +14,20 @@ import {
   X,
   LogOut,
   Sparkles,
+  Activity,
+  ShieldAlert,
   ChevronRight,
   Building2,
   PanelLeftClose,
   PanelLeftOpen,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Button, Avatar, AvatarFallback } from "@/shared/ui";
-import { BusinessSwitcher } from "../molecules/BusinessSwitcher";
-import { AIAssistant } from "../organisms/AIAssistant";
-import ChatWidget from "@/shared/components/ChatWidget";
-import { useBusinessContext } from "@/shared/contexts/BusinessContext";
-import { useAuth } from "@/shared/contexts/AuthContext";
+import { Button, Avatar, AvatarFallback } from '@/shared/ui';
+import { BusinessSwitcher } from '../molecules/BusinessSwitcher';
+import { AIAssistant } from '../organisms/AIAssistant';
+import ChatWidget from '@/shared/components/ChatWidget';
+import { useBusinessContext } from '@/shared/contexts/BusinessContext';
+import { useAuth } from '@/shared/contexts/AuthContext';
 
 type NavItem = {
   name: string;
@@ -36,31 +38,49 @@ type NavItem = {
 };
 
 const navigation: NavItem[] = [
-  { name: 'Communication', href: '/dashboard/communication', icon: MessageSquare, perm: 'team.read' },
+  {
+    name: 'Communication',
+    href: '/dashboard/communication',
+    icon: MessageSquare,
+    perm: 'team.read',
+  },
 
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "AI Insights", href: "/dashboard/ai-insights", icon: Sparkles, perm: "ai.read", badge: "AI" },
-  { name: "Invoices", href: "/dashboard/invoices", icon: FileText, perm: "invoices.read" },
-  { name: "Expenses", href: "/dashboard/expenses", icon: Receipt, perm: "expenses.read" },
-  { name: "Clients", href: "/dashboard/clients", icon: Users, perm: "clients.read" },
-  { name: "Team", href: "/dashboard/team", icon: UsersRound, perm: "team.read" },
-  { name: "Reports", href: "/dashboard/reports", icon: BarChart3, perm: "reports.read" },
-  { name: "Settings", href: "/dashboard/settings", icon: Settings, perm: "settings.read" },
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  {
+    name: 'AI Insights',
+    href: '/dashboard/ai-insights',
+    icon: Sparkles,
+    perm: 'ai.read',
+    badge: 'AI',
+  },
+  { name: 'Cash Flow', href: '/dashboard/cash-flow-forecast', icon: Activity, perm: 'ai.read' },
+  {
+    name: 'Invoice Risk',
+    href: '/dashboard/invoice-late-risk',
+    icon: ShieldAlert,
+    perm: 'ai.read',
+  },
+  { name: 'Invoices', href: '/dashboard/invoices', icon: FileText, perm: 'invoices.read' },
+  { name: 'Expenses', href: '/dashboard/expenses', icon: Receipt, perm: 'expenses.read' },
+  { name: 'Clients', href: '/dashboard/clients', icon: Users, perm: 'clients.read' },
+  { name: 'Team', href: '/dashboard/team', icon: UsersRound, perm: 'team.read' },
+  { name: 'Reports', href: '/dashboard/reports', icon: BarChart3, perm: 'reports.read' },
+  { name: 'Settings', href: '/dashboard/settings', icon: Settings, perm: 'settings.read' },
 ];
 
 function initials(name?: string) {
-  if (!name) return "U";
+  if (!name) return 'U';
   const parts = name.trim().split(/\s+/);
-  const a = parts[0]?.[0] ?? "U";
-  const b = parts[1]?.[0] ?? "";
+  const a = parts[0]?.[0] ?? 'U';
+  const b = parts[1]?.[0] ?? '';
   return (a + b).toUpperCase();
 }
 
 function getPageTitle(pathname: string) {
   const match = navigation.find(
-    (item) => pathname === item.href || pathname.startsWith(item.href + "/")
+    (item) => pathname === item.href || pathname.startsWith(item.href + '/')
   );
-  return match?.name || "Dashboard";
+  return match?.name || 'Dashboard';
 }
 
 export function DashboardLayout() {
@@ -75,30 +95,30 @@ export function DashboardLayout() {
   const { currentBusiness, setCurrentBusiness, businesses, isReady } = useBusinessContext();
   const { user, logout, isReady: authReady, hasPermission } = useAuth();
 
-  const isOnSetupPage = location.pathname.startsWith("/dashboard/company/setup");
+  const isOnSetupPage = location.pathname.startsWith('/dashboard/company/setup');
 
   const brandTitle = useMemo(() => {
-    return (currentBusiness as any)?.name || "BizManager";
+    return (currentBusiness as any)?.name || 'BizManager';
   }, [currentBusiness]);
 
   const pageTitle = useMemo(() => getPageTitle(location.pathname), [location.pathname]);
 
   const filteredNavigation = useMemo(() => {
     if (!user) return [];
-    if (user.role === "platform_admin" || user.role === "business_owner") return navigation;
+    if (user.role === 'platform_admin' || user.role === 'business_owner') return navigation;
     return navigation.filter((item) => !item.perm || hasPermission(item.perm));
   }, [user, hasPermission]);
 
   const handleLogout = () => {
     logout();
-    navigate("/auth/login", { replace: true });
+    navigate('/auth/login', { replace: true });
   };
 
   const handleBusinessChange = (business: (typeof businesses)[0]) => {
     setCurrentBusiness(business);
     if ((business as any)?.id) {
-      localStorage.setItem("current_business_id", String((business as any).id));
-      window.dispatchEvent(new Event("business-changed"));
+      localStorage.setItem('current_business_id', String((business as any).id));
+      window.dispatchEvent(new Event('business-changed'));
     }
   };
 
@@ -114,18 +134,18 @@ export function DashboardLayout() {
     }
 
     if (userMenuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [userMenuOpen]);
 
   useEffect(() => {
     if (!authReady || !isReady) return;
 
-    const isOwner = user?.role === "business_owner";
+    const isOwner = user?.role === 'business_owner';
 
     if (!currentBusiness && businesses.length > 0) {
       handleBusinessChange(businesses[0]);
@@ -135,37 +155,29 @@ export function DashboardLayout() {
     const incomplete = (currentBusiness as any)?.isProfileComplete === false;
 
     if (isOwner && incomplete && !isOnSetupPage) {
-      navigate("/dashboard/company/setup", { replace: true });
+      navigate('/dashboard/company/setup', { replace: true });
       return;
     }
 
     if (isOwner && !incomplete && isOnSetupPage) {
-      navigate("/dashboard", { replace: true });
+      navigate('/dashboard', { replace: true });
     }
-  }, [
-    authReady,
-    isReady,
-    user?.role,
-    currentBusiness,
-    businesses,
-    isOnSetupPage,
-    navigate,
-  ]);
+  }, [authReady, isReady, user?.role, currentBusiness, businesses, isOnSetupPage, navigate]);
 
   useEffect(() => {
     if (!authReady || !user) return;
-    if (user.role === "platform_admin" || user.role === "business_owner") return;
+    if (user.role === 'platform_admin' || user.role === 'business_owner') return;
 
     const currentNav = navigation.find(
-      (n) => location.pathname === n.href || location.pathname.startsWith(n.href + "/")
+      (n) => location.pathname === n.href || location.pathname.startsWith(n.href + '/')
     );
 
     if (currentNav?.perm && !hasPermission(currentNav.perm)) {
-      navigate("/dashboard", { replace: true });
+      navigate('/dashboard', { replace: true });
     }
   }, [authReady, user, location.pathname, hasPermission, navigate]);
 
-  const desktopSidebarWidth = sidebarCollapsed ? "lg:pl-24" : "lg:pl-72";
+  const desktopSidebarWidth = sidebarCollapsed ? 'lg:pl-24' : 'lg:pl-72';
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
@@ -188,24 +200,24 @@ export function DashboardLayout() {
                 </div>
               </div>
 
-              <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(false)} className="rounded-xl">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSidebarOpen(false)}
+                className="rounded-xl"
+              >
                 <X className="h-5 w-5" />
               </Button>
             </div>
 
             <div className="border-b border-slate-100 px-4 py-4">
-              <BusinessSwitcher
-                businesses={businesses}
-                currentBusiness={currentBusiness}
-                onBusinessChange={handleBusinessChange}
-              />
+              <BusinessSwitcher />
             </div>
 
             <nav className="space-y-2 px-3 py-4">
               {filteredNavigation.map((item) => {
                 const isActive =
-                  location.pathname === item.href ||
-                  location.pathname.startsWith(item.href + "/");
+                  location.pathname === item.href || location.pathname.startsWith(item.href + '/');
 
                 return (
                   <button
@@ -215,20 +227,20 @@ export function DashboardLayout() {
                       setSidebarOpen(false);
                     }}
                     className={[
-                      "group flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition-all",
+                      'group flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition-all',
                       isActive
-                        ? "bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md"
-                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
-                    ].join(" ")}
+                        ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md'
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+                    ].join(' ')}
                   >
                     <item.icon className="h-5 w-5 shrink-0" />
                     <span className="flex-1 font-medium">{item.name}</span>
                     {item.badge && (
                       <span
                         className={[
-                          "rounded-full px-2 py-0.5 text-[10px] font-semibold",
-                          isActive ? "bg-white/20 text-white" : "bg-indigo-100 text-indigo-700",
-                        ].join(" ")}
+                          'rounded-full px-2 py-0.5 text-[10px] font-semibold',
+                          isActive ? 'bg-white/20 text-white' : 'bg-indigo-100 text-indigo-700',
+                        ].join(' ')}
                       >
                         {item.badge}
                       </span>
@@ -254,9 +266,9 @@ export function DashboardLayout() {
       {/* Desktop Sidebar */}
       <aside
         className={[
-          "hidden lg:fixed lg:inset-y-0 lg:flex lg:flex-col border-r border-slate-200 bg-white/95 backdrop-blur-sm transition-all duration-300",
-          sidebarCollapsed ? "lg:w-24" : "lg:w-72",
-        ].join(" ")}
+          'hidden lg:fixed lg:inset-y-0 lg:flex lg:flex-col border-r border-slate-200 bg-white/95 backdrop-blur-sm transition-all duration-300',
+          sidebarCollapsed ? 'lg:w-24' : 'lg:w-72',
+        ].join(' ')}
       >
         <div className="flex h-20 items-center justify-between border-b border-slate-200 px-4">
           <div className="flex items-center gap-3 min-w-0">
@@ -288,11 +300,7 @@ export function DashboardLayout() {
 
         {!sidebarCollapsed && (
           <div className="border-b border-slate-100 px-4 py-4">
-            <BusinessSwitcher
-              businesses={businesses}
-              currentBusiness={currentBusiness}
-              onBusinessChange={handleBusinessChange}
-            />
+            <BusinessSwitcher />
           </div>
         )}
 
@@ -300,22 +308,19 @@ export function DashboardLayout() {
           <nav className="space-y-2">
             {filteredNavigation.map((item) => {
               const isActive =
-                location.pathname === item.href ||
-                location.pathname.startsWith(item.href + "/");
+                location.pathname === item.href || location.pathname.startsWith(item.href + '/');
 
               return (
                 <button
                   key={item.name}
                   onClick={() => navigate(item.href)}
                   className={[
-                    "group flex w-full items-center rounded-2xl transition-all duration-200",
-                    sidebarCollapsed
-                      ? "justify-center px-2 py-3"
-                      : "gap-3 px-4 py-3",
+                    'group flex w-full items-center rounded-2xl transition-all duration-200',
+                    sidebarCollapsed ? 'justify-center px-2 py-3' : 'gap-3 px-4 py-3',
                     isActive
-                      ? "bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
-                  ].join(" ")}
+                      ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md'
+                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+                  ].join(' ')}
                   title={item.name}
                 >
                   <item.icon className="h-5 w-5 shrink-0" />
@@ -326,18 +331,20 @@ export function DashboardLayout() {
                       {item.badge ? (
                         <span
                           className={[
-                            "rounded-full px-2 py-0.5 text-[10px] font-semibold",
-                            isActive ? "bg-white/20 text-white" : "bg-indigo-100 text-indigo-700",
-                          ].join(" ")}
+                            'rounded-full px-2 py-0.5 text-[10px] font-semibold',
+                            isActive ? 'bg-white/20 text-white' : 'bg-indigo-100 text-indigo-700',
+                          ].join(' ')}
                         >
                           {item.badge}
                         </span>
                       ) : (
                         <ChevronRight
                           className={[
-                            "h-4 w-4 transition-transform",
-                            isActive ? "text-white/80" : "text-slate-400 group-hover:translate-x-0.5",
-                          ].join(" ")}
+                            'h-4 w-4 transition-transform',
+                            isActive
+                              ? 'text-white/80'
+                              : 'text-slate-400 group-hover:translate-x-0.5',
+                          ].join(' ')}
                         />
                       )}
                     </>
@@ -352,9 +359,9 @@ export function DashboardLayout() {
           <button
             onClick={handleLogout}
             className={[
-              "flex w-full items-center rounded-2xl text-red-600 transition hover:bg-red-50",
-              sidebarCollapsed ? "justify-center px-2 py-3" : "gap-3 px-4 py-3",
-            ].join(" ")}
+              'flex w-full items-center rounded-2xl text-red-600 transition hover:bg-red-50',
+              sidebarCollapsed ? 'justify-center px-2 py-3' : 'gap-3 px-4 py-3',
+            ].join(' ')}
             title="Logout"
           >
             <LogOut className="h-5 w-5" />
@@ -378,11 +385,9 @@ export function DashboardLayout() {
               </Button>
 
               <div>
-                <h1 className="text-xl font-bold tracking-tight text-slate-900">
-                  {pageTitle}
-                </h1>
+                <h1 className="text-xl font-bold tracking-tight text-slate-900">{pageTitle}</h1>
                 <p className="text-sm text-slate-500">
-                  Welcome back{user?.name ? `, ${user.name}` : ""}
+                  Welcome back{user?.name ? `, ${user.name}` : ''}
                 </p>
               </div>
             </div>
@@ -401,10 +406,10 @@ export function DashboardLayout() {
 
                 <div className="hidden md:flex flex-col items-start leading-tight">
                   <span className="max-w-[160px] truncate text-sm font-semibold text-slate-900">
-                    {user?.name ?? "User"}
+                    {user?.name ?? 'User'}
                   </span>
                   <span className="max-w-[160px] truncate text-xs text-slate-500">
-                    {user?.email ?? ""}
+                    {user?.email ?? ''}
                   </span>
                 </div>
               </button>
@@ -419,10 +424,10 @@ export function DashboardLayout() {
                         </AvatarFallback>
                       </Avatar>
                       <div className="min-w-0">
-                        <div className="truncate text-sm font-bold">{user?.name ?? "User"}</div>
-                        <div className="truncate text-xs text-white/80">{user?.email ?? ""}</div>
+                        <div className="truncate text-sm font-bold">{user?.name ?? 'User'}</div>
+                        <div className="truncate text-xs text-white/80">{user?.email ?? ''}</div>
                         <div className="mt-1 inline-flex rounded-full bg-white/15 px-2 py-1 text-[11px] font-medium">
-                          {user?.role ?? "-"}
+                          {user?.role ?? '-'}
                         </div>
                       </div>
                     </div>
@@ -433,7 +438,7 @@ export function DashboardLayout() {
                       type="button"
                       onClick={() => {
                         setUserMenuOpen(false);
-                        navigate("/dashboard/settings");
+                        navigate('/dashboard/settings');
                       }}
                       className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:bg-slate-100"
                     >

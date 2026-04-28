@@ -1,0 +1,23 @@
+{
+  "model": "linear_regression_gd",
+  "features": [
+    "lag_1",
+    "lag_7",
+    "rolling_mean_7",
+    "inflow_paid",
+    "outflow_approved",
+    "paid_invoice_count",
+    "approved_expense_count",
+    "unpaid_due_7d",
+    "unpaid_due_30d",
+    "avg_invoice_amount_30d",
+    "avg_expense_amount_30d",
+    "day_of_week",
+    "month",
+    "is_month_end",
+    "is_quarter_end"
+  ],
+  "mae": 0.40216632801992996,
+  "train_rows": 46272,
+  "test_rows": 11568
+}

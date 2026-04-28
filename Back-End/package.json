@@ -5,6 +5,7 @@
   "scripts": {
     "start": "nest start",
     "start:dev": "nest start --watch",
+    "start:dev:ml": "powershell -ExecutionPolicy Bypass -File .\\scripts\\start-dev-ml.ps1",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "build": "nest build",

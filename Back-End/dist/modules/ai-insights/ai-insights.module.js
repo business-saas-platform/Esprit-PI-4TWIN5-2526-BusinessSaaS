@@ -16,6 +16,7 @@ const ai_insights_service_1 = require("./ai-insights.service");
 const invoice_entity_1 = require("../invoices/entities/invoice.entity");
 const expense_entity_1 = require("../expenses/entities/expense.entity");
 const cash_flow_forecast_service_1 = require("./cash-flow-forecast.service");
+const invoice_late_risk_service_1 = require("./invoice-late-risk.service");
 let AIInsightsModule = class AIInsightsModule {
 };
 exports.AIInsightsModule = AIInsightsModule;
@@ -26,7 +27,7 @@ exports.AIInsightsModule = AIInsightsModule = __decorate([
             typeorm_1.TypeOrmModule.forFeature([ai_insight_entity_1.AIInsightEntity, invoice_entity_1.InvoiceEntity, expense_entity_1.ExpenseEntity]),
         ],
         controllers: [ai_insights_controller_1.AIInsightsController],
-        providers: [ai_insights_service_1.AIInsightsService, cash_flow_forecast_service_1.CashFlowForecastService],
+        providers: [ai_insights_service_1.AIInsightsService, cash_flow_forecast_service_1.CashFlowForecastService, invoice_late_risk_service_1.InvoiceLateRiskService],
     })
 ], AIInsightsModule);
 //# sourceMappingURL=ai-insights.module.js.map

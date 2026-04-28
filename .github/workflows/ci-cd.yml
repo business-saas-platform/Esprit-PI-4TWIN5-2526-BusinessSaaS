@@ -1,0 +1,50 @@
+name: CI/CD
+
+# This fulfills the 'Communication and Collaboration' requirement for Esprit.
+
+on:
+	push:
+		branches: [main]
+	pull_request:
+		branches: [main]
+
+jobs:
+	build-and-test:
+		runs-on: ubuntu-latest
+
+		steps:
+			- name: Checkout
+				uses: actions/checkout@v4
+
+			- name: Setup Node.js
+				uses: actions/setup-node@v4
+				with:
+					node-version: 20
+					cache: npm
+					cache-dependency-path: |
+						Front-End/package-lock.json
+						Back-End/package-lock.json
+
+			- name: Install dependencies (Front-End)
+				working-directory: Front-End
+				run: npm ci
+
+			- name: Build (Front-End)
+				working-directory: Front-End
+				run: npm run build
+
+			- name: Test (Front-End)
+				working-directory: Front-End
+				run: npm test --if-present
+
+			- name: Install dependencies (Back-End)
+				working-directory: Back-End
+				run: npm ci
+
+			- name: Build (Back-End)
+				working-directory: Back-End
+				run: npm run build
+
+			- name: Test (Back-End)
+				working-directory: Back-End
+				run: npm test --if-present

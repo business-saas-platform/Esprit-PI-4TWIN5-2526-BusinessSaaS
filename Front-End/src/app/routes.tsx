@@ -1,92 +1,97 @@
-import React from "react";
-import { createBrowserRouter } from "react-router-dom";
-import { ProtectedRoute } from "@/shared/components/ProtectedRoute";
-import { RequirePermission } from "@/shared/components/RequirePermission";
-import { RequireCompanySetup } from "@/shared/components/RequireCompanySetup";
+import React from 'react';
+import { createBrowserRouter } from 'react-router-dom';
+import { ProtectedRoute } from '@/shared/components/ProtectedRoute';
+import { RequirePermission } from '@/shared/components/RequirePermission';
+import { RequireCompanySetup } from '@/shared/components/RequireCompanySetup';
 
 // Communication
 import { Communication } from '@/back-office/pages/communication/Communication';
-// --- AJOUT : Import du composant PlatformSupport pour l'admin ---
-import PlatformSupport from "@/back-office/pages/admin/PlatformSupport"; 
+
+// Platform support
+import PlatformSupport from '@/back-office/pages/admin/PlatformSupport';
 
 // Front-office
-import { LandingPage } from "@/front-office/pages/LandingPage";
-import { MockPaymentPage } from "@/front-office/pages/MockPaymentPage";
+import { LandingPage } from '@/front-office/pages/LandingPage';
+import { MockPaymentPage } from '@/front-office/pages/MockPaymentPage';
 
 // Layouts
-import { AuthLayout } from "@/back-office/templates/AuthLayout";
-import { DashboardLayout } from "@/back-office/templates/DashboardLayout";
-import { PlatformAdminLayout } from "@/back-office/templates/PlatformAdminLayout";
+import { AuthLayout } from '@/back-office/templates/AuthLayout';
+import { DashboardLayout } from '@/back-office/templates/DashboardLayout';
+import { PlatformAdminLayout } from '@/back-office/templates/PlatformAdminLayout';
 
 // Auth Pages
-import { Login } from "@/app/pages/auth/Login";
-import { Register } from "@/back-office/pages/auth/Register";
-import { ForgotPassword } from "@/back-office/pages/auth/ForgotPassword";
-import AcceptInvite from "@/app/pages/auth/AcceptInvite";
-import OAuthSuccess from "@/app/pages/auth/OAuthSuccess";
-import ForceChangePassword from "@/app/pages/auth/ForceChangePassword";
-import { SecurityQuestionsSetup } from "@/back-office/pages/auth/SecurityQuestionsSetup";
-import OAuthCallback from "@/app/pages/auth/OAuthCallback";
+import { Login } from '@/app/pages/auth/Login';
+import { Register } from '@/back-office/pages/auth/Register';
+import { ForgotPassword } from '@/back-office/pages/auth/ForgotPassword';
+import AcceptInvite from '@/app/pages/auth/AcceptInvite';
+import OAuthSuccess from '@/app/pages/auth/OAuthSuccess';
+import ForceChangePassword from '@/app/pages/auth/ForceChangePassword';
+import { SecurityQuestionsSetup } from '@/back-office/pages/auth/SecurityQuestionsSetup';
+import OAuthCallback from '@/app/pages/auth/OAuthCallback';
 
 // Dashboard Pages
-import { Dashboard } from "@/back-office/pages/dashboard/Dashboard";
-import CreateBusiness from "@/back-office/pages/businesses/CreateBusiness";
-import { Invoices } from "@/app/pages/invoices/Invoices";
-import { CreateInvoice } from "@/app/pages/invoices/CreateInvoice";
-import { ViewInvoice } from "@/app/pages/invoices/ViewInvoice";
-import { Expenses } from "@/app/pages/expenses/Expenses";
-import { CreateExpense } from "@/app/pages/expenses/CreateExpense";
-import { Clients } from "@/app/pages/clients/Clients";
-import { ClientDetails } from "@/app/pages/clients/ClientDetails";
-import { Team } from "@/app/pages/team/Team";
-import { Reports } from "@/app/pages/reports/Reports";
-import { Settings } from "@/app/pages/settings/Settings";
+import { Dashboard } from '@/back-office/pages/dashboard/Dashboard';
+import CreateBusiness from '@/back-office/pages/businesses/CreateBusiness';
+import { Invoices } from '@/app/pages/invoices/Invoices';
+import { CreateInvoice } from '@/app/pages/invoices/CreateInvoice';
+import { ViewInvoice } from '@/app/pages/invoices/ViewInvoice';
+import { Expenses } from '@/app/pages/expenses/Expenses';
+import { CreateExpense } from '@/app/pages/expenses/CreateExpense';
+import { Clients } from '@/app/pages/clients/Clients';
+import { ClientDetails } from '@/app/pages/clients/ClientDetails';
+import { Team } from '@/app/pages/team/Team';
+import { Reports } from '@/app/pages/reports/Reports';
+import { Settings } from '@/app/pages/settings/Settings';
 
 // Platform Admin pages
-import { AdminOverview } from "@/app/pages/admin/AdminOverview";
-import { BusinessOwners } from "@/app/pages/admin/BusinessOwners";
-import { Businesses } from "@/app/pages/admin/Businesses";
-import { Analytics } from "@/app/pages/admin/Analytics";
-import RegistrationRequestsAdmin from "@/app/pages/admin/RegistrationRequestsAdmin";
+import { AdminOverview } from '@/app/pages/admin/AdminOverview';
+import { BusinessOwners } from '@/app/pages/admin/BusinessOwners';
+import { Businesses } from '@/app/pages/admin/Businesses';
+import { Analytics } from '@/app/pages/admin/Analytics';
+import RegistrationRequestsAdmin from '@/app/pages/admin/RegistrationRequestsAdmin';
 
-// AI & Company
-import { AIInsights } from "@/app/pages/ai/AIInsights";
-import CompanySetup from "@/app/pages/businesses/CompanySetup";
+// AI
+import { AIInsights } from '@/app/pages/ai/AIInsights';
+import { CashFlowForecast } from '@/app/pages/ai/CashFlowForecast';
+import { InvoiceLateRisk } from '@/app/pages/ai/InvoiceLateRisk';
+
+// Company setup
+import CompanySetup from '@/app/pages/businesses/CompanySetup';
 
 export const router = createBrowserRouter([
   // PUBLIC
-  { path: "/", element: <LandingPage /> },
-  { path: "/auth/oauth-callback", element: <OAuthCallback /> },
-  { path: "/oauth-success", element: <OAuthSuccess /> },
-  { path: "/mock-payment/:id", element: <MockPaymentPage /> },
+  { path: '/', element: <LandingPage /> },
+  { path: '/auth/oauth-callback', element: <OAuthCallback /> },
+  { path: '/oauth-success', element: <OAuthSuccess /> },
+  { path: '/mock-payment/:id', element: <MockPaymentPage /> },
 
   // AUTH
   {
-    path: "/auth",
+    path: '/auth',
     element: <AuthLayout />,
     children: [
-      { path: "login", element: <Login /> },
-      { path: "register", element: <Register /> },
-      { path: "force-change-password", element: <ForceChangePassword /> },
-      { path: "forgot-password", element: <ForgotPassword /> },
-      { path: "accept-invite", element: <AcceptInvite /> },
+      { path: 'login', element: <Login /> },
+      { path: 'register', element: <Register /> },
+      { path: 'force-change-password', element: <ForceChangePassword /> },
+      { path: 'forgot-password', element: <ForgotPassword /> },
+      { path: 'accept-invite', element: <AcceptInvite /> },
       {
-        path: "setup-security-questions",
+        path: 'setup-security-questions',
         element: (
           <SecurityQuestionsSetup
-            token={localStorage.getItem("access_token") ?? ""}
+            token={localStorage.getItem('access_token') ?? ''}
             onComplete={async () => {
-              const { BusinessesApi } = await import("@/shared/lib/services/businesses");
+              const { BusinessesApi } = await import('@/shared/lib/services/businesses');
               const list: any[] = await BusinessesApi.listMine();
               if (!list || list.length === 0) {
-                window.location.href = "/dashboard";
+                window.location.href = '/dashboard';
                 return;
               }
               const business = list[list.length - 1];
-              localStorage.setItem("current_business_id", String(business.id));
-              localStorage.setItem("pending_setup_business_id", String(business.id));
-              window.dispatchEvent(new Event("business-changed"));
-              window.location.href = "/dashboard/company/setup";
+              localStorage.setItem('current_business_id', String(business.id));
+              localStorage.setItem('pending_setup_business_id', String(business.id));
+              window.dispatchEvent(new Event('business-changed'));
+              window.location.href = '/dashboard/company/setup';
             }}
           />
         ),
@@ -96,44 +101,42 @@ export const router = createBrowserRouter([
 
   // PLATFORM ADMIN (Back-Office Admin)
   {
-    path: "/admin",
+    path: '/admin',
     element: (
-      <ProtectedRoute roles={["platform_admin"]}>
+      <ProtectedRoute roles={['platform_admin']}>
         <PlatformAdminLayout />
       </ProtectedRoute>
     ),
     children: [
       { index: true, element: <AdminOverview /> },
-      { path: "businesses", element: <Businesses /> },
-      { path: "owners", element: <BusinessOwners /> },
-      { path: "analytics", element: <Analytics /> },
-      { path: "settings", element: <Settings /> },
-      { path: "registration-requests", element: <RegistrationRequestsAdmin /> },
-      // --- AJOUT : Route pour répondre aux tickets support côté Admin ---
-      { path: "support", element: <PlatformSupport /> }, 
+      { path: 'businesses', element: <Businesses /> },
+      { path: 'owners', element: <BusinessOwners /> },
+      { path: 'analytics', element: <Analytics /> },
+      { path: 'settings', element: <Settings /> },
+      { path: 'registration-requests', element: <RegistrationRequestsAdmin /> },
+      { path: 'support', element: <PlatformSupport /> },
     ],
   },
 
   // DASHBOARD (Business Owner / Team Members)
   {
-    path: "/dashboard",
+    path: '/dashboard',
     element: (
       <ProtectedRoute
         roles={[
-          "business_owner",
-          "business_admin",
-          "accountant",
-          "team_member",
-          "client",
-          "platform_admin",
+          'business_owner',
+          'business_admin',
+          'accountant',
+          'team_member',
+          'client',
+          'platform_admin',
         ]}
       >
         <DashboardLayout />
       </ProtectedRoute>
     ),
     children: [
-      { path: "company/setup", element: <CompanySetup /> },
-      // Chat interne au business
+      { path: 'company/setup', element: <CompanySetup /> },
       { path: 'communication', element: <Communication /> },
 
       {
@@ -146,7 +149,7 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: "businesses/new",
+        path: 'businesses/new',
         element: (
           <RequireCompanySetup>
             <RequirePermission permission="businesses:write">
@@ -158,7 +161,7 @@ export const router = createBrowserRouter([
 
       // AI
       {
-        path: "ai-insights",
+        path: 'ai-insights',
         element: (
           <RequireCompanySetup>
             <RequirePermission permission="ai:read">
@@ -167,10 +170,30 @@ export const router = createBrowserRouter([
           </RequireCompanySetup>
         ),
       },
+      {
+        path: 'cash-flow-forecast',
+        element: (
+          <RequireCompanySetup>
+            <RequirePermission permission="ai:read">
+              <CashFlowForecast />
+            </RequirePermission>
+          </RequireCompanySetup>
+        ),
+      },
+      {
+        path: 'invoice-late-risk',
+        element: (
+          <RequireCompanySetup>
+            <RequirePermission permission="ai:read">
+              <InvoiceLateRisk />
+            </RequirePermission>
+          </RequireCompanySetup>
+        ),
+      },
 
       // INVOICES
       {
-        path: "invoices",
+        path: 'invoices',
         element: (
           <RequireCompanySetup>
             <RequirePermission permission="invoices:read">
@@ -180,7 +203,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "invoices/create",
+        path: 'invoices/create',
         element: (
           <RequireCompanySetup>
             <RequirePermission permission="invoices:write">
@@ -190,7 +213,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "invoices/:id",
+        path: 'invoices/:id',
         element: (
           <RequireCompanySetup>
             <RequirePermission permission="invoices:read">
@@ -202,7 +225,7 @@ export const router = createBrowserRouter([
 
       // EXPENSES
       {
-        path: "expenses",
+        path: 'expenses',
         element: (
           <RequireCompanySetup>
             <RequirePermission permission="expenses:read">
@@ -212,7 +235,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "expenses/create",
+        path: 'expenses/create',
         element: (
           <RequireCompanySetup>
             <RequirePermission permission="expenses:write">
@@ -224,7 +247,7 @@ export const router = createBrowserRouter([
 
       // CLIENTS
       {
-        path: "clients",
+        path: 'clients',
         element: (
           <RequireCompanySetup>
             <RequirePermission permission="clients:read">
@@ -234,7 +257,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "clients/:id",
+        path: 'clients/:id',
         element: (
           <RequireCompanySetup>
             <RequirePermission permission="clients:read">
@@ -246,7 +269,7 @@ export const router = createBrowserRouter([
 
       // TEAM
       {
-        path: "team",
+        path: 'team',
         element: (
           <RequireCompanySetup>
             <RequirePermission permission="team:read">
@@ -258,7 +281,7 @@ export const router = createBrowserRouter([
 
       // REPORTS
       {
-        path: "reports",
+        path: 'reports',
         element: (
           <RequireCompanySetup>
             <RequirePermission permission="reports:read">
@@ -270,7 +293,7 @@ export const router = createBrowserRouter([
 
       // SETTINGS
       {
-        path: "settings",
+        path: 'settings',
         element: (
           <RequireCompanySetup>
             <RequirePermission permission="settings:read">
