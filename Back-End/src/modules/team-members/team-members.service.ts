@@ -11,6 +11,8 @@ import { randomUUID } from "crypto";
 import { TeamMemberEntity } from "./entities/team-member.entity";
 import { TeamInvitationEntity } from "./entities/team-invitation.entity";
 import { BusinessEntity } from "../businesses/entities/business.entity";
+import { UserEntity } from "../users/entities/user.entity";
+import { In } from "typeorm";
 
 import { CreateTeamMemberDto } from "./dto/create-team-member.dto";
 import { UpdateTeamMemberDto } from "./dto/update-team-member.dto";
@@ -37,6 +39,9 @@ export class TeamMembersService {
 
     @InjectRepository(BusinessEntity)
     private readonly businessRepo: Repository<BusinessEntity>,
+
+    @InjectRepository(UserEntity)
+    private readonly userRepo: Repository<UserEntity>,
 
     private readonly mailService: MailService
   ) {}
@@ -223,9 +228,19 @@ export class TeamMembersService {
 
     await this.assertUserHasAccess(user, businessId);
 
-    return this.membersRepo.find({
+    const members = await this.membersRepo.find({
       where: { businessId },
       order: { createdAt: "DESC" as any },
+    });
+
+    if (members.length === 0) return [];
+
+    const emails = members.map(m => m.email);
+    const users = await this.userRepo.find({ where: { email: In(emails) } });
+
+    return members.map(m => {
+      const u = users.find(u => u.email === m.email);
+      return { ...m, userId: u?.id };
     });
   }
 

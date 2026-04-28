@@ -75,47 +75,47 @@ const PlatformSupport = () => {
   };
 
   return (
-    <div className="flex h-[calc(100vh-140px)] bg-white rounded-xl shadow-lg border overflow-hidden">
+    <div className="flex h-[calc(100vh-140px)] bg-card rounded-xl shadow-lg border overflow-hidden">
       {/* Sidebar */}
-      <div className="w-80 border-r bg-gray-50 flex flex-col">
-        <div className="p-4 border-b font-bold bg-white">Tickets Support ({tickets.length})</div>
+      <div className="w-80 border-r bg-background flex flex-col">
+        <div className="p-4 border-b font-bold bg-card">Tickets Support ({tickets.length})</div>
         <div className="flex-1 overflow-y-auto">
           {tickets.map(t => (
             <div 
               key={t.id} 
               onClick={() => handleSelectTicket(t)}
-              className={`p-4 cursor-pointer border-b transition ${selectedChannel?.id === t.id ? 'bg-red-50 border-l-4 border-red-600' : 'hover:bg-gray-100'}`}
+              className={`p-4 cursor-pointer border-b transition ${selectedChannel?.id === t.id ? 'bg-red-50 border-l-4 border-red-600' : 'hover:bg-muted'}`}
             >
-              <p className="font-bold text-sm text-gray-800">Business ID: {t.businessId.slice(0,8)}</p>
-              <p className="text-xs text-gray-500 truncate">{t.description || "Nouvelle réclamation"}</p>
+              <p className="font-bold text-sm text-foreground">Business ID: {t.businessId.slice(0,8)}</p>
+              <p className="text-xs text-muted-foreground truncate">{t.description || "Nouvelle réclamation"}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* Chat */}
-      <div className="flex-1 flex flex-col bg-white">
+      <div className="flex-1 flex flex-col bg-card">
         {selectedChannel ? (
           <>
             <div className="p-4 border-b flex justify-between items-center shadow-sm">
-              <span className="font-bold text-gray-700">Discussion : {selectedChannel.id.slice(0,8)}</span>
+              <span className="font-bold text-foreground">Discussion : {selectedChannel.id.slice(0,8)}</span>
               <button className="bg-green-500 text-white text-[10px] px-3 py-1 rounded-full uppercase font-bold">Ouvert</button>
             </div>
 
-            <div className="flex-1 p-6 overflow-y-auto bg-gray-50/30">
+            <div className="flex-1 p-6 overflow-y-auto bg-background/30">
               {messages.map((msg, i) => (
                 <div key={i} className={`mb-4 flex flex-col ${msg.senderId === ADMIN_ID ? 'items-end' : 'items-start'}`}>
-                  <div className={`p-3 rounded-2xl max-w-[75%] text-sm shadow-sm ${msg.senderId === ADMIN_ID ? 'bg-red-600 text-white rounded-tr-none' : 'bg-white border text-gray-800 rounded-tl-none'}`}>
+                  <div className={`p-3 rounded-2xl max-w-[75%] text-sm shadow-sm ${msg.senderId === ADMIN_ID ? 'bg-red-600 text-white rounded-tr-none' : 'bg-card border text-foreground rounded-tl-none'}`}>
                     {msg.content}
                   </div>
-                  <span className="text-[9px] text-gray-400 mt-1 uppercase">{msg.senderName}</span>
+                  <span className="text-[9px] text-muted-foreground mt-1 uppercase">{msg.senderName}</span>
                 </div>
               ))}
               <div ref={messagesEndRef} />
             </div>
 
-            <div className="p-4 border-t bg-white">
-              <div className="flex gap-2 bg-gray-100 p-2 rounded-2xl">
+            <div className="p-4 border-t bg-card">
+              <div className="flex gap-2 bg-muted p-2 rounded-2xl">
                 <input 
                   className="flex-1 bg-transparent border-none focus:ring-0 px-3 text-sm"
                   placeholder="Écrire votre réponse..."
@@ -133,7 +133,7 @@ const PlatformSupport = () => {
             </div>
           </>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-gray-400">
+          <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground">
             <div className="text-5xl mb-2">📩</div>
             <p className="font-medium">Sélectionnez un ticket pour répondre au client</p>
           </div>

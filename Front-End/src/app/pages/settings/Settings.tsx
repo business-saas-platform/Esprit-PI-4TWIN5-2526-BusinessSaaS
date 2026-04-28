@@ -89,8 +89,8 @@ function fieldClass(hasError?: boolean) {
   return `h-11 rounded-2xl border ${
     hasError
       ? "border-red-300 focus-visible:ring-red-200"
-      : "border-slate-200 focus-visible:ring-indigo-200"
-  } bg-white`;
+      : "border-border focus-visible:ring-indigo-200"
+  } bg-card`;
 }
 
 // ─────────────────────────────────────────────────────────
@@ -112,7 +112,7 @@ function PasswordRules({ password }: { password: string }) {
           className={`flex items-center gap-2 rounded-2xl border px-3 py-2 text-xs ${
             r.ok
               ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-              : "border-slate-200 bg-slate-50 text-slate-500"
+              : "border-border bg-background text-muted-foreground"
           }`}
         >
           {r.ok ? (
@@ -185,14 +185,14 @@ export function Settings() {
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-4 py-6 md:px-6 lg:px-8">
       {/* HERO */}
-      <section className="overflow-hidden rounded-[32px] border border-slate-200 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-white shadow-sm">
+      <section className="overflow-hidden rounded-[32px] border border-border bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-white shadow-sm">
         <div className="relative p-6 md:p-8 xl:p-10">
-          <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-white/5 blur-3xl" />
+          <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-card/5 blur-3xl" />
           <div className="absolute bottom-0 left-0 h-40 w-40 rounded-full bg-indigo-500/10 blur-3xl" />
 
           <div className="relative flex flex-col gap-8 xl:flex-row xl:items-end xl:justify-between">
             <div className="max-w-3xl space-y-4">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/80">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-card/5 px-3 py-1.5 text-xs font-medium text-white/80">
                 <Sparkles className="h-3.5 w-3.5" />
                 Personal account workspace
               </div>
@@ -209,23 +209,23 @@ export function Settings() {
               </div>
 
               <div className="flex flex-wrap gap-3 pt-2">
-                <div className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/85">
+                <div className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-card/5 px-4 py-2 text-sm text-white/85">
                   <BadgeCheck className="h-4 w-4" />
                   {user?.name || "User"}
                 </div>
-                <div className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/85">
+                <div className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-card/5 px-4 py-2 text-sm text-white/85">
                   <Mail className="h-4 w-4" />
                   {user?.email || "No email"}
                 </div>
-                <div className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/85">
+                <div className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-card/5 px-4 py-2 text-sm text-white/85">
                   <Building2 className="h-4 w-4" />
                   {formatRole(user?.role)}
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-4 rounded-[28px] border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
-              <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-white/10 text-xl font-bold text-white">
+            <div className="flex items-center gap-4 rounded-[28px] border border-white/10 bg-card/5 p-4 backdrop-blur-sm">
+              <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-card/10 text-xl font-bold text-white">
                 {getInitials(user?.name)}
               </div>
               <div className="min-w-0">
@@ -245,7 +245,7 @@ export function Settings() {
       </section>
 
       {/* TABS */}
-      <section className="rounded-[28px] border border-slate-200 bg-white p-3 shadow-sm">
+      <section className="rounded-[28px] border border-border bg-card p-3 shadow-sm">
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {tabs.map((t) => {
             const active = tab === t.id;
@@ -257,7 +257,7 @@ export function Settings() {
                 className={`group rounded-[24px] border p-4 text-left transition-all ${
                   active
                     ? "border-indigo-200 bg-indigo-50 shadow-sm"
-                    : "border-slate-200 bg-white hover:bg-slate-50"
+                    : "border-border bg-card hover:bg-background"
                 }`}
               >
                 <div className="flex items-start justify-between gap-3">
@@ -265,7 +265,7 @@ export function Settings() {
                     className={`flex h-10 w-10 items-center justify-center rounded-2xl ${
                       active
                         ? "bg-indigo-600 text-white"
-                        : "bg-slate-100 text-slate-600"
+                        : "bg-muted text-muted-foreground"
                     }`}
                   >
                     {t.icon}
@@ -275,7 +275,7 @@ export function Settings() {
                     className={`h-4 w-4 transition-transform ${
                       active
                         ? "text-indigo-500"
-                        : "text-slate-400 group-hover:translate-x-0.5"
+                        : "text-muted-foreground group-hover:translate-x-0.5"
                     }`}
                   />
                 </div>
@@ -283,12 +283,12 @@ export function Settings() {
                 <div className="mt-4">
                   <h3
                     className={`font-semibold ${
-                      active ? "text-indigo-700" : "text-slate-900"
+                      active ? "text-indigo-700" : "text-foreground"
                     }`}
                   >
                     {t.label}
                   </h3>
-                  <p className="mt-1 text-sm text-slate-500">{t.description}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{t.description}</p>
                 </div>
               </button>
             );
@@ -332,9 +332,9 @@ function ProfileSection() {
 
   return (
     <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-      <Card className="rounded-[30px] border-slate-200 shadow-sm">
-        <CardHeader className="border-b border-slate-100 pb-5">
-          <CardTitle className="text-xl text-slate-900">
+      <Card className="rounded-[30px] border-border shadow-sm">
+        <CardHeader className="border-b border-border pb-5">
+          <CardTitle className="text-xl text-foreground">
             Personal Information
           </CardTitle>
           <CardDescription>
@@ -344,16 +344,16 @@ function ProfileSection() {
 
         <CardContent className="p-6">
           <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-            <div className="flex items-center gap-4 rounded-[24px] border border-slate-200 bg-slate-50 p-4">
+            <div className="flex items-center gap-4 rounded-[24px] border border-border bg-background p-4">
               <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-indigo-600 to-violet-600 text-xl font-bold text-white shadow-sm">
                 {getInitials(name)}
               </div>
               <div className="min-w-0">
-                <p className="truncate font-semibold text-slate-900">{name || "Unnamed user"}</p>
-                <p className="text-sm text-slate-500 capitalize">
+                <p className="truncate font-semibold text-foreground">{name || "Unnamed user"}</p>
+                <p className="text-sm text-muted-foreground capitalize">
                   {formatRole(user?.role)}
                 </p>
-                <p className="truncate text-xs text-slate-400">{user?.email}</p>
+                <p className="truncate text-xs text-muted-foreground">{user?.email}</p>
               </div>
             </div>
 
@@ -375,9 +375,9 @@ function ProfileSection() {
                 id="email"
                 value={email}
                 disabled
-                className="h-11 cursor-not-allowed rounded-2xl border-slate-200 bg-slate-100 text-slate-500"
+                className="h-11 cursor-not-allowed rounded-2xl border-border bg-muted text-muted-foreground"
               />
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-muted-foreground">
                 Email cannot be changed. Contact an admin if needed.
               </p>
             </div>
@@ -396,9 +396,9 @@ function ProfileSection() {
         </CardContent>
       </Card>
 
-      <Card className="rounded-[30px] border-slate-200 shadow-sm">
-        <CardHeader className="border-b border-slate-100 pb-5">
-          <CardTitle className="text-xl text-slate-900">Profile Overview</CardTitle>
+      <Card className="rounded-[30px] border-border shadow-sm">
+        <CardHeader className="border-b border-border pb-5">
+          <CardTitle className="text-xl text-foreground">Profile Overview</CardTitle>
           <CardDescription>
             Vue rapide sur ton identité et ton rôle dans la plateforme.
           </CardDescription>
@@ -456,9 +456,9 @@ function PasswordSection() {
 
   return (
     <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-      <Card className="rounded-[30px] border-slate-200 shadow-sm">
-        <CardHeader className="border-b border-slate-100 pb-5">
-          <CardTitle className="text-xl text-slate-900">
+      <Card className="rounded-[30px] border-border shadow-sm">
+        <CardHeader className="border-b border-border pb-5">
+          <CardTitle className="text-xl text-foreground">
             Change Password
           </CardTitle>
           <CardDescription>
@@ -525,30 +525,30 @@ function PasswordSection() {
         </CardContent>
       </Card>
 
-      <Card className="rounded-[30px] border-slate-200 shadow-sm">
-        <CardHeader className="border-b border-slate-100 pb-5">
-          <CardTitle className="text-xl text-slate-900">Security Tips</CardTitle>
-          <CardDescription>
-            Quelques règles simples pour un mot de passe plus fort.
-          </CardDescription>
+      <Card className="rounded-[30px] border-border shadow-sm">
+        <CardHeader className="border-b border-border pb-5">
+          <CardTitle className="text-xl text-foreground">Security Tips</CardTitle>
+         <CardDescription>
+  A few simple rules to keep your password strong and secure.
+</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-3 p-6">
           <TipBox
-            icon={<KeyRound className="h-4 w-4" />}
-            title="Use a unique password"
-            text="Ma تستعملش نفس mot de passe dans plusieurs comptes."
-          />
-          <TipBox
-            icon={<Shield className="h-4 w-4" />}
-            title="Mix characters"
-            text="A7سن mot de passe فيه majuscule, minuscule, chiffres w longueur correcte."
-          />
-          <TipBox
-            icon={<AlertTriangle className="h-4 w-4" />}
-            title="Avoid weak patterns"
-            text="B3id 3la 123456, azerty, date de naissance ou prénom."
-          />
+  icon={<KeyRound className="h-4 w-4" />}
+  title="Use a unique password"
+  text="Never reuse the same password across multiple accounts."
+/>
+<TipBox
+  icon={<Shield className="h-4 w-4" />}
+  title="Mix characters"
+  text="A strong password includes uppercase, lowercase, numbers, and is long enough."
+/>
+<TipBox
+  icon={<AlertTriangle className="h-4 w-4" />}
+  title="Avoid weak patterns"
+  text="Avoid using 123456, azerty, your date of birth, or your name."
+/>
         </CardContent>
       </Card>
     </div>
@@ -608,8 +608,8 @@ function SecurityQuestionsSection() {
 
   if (checking) {
     return (
-      <Card className="rounded-[30px] border-slate-200 shadow-sm">
-        <CardContent className="py-12 text-center text-sm text-slate-500">
+      <Card className="rounded-[30px] border-border shadow-sm">
+        <CardContent className="py-12 text-center text-sm text-muted-foreground">
           Loading...
         </CardContent>
       </Card>
@@ -618,9 +618,9 @@ function SecurityQuestionsSection() {
 
   return (
     <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-      <Card className="rounded-[30px] border-slate-200 shadow-sm">
-        <CardHeader className="border-b border-slate-100 pb-5">
-          <CardTitle className="text-xl text-slate-900">
+      <Card className="rounded-[30px] border-border shadow-sm">
+        <CardHeader className="border-b border-border pb-5">
+          <CardTitle className="text-xl text-foreground">
             Security Questions
           </CardTitle>
           <CardDescription>
@@ -642,10 +642,10 @@ function SecurityQuestionsSection() {
             {[0, 1, 2].map((i) => (
               <div
                 key={i}
-                className="rounded-[24px] border border-slate-200 bg-slate-50/70 p-4"
+                className="rounded-[24px] border border-border bg-background/70 p-4"
               >
                 <div className="mb-3">
-                  <Label className="text-sm font-semibold text-slate-900">
+                  <Label className="text-sm font-semibold text-foreground">
                     Question {i + 1}
                   </Label>
                 </div>
@@ -659,7 +659,7 @@ function SecurityQuestionsSection() {
                       setSelected(arr);
                     }}
                   >
-                    <SelectTrigger className="h-11 rounded-2xl border-slate-200 bg-white">
+                    <SelectTrigger className="h-11 rounded-2xl border-border bg-card">
                       <SelectValue placeholder="Select a question..." />
                     </SelectTrigger>
                     <SelectContent>
@@ -682,7 +682,7 @@ function SecurityQuestionsSection() {
                     }}
                     disabled={!selected[i]}
                     required
-                    className="h-11 rounded-2xl border-slate-200 bg-white"
+                    className="h-11 rounded-2xl border-border bg-card"
                   />
                 </div>
               </div>
@@ -706,9 +706,9 @@ function SecurityQuestionsSection() {
         </CardContent>
       </Card>
 
-      <Card className="rounded-[30px] border-slate-200 shadow-sm">
-        <CardHeader className="border-b border-slate-100 pb-5">
-          <CardTitle className="text-xl text-slate-900">Recovery Notes</CardTitle>
+      <Card className="rounded-[30px] border-border shadow-sm">
+        <CardHeader className="border-b border-border pb-5">
+          <CardTitle className="text-xl text-foreground">Recovery Notes</CardTitle>
           <CardDescription>
             Best practices pour garder des questions utiles et sûres.
           </CardDescription>
@@ -770,9 +770,9 @@ function AccountStatusSection({ user }: { user: any }) {
 
   return (
     <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-      <Card className="rounded-[30px] border-slate-200 shadow-sm">
-        <CardHeader className="border-b border-slate-100 pb-5">
-          <CardTitle className="text-xl text-slate-900">Account Status</CardTitle>
+      <Card className="rounded-[30px] border-border shadow-sm">
+        <CardHeader className="border-b border-border pb-5">
+          <CardTitle className="text-xl text-foreground">Account Status</CardTitle>
           <CardDescription>
             Read-only overview of your account metadata.
           </CardDescription>
@@ -782,9 +782,9 @@ function AccountStatusSection({ user }: { user: any }) {
           {statusItems.map((item) => (
             <div
               key={item.label}
-              className="flex flex-col gap-2 rounded-[22px] border border-slate-200 bg-slate-50/70 p-4 sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-2 rounded-[22px] border border-border bg-background/70 p-4 sm:flex-row sm:items-center sm:justify-between"
             >
-              <span className="text-sm font-medium text-slate-500">
+              <span className="text-sm font-medium text-muted-foreground">
                 {item.label}
               </span>
 
@@ -796,7 +796,7 @@ function AccountStatusSection({ user }: { user: any }) {
                     ? "text-emerald-600"
                     : item.highlight === "warning"
                     ? "text-amber-600"
-                    : "text-slate-900"
+                    : "text-foreground"
                 }`}
               >
                 {item.highlight === "success" && (
@@ -812,9 +812,9 @@ function AccountStatusSection({ user }: { user: any }) {
         </CardContent>
       </Card>
 
-      <Card className="rounded-[30px] border-slate-200 shadow-sm">
-        <CardHeader className="border-b border-slate-100 pb-5">
-          <CardTitle className="text-xl text-slate-900">Account Summary</CardTitle>
+      <Card className="rounded-[30px] border-border shadow-sm">
+        <CardHeader className="border-b border-border pb-5">
+          <CardTitle className="text-xl text-foreground">Account Summary</CardTitle>
           <CardDescription>
             Petit résumé visuel de ton état actuel.
           </CardDescription>
@@ -857,10 +857,10 @@ function InfoRow({
   mono?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-2 rounded-[22px] border border-slate-200 bg-slate-50/70 p-4 sm:flex-row sm:items-center sm:justify-between">
-      <span className="text-sm font-medium text-slate-500">{label}</span>
+    <div className="flex flex-col gap-2 rounded-[22px] border border-border bg-background/70 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <span className="text-sm font-medium text-muted-foreground">{label}</span>
       <span
-        className={`max-w-full break-all text-sm text-slate-900 sm:max-w-[60%] sm:text-right ${
+        className={`max-w-full break-all text-sm text-foreground sm:max-w-[60%] sm:text-right ${
           mono ? "font-mono text-xs" : "font-medium"
         }`}
       >
@@ -882,15 +882,15 @@ function TipBox({
   mono?: boolean;
 }) {
   return (
-    <div className="rounded-[22px] border border-slate-200 bg-slate-50/70 p-4">
+    <div className="rounded-[22px] border border-border bg-background/70 p-4">
       <div className="flex items-start gap-3">
-        <div className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-2xl bg-white text-slate-700 shadow-sm">
+        <div className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-2xl bg-card text-foreground shadow-sm">
           {icon}
         </div>
         <div className="min-w-0">
-          <p className="font-medium text-slate-900">{title}</p>
+          <p className="font-medium text-foreground">{title}</p>
           <p
-            className={`mt-1 text-sm text-slate-500 ${
+            className={`mt-1 text-sm text-muted-foreground ${
               mono ? "break-all font-mono text-xs" : ""
             }`}
           >

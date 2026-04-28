@@ -470,19 +470,19 @@ export function Businesses() {
         );
       case "inactive":
         return (
-          <Badge className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-slate-700 hover:bg-slate-50">
+          <Badge className="rounded-full border border-border bg-background px-3 py-1 text-foreground hover:bg-background">
             Inactive
           </Badge>
         );
       case "unassigned":
         return (
-          <Badge className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-slate-700 hover:bg-slate-50">
+          <Badge className="rounded-full border border-border bg-background px-3 py-1 text-foreground hover:bg-background">
             No status
           </Badge>
         );
       default:
         return (
-          <Badge className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-slate-700 hover:bg-slate-50">
+          <Badge className="rounded-full border border-border bg-background px-3 py-1 text-foreground hover:bg-background">
             {status || "No status"}
           </Badge>
         );
@@ -493,7 +493,7 @@ export function Businesses() {
     switch ((plan || "").toLowerCase()) {
       case "starter":
         return (
-          <Badge className="rounded-full border border-slate-200 bg-white px-3 py-1 text-slate-700 hover:bg-white">
+          <Badge className="rounded-full border border-border bg-card px-3 py-1 text-foreground hover:bg-card">
             Starter
           </Badge>
         );
@@ -511,13 +511,13 @@ export function Businesses() {
         );
       case "custom":
         return (
-          <Badge className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-slate-700 hover:bg-slate-50">
+          <Badge className="rounded-full border border-border bg-background px-3 py-1 text-foreground hover:bg-background">
             Custom
           </Badge>
         );
       default:
         return (
-          <Badge className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-slate-700 hover:bg-slate-50">
+          <Badge className="rounded-full border border-border bg-background px-3 py-1 text-foreground hover:bg-background">
             {plan || "Custom"}
           </Badge>
         );
@@ -553,22 +553,22 @@ export function Businesses() {
   return (
     <>
       <div className="space-y-8">
-        <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-slate-100 p-6 shadow-sm lg:p-8">
+        <div className="relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-background dark:from-background via-slate-50 to-slate-100 p-6 shadow-sm lg:p-8">
           <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-blue-100/40 blur-3xl" />
           <div className="absolute left-0 bottom-0 h-40 w-40 rounded-full bg-violet-100/40 blur-3xl" />
 
           <div className="relative flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
             <div className="space-y-3">
-              <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-3 py-1 text-xs font-medium text-slate-600 shadow-sm">
+              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/90 px-3 py-1 text-xs font-medium text-muted-foreground shadow-sm">
                 <Sparkles className="h-3.5 w-3.5" />
                 Business administration workspace
               </div>
 
               <div>
-                <h1 className="text-3xl font-bold tracking-tight text-slate-900 lg:text-4xl">
+                <h1 className="text-3xl font-bold tracking-tight text-foreground lg:text-4xl">
                   Businesses
                 </h1>
-                <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
                   Gérez les entreprises, surveillez leur statut, modifiez les plans
                   et ouvrez les détails dans une interface plus propre et plus pro.
                 </p>
@@ -602,7 +602,7 @@ export function Businesses() {
                 variant="outline"
                 onClick={loadBusinesses}
                 disabled={loading}
-                className="h-11 rounded-xl border-slate-300 bg-white px-5"
+                className="h-11 rounded-xl border-border bg-card px-5"
               >
                 {loading ? (
                   <>
@@ -624,8 +624,8 @@ export function Businesses() {
           <StatCard
             title="Total Businesses"
             value={totalBusinesses}
-            icon={<Building2 className="h-5 w-5 text-slate-700" />}
-            iconWrap="bg-slate-100"
+            icon={<Building2 className="h-5 w-5 text-foreground" />}
+            iconWrap="bg-muted"
           />
           <StatCard
             title="Active"
@@ -651,27 +651,27 @@ export function Businesses() {
           <StatCard
             title="Without Status"
             value={noStatusCount}
-            valueClass="text-slate-700"
-            icon={<BriefcaseBusiness className="h-5 w-5 text-slate-600" />}
-            iconWrap="bg-slate-100"
+            valueClass="text-foreground"
+            icon={<BriefcaseBusiness className="h-5 w-5 text-muted-foreground" />}
+            iconWrap="bg-muted"
           />
         </div>
 
-        <Card className="rounded-3xl border-slate-200 shadow-sm">
+        <Card className="rounded-3xl border-border shadow-sm">
           <CardContent className="p-5 lg:p-6">
             <div className="grid gap-4 lg:grid-cols-[1.5fr_0.8fr_0.8fr]">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder="Search by business, owner, email, city, country..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-12 rounded-2xl border-slate-200 pl-11"
+                  className="h-12 rounded-2xl border-border pl-11"
                 />
               </div>
 
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="h-12 rounded-2xl border-slate-200">
+                <SelectTrigger className="h-12 rounded-2xl border-border">
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -684,7 +684,7 @@ export function Businesses() {
               </Select>
 
               <Select value={planFilter} onValueChange={setPlanFilter}>
-                <SelectTrigger className="h-12 rounded-2xl border-slate-200">
+                <SelectTrigger className="h-12 rounded-2xl border-border">
                   <SelectValue placeholder="Filter by plan" />
                 </SelectTrigger>
                 <SelectContent>
@@ -699,19 +699,19 @@ export function Businesses() {
           </CardContent>
         </Card>
 
-        <Card className="overflow-hidden rounded-3xl border-slate-200 shadow-sm">
-          <CardHeader className="border-b border-slate-100 bg-white">
+        <Card className="overflow-hidden rounded-3xl border-border shadow-sm">
+          <CardHeader className="border-b border-border bg-card">
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               <div>
-                <CardTitle className="text-xl font-semibold text-slate-900">
+                <CardTitle className="text-xl font-semibold text-foreground">
                   All Businesses ({filteredBusinesses.length})
                 </CardTitle>
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-sm text-muted-foreground">
                   Liste complète avec statut, plan, localisation et actions rapides.
                 </p>
               </div>
 
-              <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-600">
+              <div className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-muted-foreground">
                 <ArrowUpRight className="h-3.5 w-3.5" />
                 Premium admin view
               </div>
@@ -721,26 +721,26 @@ export function Businesses() {
           <CardContent className="p-0">
             {loading ? (
               <div className="flex min-h-[320px] items-center justify-center">
-                <div className="flex items-center gap-2 rounded-2xl border border-dashed border-slate-300 px-5 py-4 text-slate-500">
+                <div className="flex items-center gap-2 rounded-2xl border border-dashed border-border px-5 py-4 text-muted-foreground">
                   <Loader2 className="h-5 w-5 animate-spin" />
                   Loading businesses...
                 </div>
               </div>
             ) : filteredBusinesses.length === 0 ? (
               <div className="flex min-h-[320px] flex-col items-center justify-center text-center">
-                <div className="mb-4 rounded-2xl bg-slate-100 p-4">
-                  <Building2 className="h-8 w-8 text-slate-400" />
+                <div className="mb-4 rounded-2xl bg-muted p-4">
+                  <Building2 className="h-8 w-8 text-muted-foreground" />
                 </div>
-                <p className="text-base font-semibold text-slate-800">No businesses found</p>
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="text-base font-semibold text-foreground">No businesses found</p>
+                <p className="mt-1 text-sm text-muted-foreground">
                   Change filters or search query to display results.
                 </p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <Table>
-                  <TableHeader className="bg-slate-50/70">
-                    <TableRow className="border-slate-100">
+                  <TableHeader className="bg-background/70">
+                    <TableRow className="border-border">
                       <TableHead className="whitespace-nowrap px-6 py-4">Business</TableHead>
                       <TableHead className="whitespace-nowrap px-6 py-4">Owner</TableHead>
                       <TableHead className="whitespace-nowrap px-6 py-4">Type</TableHead>
@@ -754,20 +754,20 @@ export function Businesses() {
 
                   <TableBody>
                     {filteredBusinesses.map((business) => (
-                      <TableRow key={business.id} className="border-slate-100 hover:bg-slate-50/60">
+                      <TableRow key={business.id} className="border-border hover:bg-background/60">
                         <TableCell className="px-6 py-5 align-top">
                           <div className="min-w-[260px]">
                             <div className="flex items-start gap-3">
-                              <div className="rounded-2xl bg-slate-100 p-3">
-                                <Building2 className="h-4 w-4 text-slate-600" />
+                              <div className="rounded-2xl bg-muted p-3">
+                                <Building2 className="h-4 w-4 text-muted-foreground" />
                               </div>
 
                               <div className="space-y-1.5">
-                                <p className="font-semibold text-slate-900">
+                                <p className="font-semibold text-foreground">
                                   {business.name || "Untitled business"}
                                 </p>
 
-                                <div className="flex items-center gap-2 text-sm text-slate-500">
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                   <Mail className="h-3.5 w-3.5" />
                                   <span className="break-all">{business.email || "—"}</span>
                                 </div>
@@ -778,25 +778,25 @@ export function Businesses() {
 
                         <TableCell className="px-6 py-5 align-top">
                           <div className="min-w-[180px] space-y-1">
-                            <p className="text-sm font-medium text-slate-800">
+                            <p className="text-sm font-medium text-foreground">
                               {business.ownerName || "—"}
                             </p>
                             {business.ownerId && business.ownerName !== business.ownerId && (
-                              <p className="break-all text-xs text-slate-500">{business.ownerId}</p>
+                              <p className="break-all text-xs text-muted-foreground">{business.ownerId}</p>
                             )}
                           </div>
                         </TableCell>
 
                         <TableCell className="px-6 py-5 align-top">
-                          <div className="flex items-center gap-2 text-sm text-slate-600">
-                            <BriefcaseBusiness className="h-4 w-4 text-slate-400" />
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <BriefcaseBusiness className="h-4 w-4 text-muted-foreground" />
                             <span>{business.type || "—"}</span>
                           </div>
                         </TableCell>
 
                         <TableCell className="px-6 py-5 align-top">
-                          <div className="flex items-center gap-2 text-sm text-slate-600">
-                            <MapPin className="h-4 w-4 text-slate-400" />
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <MapPin className="h-4 w-4 text-muted-foreground" />
                             <span>{getLocation(business)}</span>
                           </div>
                         </TableCell>
@@ -810,8 +810,8 @@ export function Businesses() {
                         </TableCell>
 
                         <TableCell className="px-6 py-5 align-top">
-                          <div className="flex items-center gap-2 text-sm text-slate-600">
-                            <CalendarDays className="h-4 w-4 text-slate-400" />
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <CalendarDays className="h-4 w-4 text-muted-foreground" />
                             <span>{formatDate(business.createdAt)}</span>
                           </div>
                         </TableCell>
@@ -929,7 +929,7 @@ export function Businesses() {
               <div className="border-b bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8 text-white">
                 <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
                   <div className="flex items-start gap-4">
-                    <div className="rounded-3xl bg-white/10 p-4 backdrop-blur">
+                    <div className="rounded-3xl bg-card/10 p-4 backdrop-blur">
                       <Building2 className="h-7 w-7" />
                     </div>
 
@@ -954,7 +954,7 @@ export function Businesses() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-white/20 bg-white/10 text-white hover:bg-white/20"
+                        className="border-white/20 bg-card/10 text-white hover:bg-card/20"
                         onClick={() => openEditDialog(selectedBusiness)}
                       >
                         <Pencil className="mr-2 h-4 w-4" />
@@ -965,7 +965,7 @@ export function Businesses() {
                     {selectedBusiness.status !== "active" && (
                       <Button
                         size="sm"
-                        className="bg-white text-slate-900 hover:bg-slate-100"
+                        className="bg-card text-foreground hover:bg-muted"
                         onClick={() => handleStatusChange(selectedBusiness.id, "active")}
                         disabled={updatingId === selectedBusiness.id}
                       >
@@ -982,7 +982,7 @@ export function Businesses() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-white/20 bg-white/10 text-white hover:bg-white/20"
+                        className="border-white/20 bg-card/10 text-white hover:bg-card/20"
                         onClick={() => handleStatusChange(selectedBusiness.id, "suspended")}
                         disabled={updatingId === selectedBusiness.id}
                       >
@@ -1009,7 +1009,7 @@ export function Businesses() {
               </div>
 
               <div className="grid gap-6 p-6 lg:grid-cols-3 lg:p-8">
-                <Card className="rounded-3xl border-slate-200 lg:col-span-2">
+                <Card className="rounded-3xl border-border lg:col-span-2">
                   <CardHeader>
                     <CardTitle className="text-base">Business Information</CardTitle>
                   </CardHeader>
@@ -1018,38 +1018,38 @@ export function Businesses() {
                     <InfoCard
                       label="Type"
                       value={selectedBusiness.type || selectedBusiness.industry}
-                      icon={<BriefcaseBusiness className="h-4 w-4 text-slate-400" />}
+                      icon={<BriefcaseBusiness className="h-4 w-4 text-muted-foreground" />}
                     />
                     <InfoCard
                       label="Email"
                       value={selectedBusiness.email}
-                      icon={<Mail className="h-4 w-4 text-slate-400" />}
+                      icon={<Mail className="h-4 w-4 text-muted-foreground" />}
                     />
                     <InfoCard
                       label="Phone"
                       value={selectedBusiness.phone}
-                      icon={<Phone className="h-4 w-4 text-slate-400" />}
+                      icon={<Phone className="h-4 w-4 text-muted-foreground" />}
                     />
                     <InfoCard
                       label="Website"
                       value={selectedBusiness.website}
-                      icon={<Globe2 className="h-4 w-4 text-slate-400" />}
+                      icon={<Globe2 className="h-4 w-4 text-muted-foreground" />}
                     />
                     <InfoCard
                       label="Created"
                       value={formatDate(selectedBusiness.createdAt)}
-                      icon={<CalendarDays className="h-4 w-4 text-slate-400" />}
+                      icon={<CalendarDays className="h-4 w-4 text-muted-foreground" />}
                     />
                     <InfoCard
                       label="Location"
                       value={getLocation(selectedBusiness)}
-                      icon={<MapPin className="h-4 w-4 text-slate-400" />}
+                      icon={<MapPin className="h-4 w-4 text-muted-foreground" />}
                     />
                     <InfoCard label="Address" value={selectedBusiness.address} />
                   </CardContent>
                 </Card>
 
-                <Card className="rounded-3xl border-slate-200">
+                <Card className="rounded-3xl border-border">
                   <CardHeader>
                     <CardTitle className="text-base">Owner & Settings</CardTitle>
                   </CardHeader>
@@ -1057,12 +1057,12 @@ export function Businesses() {
                     <InfoRow
                       label="Owner"
                       value={selectedBusiness.ownerName}
-                      icon={<User2 className="h-4 w-4 text-slate-400" />}
+                      icon={<User2 className="h-4 w-4 text-muted-foreground" />}
                     />
                     <InfoRow
                       label="Owner ID"
                       value={selectedBusiness.ownerId}
-                      icon={<ShieldCheck className="h-4 w-4 text-slate-400" />}
+                      icon={<ShieldCheck className="h-4 w-4 text-muted-foreground" />}
                     />
                     <InfoRow label="Currency" value={selectedBusiness.currency} />
                     <InfoRow label="Tax ID" value={selectedBusiness.taxId} />
@@ -1184,7 +1184,7 @@ function BusinessForm({
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           <FormField label="Business Name">
             <Input
-              className="h-12 rounded-2xl border-slate-200"
+              className="h-12 rounded-2xl border-border"
               value={form.name}
               onChange={(e) => onChange("name", e.target.value)}
               placeholder="Business name"
@@ -1193,7 +1193,7 @@ function BusinessForm({
 
           <FormField label="Email">
             <Input
-              className="h-12 rounded-2xl border-slate-200"
+              className="h-12 rounded-2xl border-border"
               value={form.email}
               onChange={(e) => onChange("email", e.target.value)}
               placeholder="company@email.com"
@@ -1202,7 +1202,7 @@ function BusinessForm({
 
           <FormField label="Phone">
             <Input
-              className="h-12 rounded-2xl border-slate-200"
+              className="h-12 rounded-2xl border-border"
               value={form.phone}
               onChange={(e) => onChange("phone", e.target.value)}
               placeholder="+216 ..."
@@ -1211,7 +1211,7 @@ function BusinessForm({
 
           <FormField label="Type">
             <Input
-              className="h-12 rounded-2xl border-slate-200"
+              className="h-12 rounded-2xl border-border"
               value={form.type}
               onChange={(e) => onChange("type", e.target.value)}
               placeholder="Retail / IT / Services"
@@ -1220,7 +1220,7 @@ function BusinessForm({
 
           <FormField label="Industry">
             <Input
-              className="h-12 rounded-2xl border-slate-200"
+              className="h-12 rounded-2xl border-border"
               value={form.industry}
               onChange={(e) => onChange("industry", e.target.value)}
               placeholder="Industry"
@@ -1229,7 +1229,7 @@ function BusinessForm({
 
           <FormField label="Website">
             <Input
-              className="h-12 rounded-2xl border-slate-200"
+              className="h-12 rounded-2xl border-border"
               value={form.website}
               onChange={(e) => onChange("website", e.target.value)}
               placeholder="https://..."
@@ -1247,7 +1247,7 @@ function BusinessForm({
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           <FormField label="Address">
             <Input
-              className="h-12 rounded-2xl border-slate-200"
+              className="h-12 rounded-2xl border-border"
               value={form.address}
               onChange={(e) => onChange("address", e.target.value)}
               placeholder="Address"
@@ -1256,7 +1256,7 @@ function BusinessForm({
 
           <FormField label="City">
             <Input
-              className="h-12 rounded-2xl border-slate-200"
+              className="h-12 rounded-2xl border-border"
               value={form.city}
               onChange={(e) => onChange("city", e.target.value)}
               placeholder="City"
@@ -1265,7 +1265,7 @@ function BusinessForm({
 
           <FormField label="Country">
             <Input
-              className="h-12 rounded-2xl border-slate-200"
+              className="h-12 rounded-2xl border-border"
               value={form.country}
               onChange={(e) => onChange("country", e.target.value)}
               placeholder="Country"
@@ -1274,7 +1274,7 @@ function BusinessForm({
 
           <FormField label="Tax ID">
             <Input
-              className="h-12 rounded-2xl border-slate-200"
+              className="h-12 rounded-2xl border-border"
               value={form.taxId}
               onChange={(e) => onChange("taxId", e.target.value)}
               placeholder="Tax ID"
@@ -1283,7 +1283,7 @@ function BusinessForm({
 
           <FormField label="Currency">
             <Input
-              className="h-12 rounded-2xl border-slate-200"
+              className="h-12 rounded-2xl border-border"
               value={form.currency}
               onChange={(e) => onChange("currency", e.target.value)}
               placeholder="TND / EUR / USD"
@@ -1292,7 +1292,7 @@ function BusinessForm({
 
           <FormField label="Fiscal Year Start">
             <Input
-              className="h-12 rounded-2xl border-slate-200"
+              className="h-12 rounded-2xl border-border"
               value={form.fiscalYearStart}
               onChange={(e) => onChange("fiscalYearStart", e.target.value)}
               placeholder="YYYY-MM-DD"
@@ -1301,7 +1301,7 @@ function BusinessForm({
 
           <FormField label="Tax Rate (%)">
             <Input
-              className="h-12 rounded-2xl border-slate-200"
+              className="h-12 rounded-2xl border-border"
               value={form.taxRate}
               onChange={(e) => onChange("taxRate", e.target.value)}
               placeholder="19"
@@ -1320,7 +1320,7 @@ function BusinessForm({
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           <FormField label="Status">
             <Select value={form.status} onValueChange={(value) => onChange("status", value)}>
-              <SelectTrigger className="h-12 rounded-2xl border-slate-200">
+              <SelectTrigger className="h-12 rounded-2xl border-border">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -1334,7 +1334,7 @@ function BusinessForm({
 
           <FormField label="Plan">
             <Select value={form.plan} onValueChange={(value) => onChange("plan", value)}>
-              <SelectTrigger className="h-12 rounded-2xl border-slate-200">
+              <SelectTrigger className="h-12 rounded-2xl border-border">
                 <SelectValue placeholder="Plan" />
               </SelectTrigger>
               <SelectContent>
@@ -1348,7 +1348,7 @@ function BusinessForm({
         </div>
       </FormSection>
 
-      <div className="sticky bottom-0 z-10 flex flex-col gap-3 rounded-3xl border border-slate-200 bg-white/95 p-4 backdrop-blur sm:flex-row sm:items-center sm:justify-end">
+      <div className="sticky bottom-0 z-10 flex flex-col gap-3 rounded-3xl border border-border bg-card/95 p-4 backdrop-blur sm:flex-row sm:items-center sm:justify-end">
         <Button
           variant="outline"
           onClick={onCancel}
@@ -1389,8 +1389,8 @@ function FormSection({
   return (
     <div className="space-y-5">
       <div>
-        <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
-        <p className="mt-1 text-sm text-slate-500">{description}</p>
+        <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+        <p className="mt-1 text-sm text-muted-foreground">{description}</p>
       </div>
       {children}
     </div>
@@ -1406,7 +1406,7 @@ function FormField({
 }) {
   return (
     <div className="grid gap-2.5">
-      <Label className="text-sm font-medium text-slate-700">{label}</Label>
+      <Label className="text-sm font-medium text-foreground">{label}</Label>
       {children}
     </div>
   );
@@ -1422,11 +1422,11 @@ function InfoRow({
   icon?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4">
-      <Label className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+    <div className="rounded-2xl border border-border bg-background/70 p-4">
+      <Label className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
         {label}
       </Label>
-      <div className="mt-2 flex items-center gap-2 text-sm text-slate-800">
+      <div className="mt-2 flex items-center gap-2 text-sm text-foreground">
         {icon}
         <span className="break-words">{value || "—"}</span>
       </div>
@@ -1444,14 +1444,14 @@ function InfoCard({
   icon?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-3xl border border-slate-100 bg-slate-50/60 p-5">
+    <div className="rounded-3xl border border-border bg-background/60 p-5">
       <div className="mb-2 flex items-center gap-2">
         {icon}
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
           {label}
         </p>
       </div>
-      <p className="text-sm font-medium text-slate-800 break-words">{value || "—"}</p>
+      <p className="text-sm font-medium text-foreground break-words">{value || "—"}</p>
     </div>
   );
 }
@@ -1461,7 +1461,7 @@ function StatCard({
   value,
   icon,
   iconWrap,
-  valueClass = "text-slate-900",
+  valueClass = "text-foreground",
 }: {
   title: string;
   value: number;
@@ -1470,10 +1470,10 @@ function StatCard({
   valueClass?: string;
 }) {
   return (
-    <Card className="rounded-3xl border-slate-200 shadow-sm">
+    <Card className="rounded-3xl border-border shadow-sm">
       <CardContent className="flex items-center justify-between p-6">
         <div>
-          <p className="text-sm text-slate-500">{title}</p>
+          <p className="text-sm text-muted-foreground">{title}</p>
           <p className={`mt-2 text-3xl font-bold ${valueClass}`}>{value}</p>
         </div>
 

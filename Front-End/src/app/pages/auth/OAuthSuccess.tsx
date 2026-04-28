@@ -47,7 +47,7 @@ export default function OAuthSuccess() {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="text-sm text-gray-600">Logging in...</div>
+      <div className="text-sm text-muted-foreground">Logging in...</div>
     </div>
   );
 }

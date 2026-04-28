@@ -72,7 +72,7 @@ type SortOption =
 const STATUS_CONFIG: Record<InvoiceStatus, { label: string; className: string }> = {
   draft: {
     label: 'Draft',
-    className: 'bg-gray-100 text-gray-800 border-gray-200',
+    className: 'bg-muted text-foreground border-border',
   },
   sent: {
     label: 'Sent',
@@ -523,8 +523,8 @@ export function Invoices() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Invoices</h1>
-          <p className="mt-1 text-sm text-gray-500">Manage, track and monitor all your invoices</p>
+          <h1 className="text-3xl font-bold text-foreground">Invoices</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Manage, track and monitor all your invoices</p>
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -554,14 +554,14 @@ export function Invoices() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-6">
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-gray-500">Total Invoiced</div>
+            <div className="text-sm text-muted-foreground">Total Invoiced</div>
             <div className="mt-1 text-2xl font-bold">{formatCurrency(totals.totalInvoiced)}</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-gray-500">Collected</div>
+            <div className="text-sm text-muted-foreground">Collected</div>
             <div className="mt-1 text-2xl font-bold text-green-600">
               {formatCurrency(totals.totalPaid)}
             </div>
@@ -570,7 +570,7 @@ export function Invoices() {
 
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-gray-500">Pending</div>
+            <div className="text-sm text-muted-foreground">Pending</div>
             <div className="mt-1 text-2xl font-bold text-blue-600">
               {formatCurrency(totals.pending)}
             </div>
@@ -579,7 +579,7 @@ export function Invoices() {
 
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-gray-500">Overdue</div>
+            <div className="text-sm text-muted-foreground">Overdue</div>
             <div className="mt-1 text-2xl font-bold text-red-600">
               {formatCurrency(totals.overdue)}
             </div>
@@ -588,14 +588,14 @@ export function Invoices() {
 
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-gray-500">Drafts</div>
-            <div className="mt-1 text-2xl font-bold text-gray-800">{totals.draftCount}</div>
+            <div className="text-sm text-muted-foreground">Drafts</div>
+            <div className="mt-1 text-2xl font-bold text-foreground">{totals.draftCount}</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-gray-500">Overdue Count</div>
+            <div className="text-sm text-muted-foreground">Overdue Count</div>
             <div className="mt-1 text-2xl font-bold text-red-600">{totals.overdueCount}</div>
           </CardContent>
         </Card>
@@ -605,7 +605,7 @@ export function Invoices() {
         <CardContent className="pt-6">
           <div className="flex flex-col gap-4 xl:flex-row">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Search by invoice number or client..."
                 value={searchTerm}
@@ -682,7 +682,7 @@ export function Invoices() {
       {canManageInvoices && selectedIds.length > 0 && (
         <Card>
           <CardContent className="flex flex-col gap-3 pt-6 md:flex-row md:items-center md:justify-between">
-            <div className="text-sm text-gray-600">{selectedIds.length} invoice(s) selected</div>
+            <div className="text-sm text-muted-foreground">{selectedIds.length} invoice(s) selected</div>
 
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" onClick={() => handleBulkStatusUpdate('sent')}>
@@ -743,7 +743,7 @@ export function Invoices() {
                   <TableRow>
                     <TableCell
                       colSpan={canManageInvoices ? 10 : 9}
-                      className="py-8 text-center text-gray-500"
+                      className="py-8 text-center text-muted-foreground"
                     >
                       Loading invoices...
                     </TableCell>
@@ -753,8 +753,8 @@ export function Invoices() {
                     <TableCell colSpan={canManageInvoices ? 10 : 9} className="py-10">
                       <div className="flex flex-col items-center justify-center text-center">
                         <FileText className="mb-3 h-10 w-10 text-gray-300" />
-                        <div className="text-lg font-medium text-gray-700">No invoices found</div>
-                        <div className="mt-1 text-sm text-gray-500">
+                        <div className="text-lg font-medium text-foreground">No invoices found</div>
+                        <div className="mt-1 text-sm text-muted-foreground">
                           Try changing filters or create a new invoice.
                         </div>
                         {canManageInvoices && (
@@ -813,13 +813,13 @@ export function Invoices() {
 
                         <TableCell className="min-w-[140px]">
                           <div className="space-y-1">
-                            <div className="h-2 w-full rounded-full bg-gray-100">
+                            <div className="h-2 w-full rounded-full bg-muted">
                               <div
                                 className="h-2 rounded-full bg-gray-900 transition-all"
                                 style={{ width: `${progress}%` }}
                               />
                             </div>
-                            <div className="text-xs text-gray-500">{progress.toFixed(0)}%</div>
+                            <div className="text-xs text-muted-foreground">{progress.toFixed(0)}%</div>
                           </div>
                         </TableCell>
 
@@ -905,7 +905,7 @@ export function Invoices() {
 
           {!loading && filteredAndSortedInvoices.length > 0 && (
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-muted-foreground">
                 Page {page} / {totalPages} — {filteredAndSortedInvoices.length} result(s)
               </div>
 

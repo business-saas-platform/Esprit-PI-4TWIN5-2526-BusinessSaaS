@@ -71,8 +71,8 @@ export function InvoiceLateRisk() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Invoice Late-Payment Risk</h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <h1 className="text-3xl font-bold text-foreground">Invoice Late-Payment Risk</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             Prioritized risk scoring for open invoices to improve collection focus.
           </p>
         </div>
@@ -87,7 +87,7 @@ export function InvoiceLateRisk() {
             </p>
             <button
               type="button"
-              className="rounded-lg border border-indigo-300 bg-white px-3 py-1.5 text-xs font-medium text-indigo-700 hover:bg-indigo-100"
+              className="rounded-lg border border-indigo-300 bg-card px-3 py-1.5 text-xs font-medium text-indigo-700 hover:bg-indigo-100"
               onClick={() => setSearchParams({})}
             >
               Clear focus
@@ -97,12 +97,12 @@ export function InvoiceLateRisk() {
       )}
 
       {loading ? (
-        <div className="flex min-h-[300px] items-center justify-center rounded-xl border bg-white">
-          <Loader2 className="h-6 w-6 animate-spin text-slate-500" />
+        <div className="flex min-h-[300px] items-center justify-center rounded-xl border bg-card">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         </div>
       ) : !data ? (
         <Card>
-          <CardContent className="py-12 text-center text-slate-500">
+          <CardContent className="py-12 text-center text-muted-foreground">
             No risk data available.
           </CardContent>
         </Card>
@@ -120,16 +120,16 @@ export function InvoiceLateRisk() {
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-slate-600">Scored Invoices</CardTitle>
+                <CardTitle className="text-sm text-muted-foreground">Scored Invoices</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold text-slate-900">{n(summary?.scoredInvoices)}</p>
+                <p className="text-2xl font-bold text-foreground">{n(summary?.scoredInvoices)}</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-slate-600">High Risk</CardTitle>
+                <CardTitle className="text-sm text-muted-foreground">High Risk</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-red-600">{n(summary?.highRisk)}</p>
@@ -138,7 +138,7 @@ export function InvoiceLateRisk() {
 
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-slate-600">Medium Risk</CardTitle>
+                <CardTitle className="text-sm text-muted-foreground">Medium Risk</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-amber-600">{n(summary?.mediumRisk)}</p>
@@ -147,13 +147,13 @@ export function InvoiceLateRisk() {
 
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-slate-600">Average Risk Score</CardTitle>
+                <CardTitle className="text-sm text-muted-foreground">Average Risk Score</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-indigo-600">
                   {(n(summary?.averageRisk) * 100).toFixed(1)}%
                 </p>
-                <p className="mt-2 text-xs text-slate-500">Source: {data.modelSource}</p>
+                <p className="mt-2 text-xs text-muted-foreground">Source: {data.modelSource}</p>
               </CardContent>
             </Card>
           </div>
@@ -161,9 +161,9 @@ export function InvoiceLateRisk() {
           {data.debug && (
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-slate-700">Runtime Diagnostics</CardTitle>
+                <CardTitle className="text-sm text-foreground">Runtime Diagnostics</CardTitle>
               </CardHeader>
-              <CardContent className="text-xs text-slate-600">
+              <CardContent className="text-xs text-muted-foreground">
                 <div className="grid gap-1 md:grid-cols-2 xl:grid-cols-4">
                   <p>
                     ML configured:{' '}
@@ -197,31 +197,31 @@ export function InvoiceLateRisk() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-slate-900">
+              <CardTitle className="flex items-center gap-2 text-foreground">
                 <ShieldAlert className="h-5 w-5 text-indigo-600" />
                 Top Open Invoices By Risk
               </CardTitle>
             </CardHeader>
             <CardContent>
               {!topItems.length ? (
-                <p className="text-sm text-slate-500">No open invoice risk items to display.</p>
+                <p className="text-sm text-muted-foreground">No open invoice risk items to display.</p>
               ) : (
                 <div className="space-y-3">
                   {topItems.map((item) => (
                     <div
                       key={item.invoiceId}
-                      className={`rounded-xl border bg-white p-4 shadow-sm ${
+                      className={`rounded-xl border bg-card p-4 shadow-sm ${
                         item.invoiceId === selectedInvoiceId
                           ? 'border-indigo-400 ring-2 ring-indigo-200'
-                          : 'border-slate-200'
+                          : 'border-border'
                       }`}
                     >
                       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                         <div>
-                          <p className="text-sm font-semibold text-slate-900">
+                          <p className="text-sm font-semibold text-foreground">
                             {item.invoiceNumber} - {item.clientName}
                           </p>
-                          <p className="text-xs text-slate-500">
+                          <p className="text-xs text-muted-foreground">
                             Due {item.dueDate} - Amount {formatMoney(n(item.totalAmount))}
                           </p>
                         </div>
@@ -241,7 +241,7 @@ export function InvoiceLateRisk() {
                       </div>
 
                       {item.reasons?.length ? (
-                        <ul className="mt-3 list-disc space-y-1 pl-5 text-xs text-slate-600">
+                        <ul className="mt-3 list-disc space-y-1 pl-5 text-xs text-muted-foreground">
                           {item.reasons.slice(0, 3).map((reason, idx) => (
                             <li key={`${item.invoiceId}-r-${idx}`}>{reason}</li>
                           ))}

@@ -24,7 +24,7 @@ export class ChannelEntity {
   @Column({ default: 'public' })
   type!: 'public' | 'private' | 'dm';
 
-  @Column({ type: 'text', array: true, default: () => "ARRAY[]::text[]" })
+  @Column({ type: 'simple-array', nullable: true })
   memberIds!: string[]; // for private/dm channels
 
   @Column({ default: false })

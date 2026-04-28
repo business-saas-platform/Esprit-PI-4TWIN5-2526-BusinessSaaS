@@ -95,8 +95,8 @@ export function CashFlowForecast() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Cash Flow Forecast</h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <h1 className="text-3xl font-bold text-foreground">Cash Flow Forecast</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             Projected inflow, outflow, and cumulative balance for the next {horizon} days.
           </p>
         </div>
@@ -116,12 +116,12 @@ export function CashFlowForecast() {
       </div>
 
       {loading ? (
-        <div className="flex min-h-[300px] items-center justify-center rounded-xl border bg-white">
-          <Loader2 className="h-6 w-6 animate-spin text-slate-500" />
+        <div className="flex min-h-[300px] items-center justify-center rounded-xl border bg-card">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         </div>
       ) : !data ? (
         <Card>
-          <CardContent className="py-12 text-center text-slate-500">
+          <CardContent className="py-12 text-center text-muted-foreground">
             No forecast data available.
           </CardContent>
         </Card>
@@ -139,7 +139,7 @@ export function CashFlowForecast() {
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-slate-600">Expected Inflow</CardTitle>
+                <CardTitle className="text-sm text-muted-foreground">Expected Inflow</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-emerald-600">
@@ -150,7 +150,7 @@ export function CashFlowForecast() {
 
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-slate-600">Expected Outflow</CardTitle>
+                <CardTitle className="text-sm text-muted-foreground">Expected Outflow</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-rose-600">
@@ -161,7 +161,7 @@ export function CashFlowForecast() {
 
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-slate-600">Expected Net</CardTitle>
+                <CardTitle className="text-sm text-muted-foreground">Expected Net</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-2">
@@ -181,18 +181,18 @@ export function CashFlowForecast() {
 
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-slate-600">Model Confidence</CardTitle>
+                <CardTitle className="text-sm text-muted-foreground">Model Confidence</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between">
-                  <p className="text-2xl font-bold text-slate-900">
+                  <p className="text-2xl font-bold text-foreground">
                     {(n(summary?.confidence) * 100).toFixed(0)}%
                   </p>
                   <Badge className={riskVariant(summary?.risk)}>
                     {summary?.risk?.toUpperCase()} RISK
                   </Badge>
                 </div>
-                <p className="mt-2 text-xs text-slate-500">Source: {data.modelSource}</p>
+                <p className="mt-2 text-xs text-muted-foreground">Source: {data.modelSource}</p>
               </CardContent>
             </Card>
           </div>
@@ -200,9 +200,9 @@ export function CashFlowForecast() {
           {data.debug && (
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-slate-700">Runtime Diagnostics</CardTitle>
+                <CardTitle className="text-sm text-foreground">Runtime Diagnostics</CardTitle>
               </CardHeader>
-              <CardContent className="text-xs text-slate-600">
+              <CardContent className="text-xs text-muted-foreground">
                 <div className="grid gap-1 md:grid-cols-2 xl:grid-cols-4">
                   <p>
                     ML configured:{' '}
@@ -241,7 +241,7 @@ export function CashFlowForecast() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-slate-900">
+              <CardTitle className="flex items-center gap-2 text-foreground">
                 <Activity className="h-5 w-5 text-indigo-600" />
                 Projected Balance Curve
               </CardTitle>

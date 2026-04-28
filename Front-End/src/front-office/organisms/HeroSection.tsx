@@ -12,10 +12,10 @@ export function HeroSection() {
               <Sparkles className="h-3 w-3 mr-1" />
               Plateforme SaaS Multitenant
             </Badge>
-            <h1 className="text-4xl lg:text-6xl font-bold text-slate-900 mb-6">
+            <h1 className="text-4xl lg:text-6xl font-bold text-foreground mb-6">
               Gérez votre entreprise avec intelligence
             </h1>
-            <p className="text-xl text-slate-600 mb-8">
+            <p className="text-xl text-muted-foreground mb-8">
               Une plateforme complète pour la facturation, la gestion des dépenses, le suivi client et la collaboration d'équipe. 
               Optimisée pour les entreprises tunisiennes avec conformité aux lois de souveraineté des données.
             </p>

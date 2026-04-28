@@ -205,8 +205,8 @@ export default function CreateBusiness() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Créer une entreprise</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-3xl font-bold text-foreground">Créer une entreprise</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             Remplis les informations de base. Tu pourras compléter le profil après.
           </p>
         </div>
@@ -218,7 +218,7 @@ export default function CreateBusiness() {
 
       <form onSubmit={onSubmit} className="space-y-6">
         {/* Section 1 */}
-        <Card className="border-gray-200">
+        <Card className="border-border">
           <CardHeader className="pb-3">
             <CardTitle className="text-base">Informations générales</CardTitle>
           </CardHeader>
@@ -234,7 +234,7 @@ export default function CreateBusiness() {
               {showError("name") ? (
                 <p className="text-xs text-red-600">{errors.name}</p>
               ) : (
-                <p className="text-xs text-gray-500">Nom légal affiché dans l’application.</p>
+                <p className="text-xs text-muted-foreground">Nom légal affiché dans l’application.</p>
               )}
             </div>
 
@@ -265,7 +265,7 @@ export default function CreateBusiness() {
         </Card>
 
         {/* Section 2 */}
-        <Card className="border-gray-200">
+        <Card className="border-border">
           <CardHeader className="pb-3">
             <CardTitle className="text-base">Adresse</CardTitle>
           </CardHeader>
@@ -310,7 +310,7 @@ export default function CreateBusiness() {
         </Card>
 
         {/* Section 3 */}
-        <Card className="border-gray-200">
+        <Card className="border-border">
           <CardHeader className="pb-3">
             <CardTitle className="text-base">Fiscal & Contact</CardTitle>
           </CardHeader>
@@ -340,7 +340,7 @@ export default function CreateBusiness() {
               {showError("taxRate") ? (
                 <p className="text-xs text-red-600">{errors.taxRate}</p>
               ) : (
-                <p className="text-xs text-gray-500">TVA par défaut pour les factures.</p>
+                <p className="text-xs text-muted-foreground">TVA par défaut pour les factures.</p>
               )}
             </div>
 
@@ -378,7 +378,7 @@ export default function CreateBusiness() {
               {showError("website") ? (
                 <p className="text-xs text-red-600">{errors.website}</p>
               ) : (
-                <p className="text-xs text-gray-500">On ajoutera https:// automatiquement si besoin.</p>
+                <p className="text-xs text-muted-foreground">On ajoutera https:// automatiquement si besoin.</p>
               )}
             </div>
 
@@ -442,7 +442,7 @@ export default function CreateBusiness() {
               </Button>
 
               {!isValid && (
-                <div className="text-xs text-gray-500 sm:ml-auto self-center">
+                <div className="text-xs text-muted-foreground sm:ml-auto self-center">
                   ⚠️ Corrige les champs en rouge
                 </div>
               )}

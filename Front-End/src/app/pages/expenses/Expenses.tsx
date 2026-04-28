@@ -401,8 +401,8 @@ export function Expenses() {
   if (!currentBusiness) {
     return (
       <div className="space-y-4">
-        <h1 className="text-3xl font-bold text-gray-900">Dépenses</h1>
-        <p className="text-sm text-gray-500">
+        <h1 className="text-3xl font-bold text-foreground">Dépenses</h1>
+        <p className="text-sm text-muted-foreground">
           Aucune entreprise sélectionnée. Créez ou sélectionnez une entreprise.
         </p>
         <Button onClick={() => navigate("/dashboard/businesses/new")}>
@@ -419,12 +419,12 @@ export function Expenses() {
         {/* Header */}
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">
               Dépenses
             </h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-muted-foreground">
               Gérez et suivez les dépenses de{" "}
-              <span className="font-semibold text-gray-700">
+              <span className="font-semibold text-foreground">
                 {currentBusiness.name}
               </span>
             </p>
@@ -445,21 +445,21 @@ export function Expenses() {
 
         {/* Summary cards */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
-          <Card className="border-gray-200 shadow-sm">
+          <Card className="border-border shadow-sm">
             <CardContent className="pt-6">
-              <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Wallet className="h-4 w-4" />
                 Total
               </div>
-              <div className="mt-2 text-2xl font-bold text-gray-900">
+              <div className="mt-2 text-2xl font-bold text-foreground">
                 {formatMoney(summary.total)}
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-gray-200 shadow-sm">
+          <Card className="border-border shadow-sm">
             <CardContent className="pt-6">
-              <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <CircleCheckBig className="h-4 w-4" />
                 Approuvées
               </div>
@@ -469,9 +469,9 @@ export function Expenses() {
             </CardContent>
           </Card>
 
-          <Card className="border-gray-200 shadow-sm">
+          <Card className="border-border shadow-sm">
             <CardContent className="pt-6">
-              <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Clock3 className="h-4 w-4" />
                 En attente
               </div>
@@ -481,9 +481,9 @@ export function Expenses() {
             </CardContent>
           </Card>
 
-          <Card className="border-gray-200 shadow-sm">
+          <Card className="border-border shadow-sm">
             <CardContent className="pt-6">
-              <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Ban className="h-4 w-4" />
                 Rejetées
               </div>
@@ -493,16 +493,16 @@ export function Expenses() {
             </CardContent>
           </Card>
 
-          <Card className="border-gray-200 shadow-sm">
+          <Card className="border-border shadow-sm">
             <CardContent className="pt-6">
-              <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <TrendingUp className="h-4 w-4" />
                 Catégorie principale
               </div>
-              <div className="mt-2 text-lg font-bold text-gray-900">
+              <div className="mt-2 text-lg font-bold text-foreground">
                 {summary.topCategory}
               </div>
-              <div className="mt-1 text-xs text-gray-500">
+              <div className="mt-1 text-xs text-muted-foreground">
                 Moyenne: {formatMoney(summary.average)}
               </div>
             </CardContent>
@@ -510,16 +510,16 @@ export function Expenses() {
         </div>
 
         {/* Filters */}
-        <Card className="border-gray-200 shadow-sm">
+        <Card className="border-border shadow-sm">
           <CardContent className="pt-6">
-            <div className="mb-4 flex items-center gap-2 text-sm font-medium text-gray-700">
+            <div className="mb-4 flex items-center gap-2 text-sm font-medium text-foreground">
               <Filter className="h-4 w-4" />
               Filtres
             </div>
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
               <div className="relative lg:col-span-4">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder="Rechercher par description, catégorie, fournisseur..."
                   value={searchTerm}
@@ -567,7 +567,7 @@ export function Expenses() {
                   onValueChange={(v) => setDateFilter(v as DateFilter)}
                 >
                   <SelectTrigger>
-                    <CalendarRange className="mr-2 h-4 w-4 text-gray-400" />
+                    <CalendarRange className="mr-2 h-4 w-4 text-muted-foreground" />
                     <SelectValue placeholder="Période" />
                   </SelectTrigger>
                   <SelectContent>
@@ -583,7 +583,7 @@ export function Expenses() {
               <div className="lg:col-span-2">
                 <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
                   <SelectTrigger>
-                    <ArrowUpDown className="mr-2 h-4 w-4 text-gray-400" />
+                    <ArrowUpDown className="mr-2 h-4 w-4 text-muted-foreground" />
                     <SelectValue placeholder="Trier" />
                   </SelectTrigger>
                   <SelectContent>
@@ -601,7 +601,7 @@ export function Expenses() {
         </Card>
 
         {/* Table */}
-        <Card className="border-gray-200 shadow-sm">
+        <Card className="border-border shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>
               Liste des dépenses ({isLoading ? "..." : filteredAndSortedExpenses.length})
@@ -612,7 +612,7 @@ export function Expenses() {
             <div className="overflow-x-auto rounded-lg border">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-gray-50">
+                  <TableRow className="bg-background">
                     <TableHead>Date</TableHead>
                     <TableHead>Catégorie</TableHead>
                     <TableHead>Description</TableHead>
@@ -627,7 +627,7 @@ export function Expenses() {
                 <TableBody>
                   {isLoading ? (
                     <TableRow>
-                      <TableCell colSpan={8} className="py-12 text-center text-gray-500">
+                      <TableCell colSpan={8} className="py-12 text-center text-muted-foreground">
                         <div className="flex items-center justify-center gap-2">
                           <Loader2 className="h-4 w-4 animate-spin" />
                           Chargement des dépenses...
@@ -639,10 +639,10 @@ export function Expenses() {
                       <TableCell colSpan={8} className="py-14">
                         <div className="flex flex-col items-center justify-center text-center">
                           <Receipt className="mb-3 h-10 w-10 text-gray-300" />
-                          <div className="text-lg font-medium text-gray-700">
+                          <div className="text-lg font-medium text-foreground">
                             Aucune dépense trouvée
                           </div>
-                          <div className="mt-1 text-sm text-gray-500">
+                          <div className="mt-1 text-sm text-muted-foreground">
                             Ajoutez votre première dépense pour commencer le suivi.
                           </div>
                           <Button
@@ -657,14 +657,14 @@ export function Expenses() {
                     </TableRow>
                   ) : (
                     paginatedExpenses.map((expense) => (
-                      <TableRow key={expense.id} className="hover:bg-gray-50">
+                      <TableRow key={expense.id} className="hover:bg-background">
                         <TableCell>{formatDate(expense.date)}</TableCell>
 
                         <TableCell>
                           <Badge variant="outline">{expense.category || "-"}</Badge>
                         </TableCell>
 
-                        <TableCell className="max-w-[260px] truncate font-medium text-gray-900">
+                        <TableCell className="max-w-[260px] truncate font-medium text-foreground">
                           {expense.description || "-"}
                         </TableCell>
 
@@ -729,7 +729,7 @@ export function Expenses() {
                                 </Button>
                               </>
                             ) : (
-                              <span className="px-2 text-sm text-gray-400">—</span>
+                              <span className="px-2 text-sm text-muted-foreground">—</span>
                             )}
                           </div>
                         </TableCell>
@@ -743,17 +743,17 @@ export function Expenses() {
             {/* Pagination */}
             {!isLoading && filteredAndSortedExpenses.length > 0 && (
               <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-muted-foreground">
                   Affichage de{" "}
-                  <span className="font-medium text-gray-700">
+                  <span className="font-medium text-foreground">
                     {(page - 1) * PAGE_SIZE + 1}
                   </span>{" "}
                   à{" "}
-                  <span className="font-medium text-gray-700">
+                  <span className="font-medium text-foreground">
                     {Math.min(page * PAGE_SIZE, filteredAndSortedExpenses.length)}
                   </span>{" "}
                   sur{" "}
-                  <span className="font-medium text-gray-700">
+                  <span className="font-medium text-foreground">
                     {filteredAndSortedExpenses.length}
                   </span>{" "}
                   dépenses
@@ -770,7 +770,7 @@ export function Expenses() {
                     Précédent
                   </Button>
 
-                  <div className="text-sm font-medium text-gray-700">
+                  <div className="text-sm font-medium text-foreground">
                     Page {page} / {totalPages}
                   </div>
 
@@ -803,31 +803,31 @@ export function Expenses() {
           {selectedExpense && (
             <div className="grid grid-cols-1 gap-4 py-2">
               <div className="rounded-lg border p-4">
-                <div className="mb-3 text-sm font-medium text-gray-500">Informations générales</div>
+                <div className="mb-3 text-sm font-medium text-muted-foreground">Informations générales</div>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between gap-4">
-                    <span className="text-gray-500">Date</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-muted-foreground">Date</span>
+                    <span className="font-medium text-foreground">
                       {formatDate(selectedExpense.date)}
                     </span>
                   </div>
 
                   <div className="flex justify-between gap-4">
-                    <span className="text-gray-500">Catégorie</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-muted-foreground">Catégorie</span>
+                    <span className="font-medium text-foreground">
                       {selectedExpense.category || "-"}
                     </span>
                   </div>
 
                   <div className="flex justify-between gap-4">
-                    <span className="text-gray-500">Montant</span>
-                    <span className="font-semibold text-gray-900">
+                    <span className="text-muted-foreground">Montant</span>
+                    <span className="font-semibold text-foreground">
                       {formatMoney(selectedExpense.amount, selectedExpense.currency)}
                     </span>
                   </div>
 
                   <div className="flex justify-between gap-4">
-                    <span className="text-gray-500">Statut</span>
+                    <span className="text-muted-foreground">Statut</span>
                     <Badge
                       variant="outline"
                       className={getStatusBadgeClass(selectedExpense.status as ExpenseStatus)}
@@ -837,15 +837,15 @@ export function Expenses() {
                   </div>
 
                   <div className="flex justify-between gap-4">
-                    <span className="text-gray-500">Fournisseur</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-muted-foreground">Fournisseur</span>
+                    <span className="font-medium text-foreground">
                       {selectedExpense.vendor || "-"}
                     </span>
                   </div>
 
                   <div className="flex justify-between gap-4">
-                    <span className="text-gray-500">Soumis par</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-muted-foreground">Soumis par</span>
+                    <span className="font-medium text-foreground">
                       {selectedExpense.submittedBy || "-"}
                     </span>
                   </div>
@@ -853,8 +853,8 @@ export function Expenses() {
               </div>
 
               <div className="rounded-lg border p-4">
-                <div className="mb-3 text-sm font-medium text-gray-500">Description</div>
-                <p className="text-sm leading-6 text-gray-700">
+                <div className="mb-3 text-sm font-medium text-muted-foreground">Description</div>
+                <p className="text-sm leading-6 text-foreground">
                   {selectedExpense.description || "Aucune description disponible."}
                 </p>
               </div>
@@ -873,7 +873,7 @@ export function Expenses() {
               {approveTarget ? (
                 <>
                   <br />
-                  <span className="font-medium text-gray-700">
+                  <span className="font-medium text-foreground">
                     {approveTarget.description} —{" "}
                     {formatMoney(approveTarget.amount, approveTarget.currency)}
                   </span>
@@ -905,9 +905,9 @@ export function Expenses() {
 
           <div className="space-y-4 py-2">
             {rejectTarget && (
-              <div className="rounded-lg border p-3 text-sm text-gray-700">
+              <div className="rounded-lg border p-3 text-sm text-foreground">
                 <div className="font-medium">{rejectTarget.description}</div>
-                <div className="mt-1 text-gray-500">
+                <div className="mt-1 text-muted-foreground">
                   {formatMoney(rejectTarget.amount, rejectTarget.currency)} •{" "}
                   {rejectTarget.category || "-"}
                 </div>
@@ -915,7 +915,7 @@ export function Expenses() {
             )}
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-sm font-medium text-foreground">
                 Raison du rejet
               </label>
               <Textarea
@@ -924,7 +924,7 @@ export function Expenses() {
                 onChange={(e) => setRejectReason(e.target.value)}
                 rows={4}
               />
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 Note: si ton backend ne stocke pas encore cette raison, garde ce champ
                 pour l’UX puis ajoute-le plus tard dans l’API.
               </p>

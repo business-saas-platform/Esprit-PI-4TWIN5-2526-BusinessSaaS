@@ -39,7 +39,7 @@ export function BusinessSwitcher() {
 
         <SelectContent>
           {businesses.length === 0 ? (
-            <div className="p-2 text-sm text-gray-500">No businesses</div>
+            <div className="p-2 text-sm text-muted-foreground">No businesses</div>
           ) : (
             businesses.map((b: any) => {
               const incomplete = b?.isProfileComplete === false;
@@ -51,7 +51,7 @@ export function BusinessSwitcher() {
                     <div className="flex flex-col">
                       <span className="font-medium">{b.name}</span>
                       {secondary ? (
-                        <span className="text-xs text-gray-500">{secondary}</span>
+                        <span className="text-xs text-muted-foreground">{secondary}</span>
                       ) : null}
                     </div>
 

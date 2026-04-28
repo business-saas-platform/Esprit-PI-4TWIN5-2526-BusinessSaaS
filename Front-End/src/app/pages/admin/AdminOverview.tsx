@@ -169,7 +169,7 @@ export function AdminOverview() {
 
   if (loading) {
     return (
-      <div className="flex min-h-[300px] items-center justify-center text-gray-500">
+      <div className="flex min-h-[300px] items-center justify-center text-muted-foreground">
         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
         Loading platform overview...
       </div>
@@ -180,15 +180,15 @@ export function AdminOverview() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Platform Overview</h1>
-          <p className="mt-2 text-gray-600">
+          <h1 className="text-3xl font-bold text-foreground">Platform Overview</h1>
+          <p className="mt-2 text-muted-foreground">
             Monitor and manage your Business Management SaaS platform
           </p>
         </div>
 
         <button
           onClick={loadOverview}
-          className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-gray-50"
+          className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-background"
         >
           Refresh
         </button>
@@ -197,14 +197,14 @@ export function AdminOverview() {
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Total Businesses
             </CardTitle>
-            <Building2 className="h-4 w-4 text-gray-400" />
+            <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-gray-900">{totalBusinesses}</div>
-            <p className="mt-1 text-xs text-gray-500">
+            <div className="text-2xl font-bold text-foreground">{totalBusinesses}</div>
+            <p className="mt-1 text-xs text-muted-foreground">
               {activeBusinesses} active
             </p>
           </CardContent>
@@ -212,14 +212,14 @@ export function AdminOverview() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Business Owners
             </CardTitle>
-            <Users className="h-4 w-4 text-gray-400" />
+            <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-gray-900">{totalOwners}</div>
-            <p className="mt-1 text-xs text-gray-500">
+            <div className="text-2xl font-bold text-foreground">{totalOwners}</div>
+            <p className="mt-1 text-xs text-muted-foreground">
               Platform users with role business_owner
             </p>
           </CardContent>
@@ -227,16 +227,16 @@ export function AdminOverview() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Total Revenue
             </CardTitle>
-            <TrendingUp className="h-4 w-4 text-gray-400" />
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-gray-900">
+            <div className="text-2xl font-bold text-foreground">
               {totalRevenue.toLocaleString()} TND
             </div>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-muted-foreground">
               Across all business owners
             </p>
           </CardContent>
@@ -244,16 +244,16 @@ export function AdminOverview() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Platform Activity
             </CardTitle>
-            <Activity className="h-4 w-4 text-gray-400" />
+            <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-gray-900">
+            <div className="text-2xl font-bold text-foreground">
               {totalApiCalls.toLocaleString()}
             </div>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-muted-foreground">
               Total API calls
             </p>
           </CardContent>
@@ -310,21 +310,21 @@ export function AdminOverview() {
           <div className="space-y-4">
             <div className="flex items-center justify-between border-b py-3">
               <div>
-                <p className="font-medium text-gray-900">Active Businesses</p>
-                <p className="text-sm text-gray-500">
+                <p className="font-medium text-foreground">Active Businesses</p>
+                <p className="text-sm text-muted-foreground">
                   Businesses currently using the platform
                 </p>
               </div>
               <div className="text-right">
                 <p className="text-2xl font-bold text-green-600">{activeBusinesses}</p>
-                <p className="text-xs text-gray-500">{activeRate}% of total</p>
+                <p className="text-xs text-muted-foreground">{activeRate}% of total</p>
               </div>
             </div>
 
             <div className="flex items-center justify-between border-b py-3">
               <div>
-                <p className="font-medium text-gray-900">Trial Businesses</p>
-                <p className="text-sm text-gray-500">
+                <p className="font-medium text-foreground">Trial Businesses</p>
+                <p className="text-sm text-muted-foreground">
                   Businesses in trial period
                 </p>
               </div>
@@ -337,8 +337,8 @@ export function AdminOverview() {
 
             <div className="flex items-center justify-between py-3">
               <div>
-                <p className="font-medium text-gray-900">Suspended Businesses</p>
-                <p className="text-sm text-gray-500">
+                <p className="font-medium text-foreground">Suspended Businesses</p>
+                <p className="text-sm text-muted-foreground">
                   Businesses temporarily suspended
                 </p>
               </div>

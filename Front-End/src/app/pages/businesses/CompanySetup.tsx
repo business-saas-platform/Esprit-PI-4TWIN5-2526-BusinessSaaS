@@ -245,8 +245,8 @@ export default function CompanySetup() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Complete Company Profile</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-3xl font-bold text-foreground">Complete Company Profile</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             Complete the company details to unlock all features.
           </p>
         </div>
@@ -256,7 +256,7 @@ export default function CompanySetup() {
         </Button>
       </div>
 
-      <Card className="border-gray-200">
+      <Card className="border-border">
         <CardHeader>
           <CardTitle>Company Setup</CardTitle>
           <CardDescription>
@@ -267,8 +267,8 @@ export default function CompanySetup() {
         <CardContent>
           <form onSubmit={submit} className="space-y-6" noValidate>
             {/* Section: General */}
-            <div className="rounded-lg border border-gray-200 p-4">
-              <h3 className="font-semibold text-gray-900 mb-4">General</h3>
+            <div className="rounded-lg border border-border p-4">
+              <h3 className="font-semibold text-foreground mb-4">General</h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2 md:col-span-2">
@@ -307,8 +307,8 @@ export default function CompanySetup() {
             </div>
 
             {/* Section: Address */}
-            <div className="rounded-lg border border-gray-200 p-4">
-              <h3 className="font-semibold text-gray-900 mb-4">Address</h3>
+            <div className="rounded-lg border border-border p-4">
+              <h3 className="font-semibold text-foreground mb-4">Address</h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2 md:col-span-2">
@@ -347,8 +347,8 @@ export default function CompanySetup() {
             </div>
 
             {/* Section: Fiscal */}
-            <div className="rounded-lg border border-gray-200 p-4">
-              <h3 className="font-semibold text-gray-900 mb-4">Fiscal</h3>
+            <div className="rounded-lg border border-border p-4">
+              <h3 className="font-semibold text-foreground mb-4">Fiscal</h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -375,7 +375,7 @@ export default function CompanySetup() {
                   {showError("taxRate") ? (
                     <p className="text-xs text-red-600">{errors.taxRate}</p>
                   ) : (
-                    <p className="text-xs text-gray-500">Default VAT for invoices.</p>
+                    <p className="text-xs text-muted-foreground">Default VAT for invoices.</p>
                   )}
                 </div>
 
@@ -406,8 +406,8 @@ export default function CompanySetup() {
             </div>
 
             {/* Section: Contact */}
-            <div className="rounded-lg border border-gray-200 p-4">
-              <h3 className="font-semibold text-gray-900 mb-4">Contact</h3>
+            <div className="rounded-lg border border-border p-4">
+              <h3 className="font-semibold text-foreground mb-4">Contact</h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -444,7 +444,7 @@ export default function CompanySetup() {
                   {showError("website") ? (
                     <p className="text-xs text-red-600">{errors.website}</p>
                   ) : (
-                    <p className="text-xs text-gray-500">We’ll auto-add https:// if missing.</p>
+                    <p className="text-xs text-muted-foreground">We’ll auto-add https:// if missing.</p>
                   )}
                 </div>
 
@@ -498,7 +498,7 @@ export default function CompanySetup() {
               </Button>
 
               {!isValid && (
-                <div className="text-xs text-gray-500 sm:ml-auto self-center">
+                <div className="text-xs text-muted-foreground sm:ml-auto self-center">
                   ⚠️ Corrige les champs en rouge
                 </div>
               )}

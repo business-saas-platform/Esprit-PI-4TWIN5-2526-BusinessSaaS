@@ -54,7 +54,7 @@ function RuleItem({ ok, text }: { ok: boolean; text: string }) {
       className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-xs sm:text-sm ${
         ok
           ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-          : "border-slate-200 bg-slate-50 text-slate-500"
+          : "border-border bg-background text-muted-foreground"
       }`}
     >
       {ok ? (
@@ -141,17 +141,17 @@ export default function ForceChangePassword() {
 
   return (
     <div className="mx-auto w-full max-w-xl px-4 py-6 sm:px-0">
-      <Card className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.08)]">
-        <CardHeader className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white px-6 py-6 sm:px-8">
+      <Card className="overflow-hidden rounded-[28px] border border-border bg-card shadow-[0_12px_40px_rgba(15,23,42,0.08)]">
+        <CardHeader className="border-b border-border bg-gradient-to-r from-slate-50 to-background dark:to-background px-6 py-6 sm:px-8">
           <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600">
             <Lock className="h-6 w-6" />
           </div>
 
-          <CardTitle className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+          <CardTitle className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
             Change Password
           </CardTitle>
 
-          <CardDescription className="max-w-lg text-sm leading-6 text-slate-500">
+          <CardDescription className="max-w-lg text-sm leading-6 text-muted-foreground">
             Pour continuer, change d’abord ton mot de passe temporaire par un mot
             de passe sécurisé.
           </CardDescription>
@@ -170,7 +170,7 @@ export default function ForceChangePassword() {
             <div className="space-y-2">
               <Label
                 htmlFor="currentPassword"
-                className="text-sm font-medium text-slate-700"
+                className="text-sm font-medium text-foreground"
               >
                 Current password
               </Label>
@@ -184,12 +184,12 @@ export default function ForceChangePassword() {
                   autoComplete="current-password"
                   required
                   placeholder="Enter your current password"
-                  className="h-12 rounded-2xl border-slate-200 pr-12 shadow-sm focus-visible:ring-2 focus-visible:ring-indigo-200"
+                  className="h-12 rounded-2xl border-border pr-12 shadow-sm focus-visible:ring-2 focus-visible:ring-indigo-200"
                 />
                 <button
                   type="button"
                   onClick={() => setShowCurrent((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-muted-foreground"
                 >
                   {showCurrent ? (
                     <EyeOff className="h-4 w-4" />
@@ -203,7 +203,7 @@ export default function ForceChangePassword() {
             <div className="space-y-2">
               <Label
                 htmlFor="newPassword"
-                className="text-sm font-medium text-slate-700"
+                className="text-sm font-medium text-foreground"
               >
                 New password
               </Label>
@@ -217,12 +217,12 @@ export default function ForceChangePassword() {
                   autoComplete="new-password"
                   required
                   placeholder="Create a strong password"
-                  className="h-12 rounded-2xl border-slate-200 pr-12 shadow-sm focus-visible:ring-2 focus-visible:ring-indigo-200"
+                  className="h-12 rounded-2xl border-border pr-12 shadow-sm focus-visible:ring-2 focus-visible:ring-indigo-200"
                 />
                 <button
                   type="button"
                   onClick={() => setShowNew((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-muted-foreground"
                 >
                   {showNew ? (
                     <EyeOff className="h-4 w-4" />
@@ -243,7 +243,7 @@ export default function ForceChangePassword() {
             <div className="space-y-2">
               <Label
                 htmlFor="confirmPassword"
-                className="text-sm font-medium text-slate-700"
+                className="text-sm font-medium text-foreground"
               >
                 Confirm new password
               </Label>
@@ -259,7 +259,7 @@ export default function ForceChangePassword() {
                   placeholder="Confirm your new password"
                   className={`h-12 rounded-2xl pr-12 shadow-sm focus-visible:ring-2 ${
                     confirmPassword.length === 0
-                      ? "border-slate-200 focus-visible:ring-indigo-200"
+                      ? "border-border focus-visible:ring-indigo-200"
                       : confirmValid
                       ? "border-emerald-300 focus-visible:ring-emerald-200"
                       : "border-red-300 focus-visible:ring-red-200"
@@ -268,7 +268,7 @@ export default function ForceChangePassword() {
                 <button
                   type="button"
                   onClick={() => setShowConfirm((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-muted-foreground"
                 >
                   {showConfirm ? (
                     <EyeOff className="h-4 w-4" />
@@ -289,8 +289,8 @@ export default function ForceChangePassword() {
               )}
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-              <span className="font-semibold text-slate-900">Note :</span> choisi
+            <div className="rounded-2xl border border-border bg-background px-4 py-3 text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">Note :</span> choisi
               un mot de passe fort, parce que c’est la base de sécurité de ton compte.
             </div>
 

@@ -40,7 +40,7 @@ export function PricingCard({
         <CardDescription>{description}</CardDescription>
         <div className="mt-4">
           <span className="text-4xl font-bold">{price}</span>
-          {priceLabel && <span className="text-slate-600">{priceLabel}</span>}
+          {priceLabel && <span className="text-muted-foreground">{priceLabel}</span>}
         </div>
       </CardHeader>
       <CardContent>

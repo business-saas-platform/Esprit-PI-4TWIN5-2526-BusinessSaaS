@@ -199,23 +199,23 @@ export function Register() {
   };
 
   return (
-    <Card className="w-full rounded-3xl border border-slate-200/80 bg-white/95 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm">
+    <Card className="w-full rounded-3xl border border-border/80 bg-card/95 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm">
       <CardHeader className="space-y-4 pb-6">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/15">
           <Building2 className="h-7 w-7 text-primary" />
         </div>
 
         <div className="text-center">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-muted-foreground">
             <Sparkles className="h-3.5 w-3.5" />
             Business onboarding request
           </div>
 
-          <CardTitle className="text-3xl font-bold tracking-tight text-slate-900">
+          <CardTitle className="text-3xl font-bold tracking-tight text-foreground">
             Request Business Account
           </CardTitle>
 
-          <CardDescription className="mt-2 text-sm leading-6 text-slate-500">
+          <CardDescription className="mt-2 text-sm leading-6 text-muted-foreground">
             Submit your business request to join the platform. Your application
             will be reviewed by the platform administrator before activation.
           </CardDescription>
@@ -223,14 +223,14 @@ export function Register() {
       </CardHeader>
 
       <CardContent className="space-y-6">
-        <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
+        <div className="rounded-2xl border border-border bg-background/80 p-4">
           <div className="flex items-start gap-3">
             <ShieldCheck className="mt-0.5 h-5 w-5 text-primary" />
             <div>
-              <p className="text-sm font-semibold text-slate-800">
+              <p className="text-sm font-semibold text-foreground">
                 Approval required
               </p>
-              <p className="mt-1 text-sm leading-6 text-slate-500">
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">
                 Once your request is reviewed, you will receive an email with the
                 next steps to access your business workspace.
               </p>
@@ -241,20 +241,20 @@ export function Register() {
         <form onSubmit={handleSubmit} className="space-y-5" noValidate>
           <div className="space-y-5">
             <div>
-              <p className="text-sm font-semibold text-slate-900">
+              <p className="text-sm font-semibold text-foreground">
                 Owner information
               </p>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-muted-foreground">
                 Information about the main business owner account.
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="ownerName" className="text-sm font-medium text-slate-700">
+              <Label htmlFor="ownerName" className="text-sm font-medium text-foreground">
                 Full name
               </Label>
               <div className="relative">
-                <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="ownerName"
                   value={formData.ownerName}
@@ -264,7 +264,7 @@ export function Register() {
                   }
                   placeholder="Enter the owner full name"
                   disabled={loading}
-                  className="h-12 rounded-xl border-slate-200 bg-slate-50/60 pl-10 text-slate-900 placeholder:text-slate-400 focus:border-primary focus:bg-white"
+                  className="h-12 rounded-xl border-border bg-background/60 pl-10 text-foreground placeholder:text-muted-foreground focus:border-primary focus:bg-card"
                   required
                 />
               </div>
@@ -276,11 +276,11 @@ export function Register() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="ownerEmail" className="text-sm font-medium text-slate-700">
+              <Label htmlFor="ownerEmail" className="text-sm font-medium text-foreground">
                 Email address
               </Label>
               <div className="relative">
-                <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="ownerEmail"
                   type="email"
@@ -291,7 +291,7 @@ export function Register() {
                   }
                   placeholder="you@company.com"
                   disabled={loading}
-                  className="h-12 rounded-xl border-slate-200 bg-slate-50/60 pl-10 text-slate-900 placeholder:text-slate-400 focus:border-primary focus:bg-white"
+                  className="h-12 rounded-xl border-border bg-background/60 pl-10 text-foreground placeholder:text-muted-foreground focus:border-primary focus:bg-card"
                   required
                 />
               </div>
@@ -303,24 +303,24 @@ export function Register() {
             </div>
           </div>
 
-          <div className="border-t border-slate-200 pt-1" />
+          <div className="border-t border-border pt-1" />
 
           <div className="space-y-5">
             <div>
-              <p className="text-sm font-semibold text-slate-900">
+              <p className="text-sm font-semibold text-foreground">
                 Company information
               </p>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-muted-foreground">
                 Basic business information required for account review.
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="companyName" className="text-sm font-medium text-slate-700">
+              <Label htmlFor="companyName" className="text-sm font-medium text-foreground">
                 Company name
               </Label>
               <div className="relative">
-                <BriefcaseBusiness className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <BriefcaseBusiness className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="companyName"
                   value={formData.companyName}
@@ -330,7 +330,7 @@ export function Register() {
                   }
                   placeholder="Enter your company name"
                   disabled={loading}
-                  className="h-12 rounded-xl border-slate-200 bg-slate-50/60 pl-10 text-slate-900 placeholder:text-slate-400 focus:border-primary focus:bg-white"
+                  className="h-12 rounded-xl border-border bg-background/60 pl-10 text-foreground placeholder:text-muted-foreground focus:border-primary focus:bg-card"
                   required
                 />
               </div>
@@ -344,7 +344,7 @@ export function Register() {
             <div className="space-y-2">
               <Label
                 htmlFor="companyCategory"
-                className="text-sm font-medium text-slate-700"
+                className="text-sm font-medium text-foreground"
               >
                 Company category
               </Label>
@@ -360,7 +360,7 @@ export function Register() {
                     setTouched((prev) => ({ ...prev, companyCategory: true }))
                   }
                   disabled={loading}
-                  className="h-12 w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/60 px-4 pr-10 text-sm text-slate-900 outline-none transition focus:border-primary focus:bg-white"
+                  className="h-12 w-full appearance-none rounded-xl border border-border bg-background/60 px-4 pr-10 text-sm text-foreground outline-none transition focus:border-primary focus:bg-card"
                   required
                 >
                   <option value="">Select a category</option>
@@ -371,7 +371,7 @@ export function Register() {
                   ))}
                 </select>
 
-                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               </div>
 
               {errors.companyCategory && (
@@ -403,7 +403,7 @@ export function Register() {
             )}
           </Button>
 
-          <div className="text-center text-sm text-slate-500">
+          <div className="text-center text-sm text-muted-foreground">
             Already have an account?{" "}
             <Link
               to="/auth/login"

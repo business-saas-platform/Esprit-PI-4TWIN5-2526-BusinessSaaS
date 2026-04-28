@@ -2,10 +2,24 @@
   "name": "@figma/my-make-file",
   "private": true,
   "version": "0.0.1",
+  "main": "electron.js",
   "type": "module",
   "scripts": {
     "build": "vite build",
+    "electron": "electron .",
+    "desktop": "concurrently \"npm run frontend\" \"npm run electron\"",
+    "frontend": "vite",
+    "dist": "npm run build && electron-builder",
     "dev": "vite"
+  },
+  "build": {
+    "electronVersion": "30.0.0",
+    "appId": "com.bizManagement.app",
+    "productName": "bizManagement",
+    "files": [
+      "dist/**/*",
+      "electron.js"
+    ]
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
@@ -71,6 +85,8 @@
   "devDependencies": {
     "@tailwindcss/vite": "4.1.12",
     "@vitejs/plugin-react": "4.7.0",
+    "electron": "^41.3.0",
+    "electron-builder": "^26.8.1",
     "tailwindcss": "4.1.12",
     "vite": "6.3.5"
   },

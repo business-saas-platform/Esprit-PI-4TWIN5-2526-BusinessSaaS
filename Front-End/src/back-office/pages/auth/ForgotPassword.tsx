@@ -65,8 +65,8 @@ function StepIndicator({ step }: { step: Step }) {
                 i < current
                   ? "bg-indigo-600 border-indigo-600 text-white"
                   : i === current
-                  ? "border-indigo-600 text-indigo-600 bg-white"
-                  : "border-muted text-muted-foreground bg-white"
+                  ? "border-indigo-600 text-indigo-600 bg-card"
+                  : "border-muted text-muted-foreground bg-card"
               }`}
             >
               {i < current ? "✓" : i + 1}

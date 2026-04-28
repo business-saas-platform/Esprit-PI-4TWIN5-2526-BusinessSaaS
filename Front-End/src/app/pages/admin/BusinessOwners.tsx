@@ -435,19 +435,19 @@ export function BusinessOwners() {
   const panelOpen = createOpen || detailOpen;
 
   return (
-    <div className="relative min-h-screen bg-slate-50/50">
+    <div className="relative min-h-screen bg-background/50">
       <div className={`space-y-6 p-6 transition-all duration-300 ${panelOpen ? "xl:pr-[36rem]" : ""}`}>
-        <div className="overflow-hidden rounded-[32px] border border-slate-200 bg-gradient-to-r from-slate-50 via-white to-slate-50 shadow-sm">
+        <div className="overflow-hidden rounded-[32px] border border-border bg-gradient-to-r from-slate-50 via-background dark:via-background to-slate-50 shadow-sm">
           <div className="flex flex-col gap-5 p-6 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-sm">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground shadow-sm">
                 <Sparkles className="h-3.5 w-3.5" />
                 Platform Administration
               </div>
-              <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+              <h1 className="text-3xl font-bold tracking-tight text-foreground">
                 Business Owners
               </h1>
-              <p className="mt-2 max-w-2xl text-sm text-slate-600">
+              <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
                 Gérer les owners, les businesses et les abonnements dans une interface plus pro.
               </p>
             </div>
@@ -485,8 +485,8 @@ export function BusinessOwners() {
             title="Total Owners"
             value={stats.totalOwners}
             subtitle="All registered business owners"
-            icon={<User className="h-5 w-5 text-slate-700" />}
-            boxClassName="bg-slate-100"
+            icon={<User className="h-5 w-5 text-foreground" />}
+            boxClassName="bg-muted"
           />
           <StatsCard
             title="Active Owners"
@@ -514,21 +514,21 @@ export function BusinessOwners() {
           />
         </div>
 
-        <Card className="rounded-[28px] border border-slate-200 shadow-sm">
+        <Card className="rounded-[28px] border border-border shadow-sm">
           <CardContent className="pt-6">
             <div className="grid gap-4 lg:grid-cols-3">
               <div className="relative lg:col-span-1">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder="Search by name, email, status or plan..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-12 rounded-2xl border-slate-200 pl-10"
+                  className="h-12 rounded-2xl border-border pl-10"
                 />
               </div>
 
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="h-12 rounded-2xl border-slate-200">
+                <SelectTrigger className="h-12 rounded-2xl border-border">
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -540,7 +540,7 @@ export function BusinessOwners() {
               </Select>
 
               <Select value={planFilter} onValueChange={setPlanFilter}>
-                <SelectTrigger className="h-12 rounded-2xl border-slate-200">
+                <SelectTrigger className="h-12 rounded-2xl border-border">
                   <SelectValue placeholder="Filter by plan" />
                 </SelectTrigger>
                 <SelectContent>
@@ -554,7 +554,7 @@ export function BusinessOwners() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[28px] border border-slate-200 shadow-sm">
+        <Card className="rounded-[28px] border border-border shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <div>
               <CardTitle className="text-xl">All Business Owners</CardTitle>
@@ -564,23 +564,23 @@ export function BusinessOwners() {
 
           <CardContent>
             {loading ? (
-              <div className="flex min-h-[260px] items-center justify-center text-slate-500">
+              <div className="flex min-h-[260px] items-center justify-center text-muted-foreground">
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                 Loading owners...
               </div>
             ) : filteredOwners.length === 0 ? (
-              <div className="flex min-h-[280px] flex-col items-center justify-center rounded-3xl border border-dashed bg-slate-50 text-center">
-                <AlertCircle className="mb-3 h-10 w-10 text-slate-400" />
-                <h3 className="text-lg font-semibold text-slate-800">No owners found</h3>
-                <p className="mt-1 text-sm text-slate-500">
+              <div className="flex min-h-[280px] flex-col items-center justify-center rounded-3xl border border-dashed bg-background text-center">
+                <AlertCircle className="mb-3 h-10 w-10 text-muted-foreground" />
+                <h3 className="text-lg font-semibold text-foreground">No owners found</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
                   Badel filters wala search, ma fama hata résultat.
                 </p>
               </div>
             ) : (
-              <div className="overflow-x-auto rounded-3xl border border-slate-200">
+              <div className="overflow-x-auto rounded-3xl border border-border">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-slate-50/80">
+                    <TableRow className="bg-background/80">
                       <TableHead>Owner</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Businesses</TableHead>
@@ -593,15 +593,15 @@ export function BusinessOwners() {
 
                   <TableBody>
                     {filteredOwners.map((owner) => (
-                      <TableRow key={owner.id} className="hover:bg-slate-50/60">
+                      <TableRow key={owner.id} className="hover:bg-background/60">
                         <TableCell className="min-w-[260px]">
                           <div className="flex items-start gap-3">
-                            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100">
-                              <User className="h-4 w-4 text-slate-600" />
+                            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-muted">
+                              <User className="h-4 w-4 text-muted-foreground" />
                             </div>
                             <div>
-                              <p className="font-semibold text-slate-900">{owner.name}</p>
-                              <div className="mt-1 flex items-center gap-2 text-sm text-slate-500">
+                              <p className="font-semibold text-foreground">{owner.name}</p>
+                              <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
                                 <Mail className="h-3.5 w-3.5" />
                                 <span>{owner.email}</span>
                               </div>
@@ -612,8 +612,8 @@ export function BusinessOwners() {
                         <TableCell>{getStatusBadge(owner.status)}</TableCell>
 
                         <TableCell>
-                          <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                            <Building2 className="h-4 w-4 text-slate-400" />
+                          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                            <Building2 className="h-4 w-4 text-muted-foreground" />
                             <span>{owner.businessCount}</span>
                           </div>
                         </TableCell>
@@ -623,8 +623,8 @@ export function BusinessOwners() {
                         <TableCell>{getDaysRemainingBadge(owner.daysRemaining)}</TableCell>
 
                         <TableCell>
-                          <div className="flex items-center gap-2 text-sm text-slate-600">
-                            <CalendarDays className="h-4 w-4 text-slate-400" />
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <CalendarDays className="h-4 w-4 text-muted-foreground" />
                             <span>{formatDate(owner.joinedAt)}</span>
                           </div>
                         </TableCell>
@@ -693,20 +693,20 @@ export function BusinessOwners() {
             onClick={closePanels}
           />
 
-          <aside className="fixed right-0 top-0 z-50 h-[100dvh] w-full max-w-[920px] border-l border-slate-200 bg-slate-50 shadow-[0_20px_60px_rgba(15,23,42,0.18)]">
+          <aside className="fixed right-0 top-0 z-50 h-[100dvh] w-full max-w-[920px] border-l border-border bg-background shadow-[0_20px_60px_rgba(15,23,42,0.18)]">
             {detailOpen && (
               <div className="flex h-full flex-col">
-                <div className="border-b bg-white px-6 py-5 shadow-sm">
+                <div className="border-b bg-card px-6 py-5 shadow-sm">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
-                      <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
+                      <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-muted-foreground">
                         <ShieldCheck className="h-3.5 w-3.5" />
                         Owner Profile
                       </div>
-                      <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+                      <h2 className="text-2xl font-bold tracking-tight text-foreground">
                         Owner Details
                       </h2>
-                      <p className="mt-1 text-sm text-slate-500">
+                      <p className="mt-1 text-sm text-muted-foreground">
                         Vue claire, structurée et complète du owner.
                       </p>
                     </div>
@@ -723,7 +723,7 @@ export function BusinessOwners() {
                 </div>
 
                 {detailLoading ? (
-                  <div className="flex flex-1 items-center justify-center text-slate-500">
+                  <div className="flex flex-1 items-center justify-center text-muted-foreground">
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                     Loading owner details...
                   </div>
@@ -731,20 +731,20 @@ export function BusinessOwners() {
                   <div className="grid min-h-0 flex-1 xl:grid-cols-[minmax(0,1fr)_300px]">
                     <div className="min-h-0 overflow-y-auto p-6 pb-32">
                       <div className="space-y-6">
-                        <Card className="rounded-[28px] border border-slate-200 shadow-sm">
+                        <Card className="rounded-[28px] border border-border shadow-sm">
                           <CardContent className="p-6">
                             <div className="flex flex-col gap-5">
                               <div className="flex items-start gap-4">
-                                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[24px] bg-slate-100">
-                                  <User className="h-9 w-9 text-slate-600" />
+                                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[24px] bg-muted">
+                                  <User className="h-9 w-9 text-muted-foreground" />
                                 </div>
 
                                 <div className="min-w-0 flex-1">
-                                  <h3 className="truncate text-3xl font-bold text-slate-900">
+                                  <h3 className="truncate text-3xl font-bold text-foreground">
                                     {selectedOwner.name}
                                   </h3>
 
-                                  <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-slate-500">
+                                  <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                                     <div className="flex items-center gap-2">
                                       <Mail className="h-4 w-4" />
                                       <span className="break-all">{selectedOwner.email}</span>
@@ -773,12 +773,12 @@ export function BusinessOwners() {
                                 <SummaryMiniCard
                                   label="Businesses"
                                   value={selectedOwner.businessCount ?? 0}
-                                  icon={<Building2 className="h-4 w-4 text-slate-500" />}
+                                  icon={<Building2 className="h-4 w-4 text-muted-foreground" />}
                                 />
                                 <SummaryMiniCard
                                   label="Plan"
                                   value={selectedOwner.subscriptionPlan || "No plan"}
-                                  icon={<CreditCard className="h-4 w-4 text-slate-500" />}
+                                  icon={<CreditCard className="h-4 w-4 text-muted-foreground" />}
                                 />
                                 <SummaryMiniCard
                                   label="Days Left"
@@ -788,7 +788,7 @@ export function BusinessOwners() {
                                       ? selectedOwner.daysRemaining
                                       : "Unknown"
                                   }
-                                  icon={<Clock className="h-4 w-4 text-slate-500" />}
+                                  icon={<Clock className="h-4 w-4 text-muted-foreground" />}
                                 />
                               </div>
                             </div>
@@ -811,7 +811,7 @@ export function BusinessOwners() {
                           <DetailStatCard
                             title="Subscription End"
                             content={
-                              <span className="text-base font-semibold text-slate-900">
+                              <span className="text-base font-semibold text-foreground">
                                 {formatDate(selectedOwner.subscriptionEndDate)}
                               </span>
                             }
@@ -827,9 +827,9 @@ export function BusinessOwners() {
                         </div>
 
                         <div className="grid gap-6 xl:grid-cols-2">
-                          <Card className="rounded-[28px] border border-slate-200 shadow-sm">
+                          <Card className="rounded-[28px] border border-border shadow-sm">
                             <CardHeader className="pb-3">
-                              <CardTitle className="text-lg font-semibold text-slate-900">
+                              <CardTitle className="text-lg font-semibold text-foreground">
                                 Owner Information
                               </CardTitle>
                               <CardDescription>Main owner account data</CardDescription>
@@ -838,34 +838,34 @@ export function BusinessOwners() {
                               <ProInfoRow
                                 label="Full Name"
                                 value={selectedOwner.name}
-                                icon={<User className="h-4 w-4 text-slate-400" />}
+                                icon={<User className="h-4 w-4 text-muted-foreground" />}
                               />
                               <ProInfoRow
                                 label="Email Address"
                                 value={selectedOwner.email}
-                                icon={<Mail className="h-4 w-4 text-slate-400" />}
+                                icon={<Mail className="h-4 w-4 text-muted-foreground" />}
                               />
                               <ProInfoRow
                                 label="Joined At"
                                 value={formatDate(selectedOwner.joinedAt)}
-                                icon={<CalendarDays className="h-4 w-4 text-slate-400" />}
+                                icon={<CalendarDays className="h-4 w-4 text-muted-foreground" />}
                               />
                               <ProInfoRow
                                 label="Status"
                                 value={selectedOwner.status}
-                                icon={<ShieldCheck className="h-4 w-4 text-slate-400" />}
+                                icon={<ShieldCheck className="h-4 w-4 text-muted-foreground" />}
                               />
                               <ProInfoRow
                                 label="Businesses Count"
                                 value={String(selectedOwner.businessCount ?? 0)}
-                                icon={<Building2 className="h-4 w-4 text-slate-400" />}
+                                icon={<Building2 className="h-4 w-4 text-muted-foreground" />}
                               />
                             </CardContent>
                           </Card>
 
-                          <Card className="rounded-[28px] border border-slate-200 shadow-sm">
+                          <Card className="rounded-[28px] border border-border shadow-sm">
                             <CardHeader className="pb-3">
-                              <CardTitle className="text-lg font-semibold text-slate-900">
+                              <CardTitle className="text-lg font-semibold text-foreground">
                                 Subscription Details
                               </CardTitle>
                               <CardDescription>Plan and validity period</CardDescription>
@@ -874,17 +874,17 @@ export function BusinessOwners() {
                               <ProInfoRow
                                 label="Plan"
                                 value={selectedOwner.subscriptionPlan || "No plan"}
-                                icon={<CreditCard className="h-4 w-4 text-slate-400" />}
+                                icon={<CreditCard className="h-4 w-4 text-muted-foreground" />}
                               />
                               <ProInfoRow
                                 label="Start Date"
                                 value={formatDate(selectedOwner.subscriptionStartDate)}
-                                icon={<CalendarDays className="h-4 w-4 text-slate-400" />}
+                                icon={<CalendarDays className="h-4 w-4 text-muted-foreground" />}
                               />
                               <ProInfoRow
                                 label="End Date"
                                 value={formatDate(selectedOwner.subscriptionEndDate)}
-                                icon={<CalendarDays className="h-4 w-4 text-slate-400" />}
+                                icon={<CalendarDays className="h-4 w-4 text-muted-foreground" />}
                               />
                               <ProInfoRow
                                 label="Days Remaining"
@@ -894,15 +894,15 @@ export function BusinessOwners() {
                                     ? `${selectedOwner.daysRemaining} day(s)`
                                     : "Unknown"
                                 }
-                                icon={<Clock className="h-4 w-4 text-slate-400" />}
+                                icon={<Clock className="h-4 w-4 text-muted-foreground" />}
                               />
                             </CardContent>
                           </Card>
                         </div>
 
-                        <Card className="rounded-[28px] border border-slate-200 shadow-sm">
+                        <Card className="rounded-[28px] border border-border shadow-sm">
                           <CardHeader className="pb-3">
-                            <CardTitle className="text-lg font-semibold text-slate-900">
+                            <CardTitle className="text-lg font-semibold text-foreground">
                               Linked Businesses
                             </CardTitle>
                             <CardDescription>Businesses liés à ce owner</CardDescription>
@@ -910,7 +910,7 @@ export function BusinessOwners() {
 
                           <CardContent>
                             {!selectedOwner.businesses || selectedOwner.businesses.length === 0 ? (
-                              <div className="rounded-3xl border border-dashed bg-slate-50 p-8 text-center text-sm text-slate-500">
+                              <div className="rounded-3xl border border-dashed bg-background p-8 text-center text-sm text-muted-foreground">
                                 No businesses found.
                               </div>
                             ) : (
@@ -918,19 +918,19 @@ export function BusinessOwners() {
                                 {selectedOwner.businesses.map((business) => (
                                   <Card
                                     key={business.id}
-                                    className="rounded-[24px] border border-slate-200 bg-slate-50/50 shadow-sm"
+                                    className="rounded-[24px] border border-border bg-background/50 shadow-sm"
                                   >
                                     <CardContent className="p-5">
                                       <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                                         <div className="flex min-w-0 items-start gap-3">
-                                          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white">
-                                            <BriefcaseBusiness className="h-5 w-5 text-slate-600" />
+                                          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-border bg-card">
+                                            <BriefcaseBusiness className="h-5 w-5 text-muted-foreground" />
                                           </div>
                                           <div className="min-w-0">
-                                            <p className="truncate text-lg font-semibold text-slate-900">
+                                            <p className="truncate text-lg font-semibold text-foreground">
                                               {business.name}
                                             </p>
-                                            <p className="text-sm text-slate-500">
+                                            <p className="text-sm text-muted-foreground">
                                               {business.type || "Business"}
                                             </p>
                                           </div>
@@ -946,17 +946,17 @@ export function BusinessOwners() {
                                         <ProInfoRow
                                           label="Email"
                                           value={business.email || "—"}
-                                          icon={<Mail className="h-4 w-4 text-slate-400" />}
+                                          icon={<Mail className="h-4 w-4 text-muted-foreground" />}
                                         />
                                         <ProInfoRow
                                           label="Phone"
                                           value={business.phone || "—"}
-                                          icon={<Phone className="h-4 w-4 text-slate-400" />}
+                                          icon={<Phone className="h-4 w-4 text-muted-foreground" />}
                                         />
                                         <ProInfoRow
                                           label="Website"
                                           value={business.website || "—"}
-                                          icon={<Globe className="h-4 w-4 text-slate-400" />}
+                                          icon={<Globe className="h-4 w-4 text-muted-foreground" />}
                                         />
                                         <ProInfoRow
                                           label="Address"
@@ -965,17 +965,17 @@ export function BusinessOwners() {
                                               .filter(Boolean)
                                               .join(", ") || "—"
                                           }
-                                          icon={<MapPin className="h-4 w-4 text-slate-400" />}
+                                          icon={<MapPin className="h-4 w-4 text-muted-foreground" />}
                                         />
                                         <ProInfoRow
                                           label="Tax ID"
                                           value={business.taxId || "—"}
-                                          icon={<FileText className="h-4 w-4 text-slate-400" />}
+                                          icon={<FileText className="h-4 w-4 text-muted-foreground" />}
                                         />
                                         <ProInfoRow
                                           label="Subscription End"
                                           value={formatDate(business.subscriptionEndDate)}
-                                          icon={<CalendarDays className="h-4 w-4 text-slate-400" />}
+                                          icon={<CalendarDays className="h-4 w-4 text-muted-foreground" />}
                                         />
                                       </div>
                                     </CardContent>
@@ -988,10 +988,10 @@ export function BusinessOwners() {
                       </div>
                     </div>
 
-                    <div className="hidden border-l bg-white xl:flex xl:flex-col">
+                    <div className="hidden border-l bg-card xl:flex xl:flex-col">
                       <div className="border-b px-5 py-5">
-                        <h3 className="text-lg font-semibold text-slate-900">Quick Actions</h3>
-                        <p className="mt-1 text-sm text-slate-500">Actions rapides et résumé</p>
+                        <h3 className="text-lg font-semibold text-foreground">Quick Actions</h3>
+                        <p className="mt-1 text-sm text-muted-foreground">Actions rapides et résumé</p>
                       </div>
 
                       <div className="flex-1 space-y-4 overflow-y-auto p-5 pb-28">
@@ -1005,7 +1005,7 @@ export function BusinessOwners() {
                           </div>
                         </div>
 
-                        <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-5">
+                        <div className="rounded-[28px] border border-border bg-background p-5">
                           <QuickSummaryItem label="Status" value={selectedOwner.status || "—"} />
                           <div className="my-3" />
                           <QuickSummaryItem label="Plan" value={selectedOwner.subscriptionPlan || "No plan"} />
@@ -1016,7 +1016,7 @@ export function BusinessOwners() {
                         </div>
                       </div>
 
-                      <div className="sticky bottom-0 border-t bg-white/95 p-5 shadow-[0_-8px_24px_rgba(15,23,42,0.06)] backdrop-blur supports-[backdrop-filter]:bg-white/80">
+                      <div className="sticky bottom-0 border-t bg-card/95 p-5 shadow-[0_-8px_24px_rgba(15,23,42,0.06)] backdrop-blur supports-[backdrop-filter]:bg-card/80">
                         <div className="grid gap-2">
                           {selectedOwner.status !== "active" && (
                             <Button
@@ -1061,24 +1061,24 @@ export function BusinessOwners() {
                     </div>
                   </div>
                 ) : (
-                  <div className="p-6 text-sm text-slate-500">No details available.</div>
+                  <div className="p-6 text-sm text-muted-foreground">No details available.</div>
                 )}
               </div>
             )}
 
             {createOpen && (
               <div className="flex h-full flex-col">
-                <div className="border-b bg-white px-6 py-5 shadow-sm">
+                <div className="border-b bg-card px-6 py-5 shadow-sm">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
-                      <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
+                      <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-muted-foreground">
                         <Sparkles className="h-3.5 w-3.5" />
                         Platform Admin
                       </div>
-                      <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+                      <h2 className="text-2xl font-bold tracking-tight text-foreground">
                         Create Business Owner + Business
                       </h2>
-                      <p className="mt-1 text-sm text-slate-500">
+                      <p className="mt-1 text-sm text-muted-foreground">
                         Formulaire clair, structuré et facile à lire.
                       </p>
                     </div>
@@ -1097,14 +1097,14 @@ export function BusinessOwners() {
                 <div className="grid min-h-0 flex-1 lg:grid-cols-[minmax(0,1fr)_320px]">
                   <div className="min-h-0 overflow-y-auto px-6 py-6 pb-36">
                     <div className="space-y-6">
-                      <Card className="rounded-[28px] border border-slate-200 shadow-sm">
+                      <Card className="rounded-[28px] border border-border shadow-sm">
                         <CardHeader className="pb-3">
                           <div className="flex items-center gap-3">
                             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50">
                               <User className="h-5 w-5 text-blue-700" />
                             </div>
                             <div>
-                              <CardTitle className="text-lg font-semibold text-slate-900">
+                              <CardTitle className="text-lg font-semibold text-foreground">
                                 Owner Information
                               </CardTitle>
                               <CardDescription>Main owner account fields</CardDescription>
@@ -1115,7 +1115,7 @@ export function BusinessOwners() {
                         <CardContent className="grid gap-4 md:grid-cols-2">
                           <FormField label="Owner Name">
                             <Input
-                              className="h-12 rounded-2xl border-slate-200 bg-slate-50/70"
+                              className="h-12 rounded-2xl border-border bg-background/70"
                               value={form.ownerName}
                               onChange={(e) => handleFormChange("ownerName", e.target.value)}
                               placeholder="Ex: Aziz Rahouej"
@@ -1124,7 +1124,7 @@ export function BusinessOwners() {
 
                           <FormField label="Owner Email">
                             <Input
-                              className="h-12 rounded-2xl border-slate-200 bg-slate-50/70"
+                              className="h-12 rounded-2xl border-border bg-background/70"
                               value={form.ownerEmail}
                               onChange={(e) => handleFormChange("ownerEmail", e.target.value)}
                               placeholder="owner@email.com"
@@ -1137,7 +1137,7 @@ export function BusinessOwners() {
                                 value={form.ownerStatus}
                                 onValueChange={(value) => handleFormChange("ownerStatus", value)}
                               >
-                                <SelectTrigger className="h-12 rounded-2xl border-slate-200 bg-slate-50/70">
+                                <SelectTrigger className="h-12 rounded-2xl border-border bg-background/70">
                                   <SelectValue placeholder="Owner Status" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -1150,14 +1150,14 @@ export function BusinessOwners() {
                         </CardContent>
                       </Card>
 
-                      <Card className="rounded-[28px] border border-slate-200 shadow-sm">
+                      <Card className="rounded-[28px] border border-border shadow-sm">
                         <CardHeader className="pb-3">
                           <div className="flex items-center gap-3">
                             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50">
                               <BriefcaseBusiness className="h-5 w-5 text-emerald-700" />
                             </div>
                             <div>
-                              <CardTitle className="text-lg font-semibold text-slate-900">
+                              <CardTitle className="text-lg font-semibold text-foreground">
                                 Business Information
                               </CardTitle>
                               <CardDescription>Business details and subscription</CardDescription>
@@ -1168,7 +1168,7 @@ export function BusinessOwners() {
                         <CardContent className="grid gap-4 md:grid-cols-2">
                           <FormField label="Business Name">
                             <Input
-                              className="h-12 rounded-2xl border-slate-200 bg-slate-50/70"
+                              className="h-12 rounded-2xl border-border bg-background/70"
                               value={form.businessName}
                               onChange={(e) => handleFormChange("businessName", e.target.value)}
                               placeholder="Business name"
@@ -1177,7 +1177,7 @@ export function BusinessOwners() {
 
                           <FormField label="Business Email">
                             <Input
-                              className="h-12 rounded-2xl border-slate-200 bg-slate-50/70"
+                              className="h-12 rounded-2xl border-border bg-background/70"
                               value={form.businessEmail}
                               onChange={(e) => handleFormChange("businessEmail", e.target.value)}
                               placeholder="business@email.com"
@@ -1186,7 +1186,7 @@ export function BusinessOwners() {
 
                           <FormField label="Business Type">
                             <Input
-                              className="h-12 rounded-2xl border-slate-200 bg-slate-50/70"
+                              className="h-12 rounded-2xl border-border bg-background/70"
                               value={form.businessType}
                               onChange={(e) => handleFormChange("businessType", e.target.value)}
                               placeholder="Retail / IT / Services"
@@ -1195,7 +1195,7 @@ export function BusinessOwners() {
 
                           <FormField label="Industry">
                             <Input
-                              className="h-12 rounded-2xl border-slate-200 bg-slate-50/70"
+                              className="h-12 rounded-2xl border-border bg-background/70"
                               value={form.industry}
                               onChange={(e) => handleFormChange("industry", e.target.value)}
                               placeholder="Industry"
@@ -1205,7 +1205,7 @@ export function BusinessOwners() {
                           <div className="md:col-span-2">
                             <FormField label="Address">
                               <Input
-                                className="h-12 rounded-2xl border-slate-200 bg-slate-50/70"
+                                className="h-12 rounded-2xl border-border bg-background/70"
                                 value={form.address}
                                 onChange={(e) => handleFormChange("address", e.target.value)}
                                 placeholder="Full address"
@@ -1215,7 +1215,7 @@ export function BusinessOwners() {
 
                           <FormField label="City">
                             <Input
-                              className="h-12 rounded-2xl border-slate-200 bg-slate-50/70"
+                              className="h-12 rounded-2xl border-border bg-background/70"
                               value={form.city}
                               onChange={(e) => handleFormChange("city", e.target.value)}
                               placeholder="City"
@@ -1224,7 +1224,7 @@ export function BusinessOwners() {
 
                           <FormField label="Country">
                             <Input
-                              className="h-12 rounded-2xl border-slate-200 bg-slate-50/70"
+                              className="h-12 rounded-2xl border-border bg-background/70"
                               value={form.country}
                               onChange={(e) => handleFormChange("country", e.target.value)}
                               placeholder="Country"
@@ -1233,7 +1233,7 @@ export function BusinessOwners() {
 
                           <FormField label="Tax ID">
                             <Input
-                              className="h-12 rounded-2xl border-slate-200 bg-slate-50/70"
+                              className="h-12 rounded-2xl border-border bg-background/70"
                               value={form.taxId}
                               onChange={(e) => handleFormChange("taxId", e.target.value)}
                               placeholder="Tax ID"
@@ -1242,7 +1242,7 @@ export function BusinessOwners() {
 
                           <FormField label="Phone">
                             <Input
-                              className="h-12 rounded-2xl border-slate-200 bg-slate-50/70"
+                              className="h-12 rounded-2xl border-border bg-background/70"
                               value={form.phone}
                               onChange={(e) => handleFormChange("phone", e.target.value)}
                               placeholder="+216 ..."
@@ -1251,7 +1251,7 @@ export function BusinessOwners() {
 
                           <FormField label="Website">
                             <Input
-                              className="h-12 rounded-2xl border-slate-200 bg-slate-50/70"
+                              className="h-12 rounded-2xl border-border bg-background/70"
                               value={form.website}
                               onChange={(e) => handleFormChange("website", e.target.value)}
                               placeholder="https://..."
@@ -1260,7 +1260,7 @@ export function BusinessOwners() {
 
                           <FormField label="Fiscal Year Start">
                             <Input
-                              className="h-12 rounded-2xl border-slate-200 bg-slate-50/70"
+                              className="h-12 rounded-2xl border-border bg-background/70"
                               value={form.fiscalYearStart}
                               onChange={(e) => handleFormChange("fiscalYearStart", e.target.value)}
                               placeholder="YYYY-MM-DD"
@@ -1269,7 +1269,7 @@ export function BusinessOwners() {
 
                           <FormField label="Currency">
                             <Input
-                              className="h-12 rounded-2xl border-slate-200 bg-slate-50/70"
+                              className="h-12 rounded-2xl border-border bg-background/70"
                               value={form.currency}
                               onChange={(e) => handleFormChange("currency", e.target.value)}
                               placeholder="TND"
@@ -1278,7 +1278,7 @@ export function BusinessOwners() {
 
                           <FormField label="Tax Rate (%)">
                             <Input
-                              className="h-12 rounded-2xl border-slate-200 bg-slate-50/70"
+                              className="h-12 rounded-2xl border-border bg-background/70"
                               type="number"
                               value={form.taxRate}
                               onChange={(e) => handleFormChange("taxRate", e.target.value)}
@@ -1291,7 +1291,7 @@ export function BusinessOwners() {
                               value={form.businessStatus}
                               onValueChange={(value) => handleFormChange("businessStatus", value)}
                             >
-                              <SelectTrigger className="h-12 rounded-2xl border-slate-200 bg-slate-50/70">
+                              <SelectTrigger className="h-12 rounded-2xl border-border bg-background/70">
                                 <SelectValue placeholder="Business Status" />
                               </SelectTrigger>
                               <SelectContent>
@@ -1307,7 +1307,7 @@ export function BusinessOwners() {
                               value={form.plan}
                               onValueChange={(value) => handleFormChange("plan", value)}
                             >
-                              <SelectTrigger className="h-12 rounded-2xl border-slate-200 bg-slate-50/70">
+                              <SelectTrigger className="h-12 rounded-2xl border-border bg-background/70">
                                 <SelectValue placeholder="Plan" />
                               </SelectTrigger>
                               <SelectContent>
@@ -1320,7 +1320,7 @@ export function BusinessOwners() {
 
                           <FormField label="Subscription Start Date">
                             <Input
-                              className="h-12 rounded-2xl border-slate-200 bg-slate-50/70"
+                              className="h-12 rounded-2xl border-border bg-background/70"
                               type="date"
                               value={form.subscriptionStartDate}
                               onChange={(e) => handleFormChange("subscriptionStartDate", e.target.value)}
@@ -1329,7 +1329,7 @@ export function BusinessOwners() {
 
                           <FormField label="Subscription End Date">
                             <Input
-                              className="h-12 rounded-2xl border-slate-200 bg-slate-50/70"
+                              className="h-12 rounded-2xl border-border bg-background/70"
                               type="date"
                               value={form.subscriptionEndDate}
                               onChange={(e) => handleFormChange("subscriptionEndDate", e.target.value)}
@@ -1340,10 +1340,10 @@ export function BusinessOwners() {
                     </div>
                   </div>
 
-                  <div className="hidden border-l bg-white lg:flex lg:flex-col">
+                  <div className="hidden border-l bg-card lg:flex lg:flex-col">
                     <div className="border-b px-5 py-5">
-                      <h3 className="text-lg font-semibold text-slate-900">Live Summary</h3>
-                      <p className="mt-1 text-sm text-slate-500">Preview before creation</p>
+                      <h3 className="text-lg font-semibold text-foreground">Live Summary</h3>
+                      <p className="mt-1 text-sm text-muted-foreground">Preview before creation</p>
                     </div>
 
                     <div className="flex-1 space-y-4 overflow-y-auto p-5 pb-28">
@@ -1353,18 +1353,18 @@ export function BusinessOwners() {
                         <p className="mt-1 break-all text-sm text-slate-300">
                           {form.ownerEmail || "owner@email.com"}
                         </p>
-                        <div className="mt-4 inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-medium">
+                        <div className="mt-4 inline-flex rounded-full bg-card/10 px-3 py-1 text-xs font-medium">
                           {form.ownerStatus || "active"}
                         </div>
                       </div>
 
-                      <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-5">
-                        <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Business</p>
-                        <p className="mt-3 text-lg font-semibold text-slate-900">
+                      <div className="rounded-[28px] border border-border bg-background p-5">
+                        <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Business</p>
+                        <p className="mt-3 text-lg font-semibold text-foreground">
                           {form.businessName || "Business name"}
                         </p>
 
-                        <div className="mt-4 space-y-3 text-sm text-slate-600">
+                        <div className="mt-4 space-y-3 text-sm text-muted-foreground">
                           <QuickSummaryItem label="Type" value={form.businessType || "—"} />
                           <div className="my-3" />
                           <QuickSummaryItem label="Plan" value={form.plan || "starter"} />
@@ -1379,7 +1379,7 @@ export function BusinessOwners() {
                       </div>
                     </div>
 
-                    <div className="sticky bottom-0 border-t bg-white/95 p-5 shadow-[0_-8px_24px_rgba(15,23,42,0.06)] backdrop-blur supports-[backdrop-filter]:bg-white/80">
+                    <div className="sticky bottom-0 border-t bg-card/95 p-5 shadow-[0_-8px_24px_rgba(15,23,42,0.06)] backdrop-blur supports-[backdrop-filter]:bg-card/80">
                       <div className="grid gap-2">
                         <Button
                           className="h-11 rounded-2xl"
@@ -1409,7 +1409,7 @@ export function BusinessOwners() {
                   </div>
                 </div>
 
-                <div className="border-t bg-white/95 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-white/80 lg:hidden">
+                <div className="border-t bg-card/95 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-card/80 lg:hidden">
                   <div className="grid gap-2">
                     <Button
                       className="h-11 rounded-2xl"
@@ -1451,7 +1451,7 @@ function StatsCard({
   subtitle,
   icon,
   valueClassName,
-  boxClassName = "bg-slate-100",
+  boxClassName = "bg-muted",
 }: {
   title: string;
   value: string | number;
@@ -1461,15 +1461,15 @@ function StatsCard({
   boxClassName?: string;
 }) {
   return (
-    <Card className="rounded-[24px] border border-slate-200 bg-white shadow-sm">
+    <Card className="rounded-[24px] border border-border bg-card shadow-sm">
       <CardContent className="p-5">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <p className="text-sm font-medium text-slate-500">{title}</p>
-            <p className={`mt-2 text-3xl font-bold text-slate-900 ${valueClassName || ""}`}>
+            <p className="text-sm font-medium text-muted-foreground">{title}</p>
+            <p className={`mt-2 text-3xl font-bold text-foreground ${valueClassName || ""}`}>
               {value}
             </p>
-            <p className="mt-2 text-sm text-slate-500">{subtitle}</p>
+            <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>
           </div>
           <div className={`rounded-2xl p-3 ${boxClassName}`}>{icon}</div>
         </div>
@@ -1482,7 +1482,7 @@ function DetailStatCard({
   title,
   content,
   icon,
-  iconBox = "bg-slate-100",
+  iconBox = "bg-muted",
 }: {
   title: string;
   content: React.ReactNode;
@@ -1490,10 +1490,10 @@ function DetailStatCard({
   iconBox?: string;
 }) {
   return (
-    <Card className="rounded-[24px] border border-slate-200 shadow-sm">
+    <Card className="rounded-[24px] border border-border shadow-sm">
       <CardContent className="flex items-center justify-between gap-3 p-5">
         <div className="min-w-0">
-          <p className="text-sm font-medium text-slate-500">{title}</p>
+          <p className="text-sm font-medium text-muted-foreground">{title}</p>
           <div className="mt-3">{content}</div>
         </div>
         <div className={`rounded-2xl p-3 ${iconBox}`}>{icon}</div>
@@ -1512,12 +1512,12 @@ function SummaryMiniCard({
   icon: React.ReactNode;
 }) {
   return (
-    <div className="rounded-[20px] border border-slate-200 bg-white p-4 shadow-sm">
-      <div className="mb-2 flex items-center gap-2 text-slate-500">
+    <div className="rounded-[20px] border border-border bg-card p-4 shadow-sm">
+      <div className="mb-2 flex items-center gap-2 text-muted-foreground">
         {icon}
         <span className="text-xs font-medium uppercase tracking-[0.15em]">{label}</span>
       </div>
-      <p className="break-words text-lg font-bold text-slate-900">{value}</p>
+      <p className="break-words text-lg font-bold text-foreground">{value}</p>
     </div>
   );
 }
@@ -1530,9 +1530,9 @@ function QuickSummaryItem({
   value?: string | number | null;
 }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
-      <span className="text-sm text-slate-500">{label}</span>
-      <span className="max-w-[150px] break-words text-right text-sm font-semibold text-slate-900">
+    <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-card px-4 py-3">
+      <span className="text-sm text-muted-foreground">{label}</span>
+      <span className="max-w-[150px] break-words text-right text-sm font-semibold text-foreground">
         {value || "—"}
       </span>
     </div>
@@ -1549,14 +1549,14 @@ function ProInfoRow({
   icon?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3 transition-all hover:border-slate-300 hover:bg-white">
+    <div className="rounded-2xl border border-border bg-background/80 px-4 py-3 transition-all hover:border-border hover:bg-card">
       <div className="mb-2 flex items-center gap-2">
         {icon}
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
           {label}
         </p>
       </div>
-      <p className="break-words text-sm font-semibold text-slate-900">{value || "—"}</p>
+      <p className="break-words text-sm font-semibold text-foreground">{value || "—"}</p>
     </div>
   );
 }
@@ -1570,7 +1570,7 @@ function FormField({
 }) {
   return (
     <div className="grid gap-2">
-      <Label className="text-sm font-semibold text-slate-800">{label}</Label>
+      <Label className="text-sm font-semibold text-foreground">{label}</Label>
       {children}
     </div>
   );

@@ -173,15 +173,15 @@ export function Dashboard() {
   const getInsightColor = (type: string) => {
     switch (type) {
       case "prediction":
-        return "text-blue-600 bg-blue-50 border-blue-200";
+        return "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800";
       case "warning":
-        return "text-orange-600 bg-orange-50 border-orange-200";
+        return "text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800";
       case "recommendation":
-        return "text-purple-600 bg-purple-50 border-purple-200";
+        return "text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800";
       case "opportunity":
-        return "text-green-600 bg-green-50 border-green-200";
+        return "text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800";
       default:
-        return "text-gray-600 bg-gray-50 border-gray-200";
+        return "text-muted-foreground bg-background border-border";
     }
   };
 
@@ -198,16 +198,16 @@ export function Dashboard() {
   const recentInvoices = useMemo(() => invoices.slice(0, 5), [invoices]);
 
   if (loading) {
-    return <div className="p-6 text-sm text-gray-500">Loading dashboard...</div>;
+    return <div className="p-6 text-sm text-muted-foreground">Loading dashboard...</div>;
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-3xl font-bold text-foreground">
           Dashboard {currentBusiness?.name ? `— ${currentBusiness.name}` : ""}
         </h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-muted-foreground">
           Overview of your business performance
         </p>
       </div>
@@ -215,7 +215,7 @@ export function Dashboard() {
       <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg p-6 text-white">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+            <div className="p-2 bg-card/20 rounded-lg backdrop-blur-sm">
               <Sparkles className="h-6 w-6" />
             </div>
             <div>
@@ -337,7 +337,7 @@ export function Dashboard() {
       </div>
 
       {/* AI Insights */}
-      <Card className="border-2 border-indigo-200 bg-gradient-to-br from-white to-indigo-50/30">
+      <Card className="border-2 border-indigo-200 dark:border-indigo-900 bg-gradient-to-br from-card to-indigo-50/50 dark:to-indigo-900/20">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
@@ -350,7 +350,7 @@ export function Dashboard() {
 
         <CardContent>
           {!topAIInsights.length ? (
-            <div className="text-sm text-gray-500">No AI insights yet.</div>
+            <div className="text-sm text-muted-foreground">No AI insights yet.</div>
           ) : (
             <div className="space-y-4">
               {topAIInsights.map((insight) => {
@@ -362,17 +362,17 @@ export function Dashboard() {
                     className={`p-4 rounded-lg border-2 ${colorClass} transition-all hover:shadow-md`}
                   >
                     <div className="flex items-start space-x-3">
-                      <div className="p-2 rounded-lg bg-white/80">
+                      <div className="p-2 rounded-lg bg-card/80">
                         <Icon className="h-5 w-5" />
                       </div>
                       <div className="flex-1">
                         <div className="flex items-start justify-between mb-2">
-                          <h4 className="font-semibold text-gray-900">{insight.title}</h4>
+                          <h4 className="font-semibold text-foreground">{insight.title}</h4>
                           <Badge variant="secondary" className="ml-2">
                             {insight.confidence}% confident
                           </Badge>
                         </div>
-                        <p className="text-sm text-gray-700 mb-3">{insight.description}</p>
+                        <p className="text-sm text-foreground mb-3">{insight.description}</p>
                         <div className="flex items-center justify-between">
                           <Badge variant="outline" className="text-xs capitalize">
                             {insight.type} • {String(insight.category || "").replace("_", " ")}
@@ -411,7 +411,7 @@ export function Dashboard() {
 
           <CardContent>
             {!recentInvoices.length ? (
-              <div className="text-sm text-gray-500">No invoices yet.</div>
+              <div className="text-sm text-muted-foreground">No invoices yet.</div>
             ) : (
               <div className="space-y-4">
                 {recentInvoices.map((invoice) => (
@@ -421,11 +421,11 @@ export function Dashboard() {
                   >
                     <div className="flex-1">
                       <p className="font-medium">{invoice.invoiceNumber ?? invoice.id}</p>
-                      <p className="text-sm text-gray-500">{invoice.clientName ?? "-"}</p>
+                      <p className="text-sm text-muted-foreground">{invoice.clientName ?? "-"}</p>
                     </div>
                     <div className="text-right">
                       <p className="font-medium">{Number(invoice.total ?? 0).toFixed(2)} TND</p>
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-muted text-foreground">
                         {invoice.status ?? "unknown"}
                       </span>
                     </div>
@@ -452,7 +452,7 @@ export function Dashboard() {
 
           <CardContent>
             {!clients.length ? (
-              <div className="text-sm text-gray-500">No clients yet.</div>
+              <div className="text-sm text-muted-foreground">No clients yet.</div>
             ) : (
               <div className="space-y-4">
                 {clients
@@ -465,7 +465,7 @@ export function Dashboard() {
                     >
                       <div className="flex-1">
                         <p className="font-medium">{client.name ?? "Client"}</p>
-                        <p className="text-sm text-gray-500">{client.email ?? "-"}</p>
+                        <p className="text-sm text-muted-foreground">{client.email ?? "-"}</p>
                       </div>
                       <div className="text-right">
                         <p className="font-medium">{Number(client.totalInvoiced ?? 0).toFixed(2)} TND</p>

@@ -83,7 +83,7 @@ const addDays = (dateStr: string, days: number) => {
 const getInputClass = (hasError?: boolean) =>
   hasError
     ? "border-red-500 focus-visible:ring-red-500"
-    : "border-gray-200 focus-visible:ring-indigo-500";
+    : "border-border focus-visible:ring-indigo-500";
 
 export function CreateInvoice() {
   const navigate = useNavigate();
@@ -423,7 +423,7 @@ export function CreateInvoice() {
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-1 pb-8">
       {/* Header */}
-      <div className="flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:flex-row sm:items-start sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5 shadow-sm sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-4">
           <Button
             variant="ghost"
@@ -439,10 +439,10 @@ export function CreateInvoice() {
               Invoice workspace
             </div>
 
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">
               Create Invoice
             </h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-muted-foreground">
               Create a professional invoice for{" "}
               <span className="font-semibold text-indigo-600">
                 {currentBusiness?.name ?? "..."}
@@ -468,8 +468,8 @@ export function CreateInvoice() {
         {/* Left Content */}
         <div className="space-y-6 min-w-0">
           {/* Invoice Details */}
-          <Card className="overflow-hidden rounded-2xl border-gray-200 shadow-sm">
-            <CardHeader className="border-b bg-gradient-to-r from-white to-gray-50">
+          <Card className="overflow-hidden rounded-2xl border-border shadow-sm">
+            <CardHeader className="border-b bg-gradient-to-r from-background dark:from-background to-gray-50">
               <CardTitle className="flex items-center gap-2 text-xl">
                 <FileText className="h-5 w-5 text-indigo-600" />
                 Invoice Details
@@ -512,7 +512,7 @@ export function CreateInvoice() {
                     </SelectTrigger>
                     <SelectContent>
                       {clients.length === 0 ? (
-                        <div className="p-2 text-sm text-gray-500">
+                        <div className="p-2 text-sm text-muted-foreground">
                           Aucun client disponible
                         </div>
                       ) : (
@@ -530,7 +530,7 @@ export function CreateInvoice() {
                   )}
 
                   {clients.length === 0 && !clientsLoading && (
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted-foreground">
                       Ajoute d'abord un client avant de créer une facture.
                     </p>
                   )}
@@ -538,13 +538,13 @@ export function CreateInvoice() {
 
                 <div className="space-y-2">
                   <Label>Business Currency</Label>
-                  <Input value={currency} disabled className="bg-gray-50" />
+                  <Input value={currency} disabled className="bg-background" />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="issueDate">Issue Date</Label>
                   <div className="relative">
-                    <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                    <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       id="issueDate"
                       type="date"
@@ -569,7 +569,7 @@ export function CreateInvoice() {
                 <div className="space-y-2">
                   <Label htmlFor="dueDate">Due Date *</Label>
                   <div className="relative">
-                    <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                    <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       id="dueDate"
                       type="date"
@@ -592,8 +592,8 @@ export function CreateInvoice() {
                     Selected Client
                   </div>
 
-                  <div className="grid gap-2 text-sm text-gray-700">
-                    <p className="font-semibold text-gray-900">{clientSummary.name}</p>
+                  <div className="grid gap-2 text-sm text-foreground">
+                    <p className="font-semibold text-foreground">{clientSummary.name}</p>
                     {clientSummary.email && <p>{clientSummary.email}</p>}
                     {clientSummary.phone && <p>{clientSummary.phone}</p>}
                     {clientSummary.address && <p>{clientSummary.address}</p>}
@@ -604,8 +604,8 @@ export function CreateInvoice() {
           </Card>
 
           {/* Line Items */}
-          <Card className="overflow-hidden rounded-2xl border-gray-200 shadow-sm">
-            <CardHeader className="flex flex-row items-center justify-between border-b bg-gradient-to-r from-white to-gray-50">
+          <Card className="overflow-hidden rounded-2xl border-border shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between border-b bg-gradient-to-r from-background dark:from-background to-gray-50">
               <CardTitle className="flex items-center gap-2 text-xl">
                 <CircleDollarSign className="h-5 w-5 text-indigo-600" />
                 Line Items
@@ -623,14 +623,14 @@ export function CreateInvoice() {
                 return (
                   <div
                     key={item.id}
-                    className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition-all"
+                    className="rounded-2xl border border-border bg-card p-4 shadow-sm transition-all"
                   >
                     <div className="mb-4 flex items-center justify-between">
                       <div>
-                        <div className="text-sm font-semibold text-gray-800">
+                        <div className="text-sm font-semibold text-foreground">
                           Item #{index + 1}
                         </div>
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-muted-foreground">
                           Product or service billing line
                         </div>
                       </div>
@@ -730,23 +730,23 @@ export function CreateInvoice() {
                       </div>
 
                       <div className="flex items-end md:col-span-1">
-                        <div className="w-full rounded-xl border bg-gray-50 px-3 py-2 text-center text-xs font-medium text-gray-500">
+                        <div className="w-full rounded-xl border bg-background px-3 py-2 text-center text-xs font-medium text-muted-foreground">
                           {currency}
                         </div>
                       </div>
                     </div>
 
-                    <div className="mt-4 grid grid-cols-1 gap-3 rounded-2xl border bg-gray-50 p-4 text-sm md:grid-cols-3">
-                      <div className="rounded-xl bg-white p-3 shadow-sm">
-                        <span className="text-gray-500">Line Amount</span>
-                        <div className="mt-1 font-semibold text-gray-900">
+                    <div className="mt-4 grid grid-cols-1 gap-3 rounded-2xl border bg-background p-4 text-sm md:grid-cols-3">
+                      <div className="rounded-xl bg-card p-3 shadow-sm">
+                        <span className="text-muted-foreground">Line Amount</span>
+                        <div className="mt-1 font-semibold text-foreground">
                           {formatMoney(lineAmount(item))}
                         </div>
                       </div>
 
-                      <div className="rounded-xl bg-white p-3 shadow-sm">
-                        <span className="text-gray-500">Tax Amount</span>
-                        <div className="mt-1 font-semibold text-gray-900">
+                      <div className="rounded-xl bg-card p-3 shadow-sm">
+                        <span className="text-muted-foreground">Tax Amount</span>
+                        <div className="mt-1 font-semibold text-foreground">
                           {formatMoney(lineTax(item))}
                         </div>
                       </div>
@@ -765,8 +765,8 @@ export function CreateInvoice() {
           </Card>
 
           {/* Notes */}
-          <Card className="rounded-2xl border-gray-200 shadow-sm">
-            <CardHeader className="border-b bg-gradient-to-r from-white to-gray-50">
+          <Card className="rounded-2xl border-border shadow-sm">
+            <CardHeader className="border-b bg-gradient-to-r from-background dark:from-background to-gray-50">
               <CardTitle>Additional Notes</CardTitle>
             </CardHeader>
             <CardContent className="p-6">
@@ -783,8 +783,8 @@ export function CreateInvoice() {
 
         {/* Right Summary */}
         <div className="min-w-0">
-          <Card className="sticky top-6 w-full rounded-2xl border-gray-200 shadow-sm">
-            <CardHeader className="border-b bg-gradient-to-r from-white to-gray-50">
+          <Card className="sticky top-6 w-full rounded-2xl border-border shadow-sm">
+            <CardHeader className="border-b bg-gradient-to-r from-background dark:from-background to-gray-50">
               <CardTitle>Invoice Summary</CardTitle>
             </CardHeader>
 
@@ -810,7 +810,7 @@ export function CreateInvoice() {
                   )}
                 </div>
 
-                <div className="space-y-2 text-xs text-gray-700">
+                <div className="space-y-2 text-xs text-foreground">
                   <div className="flex items-center justify-between gap-3">
                     <span>Invoice number</span>
                     {formHealth.hasInvoiceNumber ? (
@@ -849,42 +849,42 @@ export function CreateInvoice() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border bg-gray-50 p-4">
-                <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-700">
+              <div className="rounded-2xl border bg-background p-4">
+                <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
                   <FileText className="h-4 w-4" />
                   Quick Overview
                 </div>
 
                 <div className="space-y-3 text-sm">
                   <div className="flex items-start justify-between gap-4">
-                    <span className="text-gray-500">Client</span>
-                    <span className="max-w-[190px] truncate text-right font-medium text-gray-900">
+                    <span className="text-muted-foreground">Client</span>
+                    <span className="max-w-[190px] truncate text-right font-medium text-foreground">
                       {selectedClient?.name || "-"}
                     </span>
                   </div>
 
                   <div className="flex items-start justify-between gap-4">
-                    <span className="text-gray-500">Items</span>
-                    <span className="font-medium text-gray-900">{itemCount}</span>
+                    <span className="text-muted-foreground">Items</span>
+                    <span className="font-medium text-foreground">{itemCount}</span>
                   </div>
 
                   <div className="flex items-start justify-between gap-4">
-                    <span className="text-gray-500">Valid Lines</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-muted-foreground">Valid Lines</span>
+                    <span className="font-medium text-foreground">
                       {validLineItems.length}
                     </span>
                   </div>
 
                   <div className="flex items-start justify-between gap-4">
-                    <span className="text-gray-500">Issue Date</span>
-                    <span className="max-w-[190px] truncate text-right font-medium text-gray-900">
+                    <span className="text-muted-foreground">Issue Date</span>
+                    <span className="max-w-[190px] truncate text-right font-medium text-foreground">
                       {issueDate || "-"}
                     </span>
                   </div>
 
                   <div className="flex items-start justify-between gap-4">
-                    <span className="text-gray-500">Due Date</span>
-                    <span className="max-w-[190px] truncate text-right font-medium text-gray-900">
+                    <span className="text-muted-foreground">Due Date</span>
+                    <span className="max-w-[190px] truncate text-right font-medium text-foreground">
                       {dueDate || "-"}
                     </span>
                   </div>
@@ -893,18 +893,18 @@ export function CreateInvoice() {
 
               <div className="space-y-3 rounded-2xl border p-4">
                 <div className="flex items-center justify-between gap-4 text-sm">
-                  <span className="text-gray-600">Subtotal</span>
+                  <span className="text-muted-foreground">Subtotal</span>
                   <span className="text-right font-medium">{formatMoney(subtotal)}</span>
                 </div>
 
                 <div className="flex items-center justify-between gap-4 text-sm">
-                  <span className="text-gray-600">Tax</span>
+                  <span className="text-muted-foreground">Tax</span>
                   <span className="text-right font-medium">{formatMoney(taxAmount)}</span>
                 </div>
 
                 <div className="border-t pt-4">
                   <div className="flex items-center justify-between gap-4">
-                    <span className="font-semibold text-gray-900">Total</span>
+                    <span className="font-semibold text-foreground">Total</span>
                     <span className="text-right text-2xl font-bold text-indigo-600">
                       {formatMoney(total)}
                     </span>

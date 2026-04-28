@@ -324,7 +324,7 @@ export function Team() {
     const variants: Record<string, string> = {
       active: "bg-green-100 text-green-800 border-green-200",
       invited: "bg-blue-100 text-blue-800 border-blue-200",
-      inactive: "bg-gray-100 text-gray-800 border-gray-200",
+      inactive: "bg-muted text-foreground border-border",
     };
     return variants[status] || variants.inactive;
   };
@@ -452,7 +452,7 @@ export function Team() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Team</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Team</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Manage team members, roles and permissions for your business
           </p>
@@ -579,8 +579,8 @@ export function Team() {
                       </p>
                     )}
 
-                    <div className="rounded-xl border bg-white px-4 py-3 text-sm text-muted-foreground">
-                      <span className="font-medium text-gray-900">Preset loaded:</span>{" "}
+                    <div className="rounded-xl border bg-card px-4 py-3 text-sm text-muted-foreground">
+                      <span className="font-medium text-foreground">Preset loaded:</span>{" "}
                       permissions are auto-suggested based on the selected role.
                       You can still customize them manually.
                     </div>
@@ -591,7 +591,7 @@ export function Team() {
               <div className="space-y-4">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <h3 className="text-base font-semibold text-gray-900">
+                    <h3 className="text-base font-semibold text-foreground">
                       Permissions
                     </h3>
                     <p className="text-sm text-muted-foreground">
@@ -625,7 +625,7 @@ export function Team() {
                               className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 transition hover:bg-muted/40 ${
                                 selectedPermissions.includes(perm)
                                   ? "border-primary/30 bg-primary/5"
-                                  : "border-border bg-white"
+                                  : "border-border bg-card"
                               }`}
                             >
                               <Checkbox
@@ -634,7 +634,7 @@ export function Team() {
                                 className="mt-0.5"
                               />
                               <div className="space-y-1">
-                                <p className="text-sm font-medium text-gray-900">
+                                <p className="text-sm font-medium text-foreground">
                                   {getPermissionLabel(perm)}
                                 </p>
                                 <p className="text-xs text-muted-foreground">
@@ -661,25 +661,25 @@ export function Team() {
 
               <Card className="border-dashed bg-gradient-to-r from-primary/5 to-transparent shadow-none">
                 <CardContent className="flex flex-col gap-3 p-4 text-sm">
-                  <div className="flex items-center gap-2 font-medium text-gray-900">
+                  <div className="flex items-center gap-2 font-medium text-foreground">
                     <CheckCircle2 className="h-4 w-4 text-green-600" />
                     Invitation summary
                   </div>
                   <div className="grid gap-2 text-muted-foreground sm:grid-cols-2">
                     <p>
-                      <span className="font-medium text-gray-900">Name:</span>{" "}
+                      <span className="font-medium text-foreground">Name:</span>{" "}
                       {newMember.name.trim() || "-"}
                     </p>
                     <p>
-                      <span className="font-medium text-gray-900">Email:</span>{" "}
+                      <span className="font-medium text-foreground">Email:</span>{" "}
                       {newMember.email.trim() || "-"}
                     </p>
                     <p>
-                      <span className="font-medium text-gray-900">Role:</span>{" "}
+                      <span className="font-medium text-foreground">Role:</span>{" "}
                       {roleLabels?.[newMember.role] || newMember.role}
                     </p>
                     <p>
-                      <span className="font-medium text-gray-900">Permissions:</span>{" "}
+                      <span className="font-medium text-foreground">Permissions:</span>{" "}
                       {selectedPermissions.length}
                     </p>
                   </div>
@@ -721,7 +721,7 @@ export function Team() {
               <Users className="h-4 w-4" />
               Total Members
             </div>
-            <div className="mt-2 text-2xl font-bold text-gray-900">{stats.total}</div>
+            <div className="mt-2 text-2xl font-bold text-foreground">{stats.total}</div>
           </CardContent>
         </Card>
 
@@ -751,7 +751,7 @@ export function Team() {
         <CardContent className="pt-6">
           <div className="flex flex-col gap-4 lg:flex-row">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Search by member name or email..."
                 value={searchTerm}
@@ -764,7 +764,7 @@ export function Team() {
               <div className="w-full lg:w-[220px]">
                 <Select value={roleFilter} onValueChange={setRoleFilter}>
                   <SelectTrigger>
-                    <Filter className="mr-2 h-4 w-4 text-gray-400" />
+                    <Filter className="mr-2 h-4 w-4 text-muted-foreground" />
                     <SelectValue placeholder="Filter by role" />
                   </SelectTrigger>
                   <SelectContent>
@@ -842,7 +842,7 @@ export function Team() {
                           </Avatar>
 
                           <div>
-                            <p className="font-medium text-gray-900">{member.name}</p>
+                            <p className="font-medium text-foreground">{member.name}</p>
                             <p className="text-sm text-muted-foreground">{member.email}</p>
                           </div>
                         </div>
@@ -850,7 +850,7 @@ export function Team() {
 
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <Shield className="h-4 w-4 text-gray-400" />
+                          <Shield className="h-4 w-4 text-muted-foreground" />
                           <span>{roleLabels?.[member.role] || member.role}</span>
                         </div>
                       </TableCell>

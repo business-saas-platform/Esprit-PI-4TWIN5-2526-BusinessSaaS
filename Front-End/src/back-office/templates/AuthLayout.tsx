@@ -10,7 +10,7 @@ import {
 
 export function AuthLayout() {
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-background">
       <div className="grid min-h-screen lg:grid-cols-2">
         {/* Left side - Branding / Showcase */}
         <div className="relative hidden overflow-hidden lg:flex">
@@ -28,7 +28,7 @@ export function AuthLayout() {
           <div className="relative z-10 flex w-full flex-col justify-between p-10 xl:p-14 text-white">
             {/* Logo */}
             <div className="flex items-center gap-3">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 shadow-lg">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-card/10 backdrop-blur-md border border-white/15 shadow-lg">
                 <Building2 className="h-7 w-7" />
               </div>
               <div>
@@ -41,14 +41,14 @@ export function AuthLayout() {
 
             {/* Main content */}
             <div className="max-w-xl">
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-blue-50 backdrop-blur-md">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-card/10 px-4 py-2 text-sm text-blue-50 backdrop-blur-md">
                 <Sparkles className="h-4 w-4" />
                 Solution moderne pour entreprises et équipes
               </div>
 
               <h2 className="text-4xl xl:text-5xl font-bold leading-tight tracking-tight">
                 Gérez votre entreprise
-                <span className="block bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+                <span className="block bg-gradient-to-r from-background dark:from-background to-blue-200 bg-clip-text text-transparent">
                   avec une expérience plus intelligente
                 </span>
               </h2>
@@ -61,7 +61,7 @@ export function AuthLayout() {
 
               {/* Feature list */}
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
+                <div className="rounded-2xl border border-white/10 bg-card/10 p-4 backdrop-blur-md">
                   <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/20">
                     <BarChart3 className="h-5 w-5 text-blue-100" />
                   </div>
@@ -71,7 +71,7 @@ export function AuthLayout() {
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
+                <div className="rounded-2xl border border-white/10 bg-card/10 p-4 backdrop-blur-md">
                   <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/20">
                     <Users className="h-5 w-5 text-blue-100" />
                   </div>
@@ -81,7 +81,7 @@ export function AuthLayout() {
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
+                <div className="rounded-2xl border border-white/10 bg-card/10 p-4 backdrop-blur-md">
                   <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/20">
                     <ShieldCheck className="h-5 w-5 text-blue-100" />
                   </div>
@@ -91,7 +91,7 @@ export function AuthLayout() {
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
+                <div className="rounded-2xl border border-white/10 bg-card/10 p-4 backdrop-blur-md">
                   <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/20">
                     <CheckCircle2 className="h-5 w-5 text-blue-100" />
                   </div>
@@ -104,19 +104,19 @@ export function AuthLayout() {
 
               {/* Stats */}
               <div className="mt-10 grid grid-cols-3 gap-4">
-                <div className="rounded-2xl border border-white/10 bg-white/10 p-4 text-center backdrop-blur-md">
+                <div className="rounded-2xl border border-white/10 bg-card/10 p-4 text-center backdrop-blur-md">
                   <div className="text-2xl xl:text-3xl font-bold">500+</div>
                   <div className="mt-1 text-xs xl:text-sm text-blue-100/75">
                     Entreprises
                   </div>
                 </div>
-                <div className="rounded-2xl border border-white/10 bg-white/10 p-4 text-center backdrop-blur-md">
+                <div className="rounded-2xl border border-white/10 bg-card/10 p-4 text-center backdrop-blur-md">
                   <div className="text-2xl xl:text-3xl font-bold">99.9%</div>
                   <div className="mt-1 text-xs xl:text-sm text-blue-100/75">
                     Disponibilité
                   </div>
                 </div>
-                <div className="rounded-2xl border border-white/10 bg-white/10 p-4 text-center backdrop-blur-md">
+                <div className="rounded-2xl border border-white/10 bg-card/10 p-4 text-center backdrop-blur-md">
                   <div className="text-2xl xl:text-3xl font-bold">24/7</div>
                   <div className="mt-1 text-xs xl:text-sm text-blue-100/75">
                     Support
@@ -134,10 +134,10 @@ export function AuthLayout() {
         </div>
 
         {/* Right side - Auth forms */}
-        <div className="relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-white via-slate-50 to-blue-50 px-6 py-10 sm:px-8 lg:px-12">
+        <div className="relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-muted/30 to-muted/50 dark:from-background dark:via-background dark:to-muted/5 px-6 py-10 sm:px-8 lg:px-12">
           {/* Decorative shapes */}
-          <div className="absolute left-10 top-10 h-40 w-40 rounded-full bg-blue-100 blur-3xl opacity-70" />
-          <div className="absolute bottom-10 right-10 h-48 w-48 rounded-full bg-indigo-100 blur-3xl opacity-70" />
+          <div className="absolute left-10 top-10 h-40 w-40 rounded-full bg-blue-500/20 blur-3xl opacity-70" />
+          <div className="absolute bottom-10 right-10 h-48 w-48 rounded-full bg-indigo-500/20 blur-3xl opacity-70" />
 
           <div className="relative z-10 w-full max-w-md">
             {/* Mobile branding */}
@@ -146,18 +146,18 @@ export function AuthLayout() {
                 <Building2 className="h-6 w-6" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-900">BizManager Pro</h1>
-                <p className="text-sm text-slate-500">Business Management SaaS</p>
+                <h1 className="text-xl font-bold text-foreground">BizManager Pro</h1>
+                <p className="text-sm text-muted-foreground">Business Management SaaS</p>
               </div>
             </div>
 
             {/* Form container */}
-            <div className="rounded-3xl border border-slate-200/80 bg-white/85 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:p-8">
+            <div className="rounded-3xl border border-border/80 bg-card/85 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:p-8">
               <Outlet />
             </div>
 
             {/* Bottom small text */}
-            <p className="mt-6 text-center text-sm leading-6 text-slate-500">
+            <p className="mt-6 text-center text-sm leading-6 text-muted-foreground">
               Connexion sécurisée à votre espace professionnel.
             </p>
           </div>

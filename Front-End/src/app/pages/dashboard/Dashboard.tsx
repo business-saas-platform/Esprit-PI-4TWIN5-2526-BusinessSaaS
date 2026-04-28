@@ -343,15 +343,15 @@ export function Dashboard() {
       case "opportunity":
         return "text-green-600 bg-green-50 border-green-200";
       default:
-        return "text-gray-600 bg-gray-50 border-gray-200";
+        return "text-muted-foreground bg-background border-border";
     }
   };
 
   if (!currentBusiness) {
     return (
       <div className="space-y-4">
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-sm text-gray-500">
+        <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+        <p className="text-sm text-muted-foreground">
           Aucune entreprise sélectionnée. Créez ou sélectionnez une entreprise.
         </p>
       </div>
@@ -362,8 +362,8 @@ export function Dashboard() {
     <div className="space-y-6">
       {/* Page header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
           Overview of your business performance —{" "}
           <span className="font-medium">{currentBusiness.name}</span>
         </p>
@@ -371,7 +371,7 @@ export function Dashboard() {
 
       {loading ? (
         <Card>
-          <CardContent className="flex items-center gap-3 p-8 text-gray-500">
+          <CardContent className="flex items-center gap-3 p-8 text-muted-foreground">
             <Loader2 className="h-5 w-5 animate-spin" />
             Loading dashboard...
           </CardContent>
@@ -382,7 +382,7 @@ export function Dashboard() {
           <div className="rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-6 text-white">
             <div className="flex items-start justify-between">
               <div className="flex items-center space-x-3">
-                <div className="rounded-lg bg-white/20 p-2 backdrop-blur-sm">
+                <div className="rounded-lg bg-card/20 p-2 backdrop-blur-sm">
                   <Sparkles className="h-6 w-6" />
                 </div>
                 <div>
@@ -490,7 +490,7 @@ export function Dashboard() {
               </CardHeader>
               <CardContent>
                 {invoiceStatusData.length === 0 ? (
-                  <div className="py-12 text-center text-gray-500">
+                  <div className="py-12 text-center text-muted-foreground">
                     No invoices yet
                   </div>
                 ) : (
@@ -518,7 +518,7 @@ export function Dashboard() {
           </div>
 
           {/* AI Insights Section */}
-          <Card className="border-2 border-indigo-200 bg-gradient-to-br from-white to-indigo-50/30">
+          <Card className="border-2 border-indigo-200 bg-gradient-to-br from-background dark:from-background to-indigo-50/30">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
@@ -532,7 +532,7 @@ export function Dashboard() {
             <CardContent>
               <div className="space-y-4">
                 {aiInsights.length === 0 ? (
-                  <div className="py-8 text-center text-gray-500">
+                  <div className="py-8 text-center text-muted-foreground">
                     No AI insights available yet
                   </div>
                 ) : (
@@ -546,13 +546,13 @@ export function Dashboard() {
                         className={`rounded-lg border-2 p-4 transition-all hover:shadow-md ${colorClass}`}
                       >
                         <div className="flex items-start space-x-3">
-                          <div className="rounded-lg bg-white/80 p-2">
+                          <div className="rounded-lg bg-card/80 p-2">
                             <Icon className="h-5 w-5" />
                           </div>
 
                           <div className="flex-1">
                             <div className="mb-2 flex items-start justify-between">
-                              <h4 className="font-semibold text-gray-900">
+                              <h4 className="font-semibold text-foreground">
                                 {insight.title}
                               </h4>
                               <Badge variant="secondary" className="ml-2">
@@ -560,7 +560,7 @@ export function Dashboard() {
                               </Badge>
                             </div>
 
-                            <p className="mb-3 text-sm text-gray-700">
+                            <p className="mb-3 text-sm text-foreground">
                               {insight.description}
                             </p>
 
@@ -598,10 +598,10 @@ export function Dashboard() {
               </div>
 
               <div className="mt-4 text-center">
-                <p className="mb-2 text-sm text-gray-500">
+                <p className="mb-2 text-sm text-muted-foreground">
                   AI insights are generated from your real business activity.
                 </p>
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-muted-foreground/80">
                   Better data quality gives better recommendations.
                 </p>
               </div>
@@ -626,7 +626,7 @@ export function Dashboard() {
               <CardContent>
                 <div className="space-y-4">
                   {recentInvoices.length === 0 ? (
-                    <div className="py-8 text-center text-gray-500">
+                    <div className="py-8 text-center text-muted-foreground">
                       No invoices yet
                     </div>
                   ) : (
@@ -637,7 +637,7 @@ export function Dashboard() {
                       >
                         <div className="flex-1">
                           <p className="font-medium">{invoice.invoiceNumber}</p>
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-muted-foreground">
                             {invoice.clientName || "Unknown client"}
                           </p>
                         </div>
@@ -654,7 +654,7 @@ export function Dashboard() {
                                 ? "bg-blue-100 text-blue-800"
                                 : invoice.status === "overdue"
                                 ? "bg-red-100 text-red-800"
-                                : "bg-gray-100 text-gray-800"
+                                : "bg-muted text-foreground"
                             }`}
                           >
                             {invoice.status}
@@ -683,7 +683,7 @@ export function Dashboard() {
               <CardContent>
                 <div className="space-y-4">
                   {topClients.length === 0 ? (
-                    <div className="py-8 text-center text-gray-500">
+                    <div className="py-8 text-center text-muted-foreground">
                       No clients yet
                     </div>
                   ) : (
@@ -694,7 +694,7 @@ export function Dashboard() {
                       >
                         <div className="flex-1">
                           <p className="font-medium">{client.name}</p>
-                          <p className="text-sm text-gray-500">{client.email || "-"}</p>
+                          <p className="text-sm text-muted-foreground">{client.email || "-"}</p>
                         </div>
 
                         <div className="text-right">

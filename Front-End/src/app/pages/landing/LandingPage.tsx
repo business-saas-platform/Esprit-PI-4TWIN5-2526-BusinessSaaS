@@ -189,23 +189,23 @@ export function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-background dark:to-background">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur-sm">
+      <nav className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-sm">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2">
             <Building2 className="h-8 w-8 text-blue-600" />
-            <span className="text-xl font-semibold text-slate-900">BizManager Pro</span>
+            <span className="text-xl font-semibold text-foreground">BizManager Pro</span>
           </div>
 
           <div className="hidden items-center gap-8 md:flex">
-            <a href="#features" className="text-slate-600 transition-colors hover:text-slate-900">
+            <a href="#features" className="text-muted-foreground transition-colors hover:text-foreground">
               Fonctionnalités
             </a>
-            <a href="#pricing" className="text-slate-600 transition-colors hover:text-slate-900">
+            <a href="#pricing" className="text-muted-foreground transition-colors hover:text-foreground">
               Tarifs
             </a>
-            <a href="#contact" className="text-slate-600 transition-colors hover:text-slate-900">
+            <a href="#contact" className="text-muted-foreground transition-colors hover:text-foreground">
               Contact
             </a>
 
@@ -229,11 +229,11 @@ export function LandingPage() {
               Plateforme SaaS Multitenant
             </Badge>
 
-            <h1 className="mb-6 text-4xl font-bold leading-tight text-slate-900 lg:text-6xl">
+            <h1 className="mb-6 text-4xl font-bold leading-tight text-foreground lg:text-6xl">
               Gérez votre entreprise avec plus de clarté et d’efficacité
             </h1>
 
-            <p className="mb-8 text-xl text-slate-600">
+            <p className="mb-8 text-xl text-muted-foreground">
               Une plateforme complète pour la facturation, les dépenses, la gestion client,
               les rapports et la collaboration d’équipe. Conçue pour les entreprises
               tunisiennes avec une approche moderne, sécurisée et évolutive.
@@ -254,19 +254,19 @@ export function LandingPage() {
               </a>
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center gap-6 text-sm text-slate-600">
+            <div className="mt-8 flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
               <div>
-                <div className="text-2xl font-bold text-slate-900">500+</div>
+                <div className="text-2xl font-bold text-foreground">500+</div>
                 <div>Entreprises</div>
               </div>
               <div className="hidden h-12 w-px bg-slate-200 sm:block" />
               <div>
-                <div className="text-2xl font-bold text-slate-900">99.9%</div>
+                <div className="text-2xl font-bold text-foreground">99.9%</div>
                 <div>Disponibilité</div>
               </div>
               <div className="hidden h-12 w-px bg-slate-200 sm:block" />
               <div>
-                <div className="text-2xl font-bold text-slate-900">24/7</div>
+                <div className="text-2xl font-bold text-foreground">24/7</div>
                 <div>Support</div>
               </div>
             </div>
@@ -300,17 +300,17 @@ export function LandingPage() {
                 </div>
 
                 <div className="grid grid-cols-3 gap-3">
-                  <div className="rounded-lg border bg-white p-3 text-center">
-                    <div className="text-sm text-slate-500">Clients</div>
-                    <div className="text-lg font-semibold text-slate-900">84</div>
+                  <div className="rounded-lg border bg-card p-3 text-center">
+                    <div className="text-sm text-muted-foreground">Clients</div>
+                    <div className="text-lg font-semibold text-foreground">84</div>
                   </div>
-                  <div className="rounded-lg border bg-white p-3 text-center">
-                    <div className="text-sm text-slate-500">Dépenses</div>
-                    <div className="text-lg font-semibold text-slate-900">12,350</div>
+                  <div className="rounded-lg border bg-card p-3 text-center">
+                    <div className="text-sm text-muted-foreground">Dépenses</div>
+                    <div className="text-lg font-semibold text-foreground">12,350</div>
                   </div>
-                  <div className="rounded-lg border bg-white p-3 text-center">
-                    <div className="text-sm text-slate-500">Marge</div>
-                    <div className="text-lg font-semibold text-slate-900">31%</div>
+                  <div className="rounded-lg border bg-card p-3 text-center">
+                    <div className="text-sm text-muted-foreground">Marge</div>
+                    <div className="text-lg font-semibold text-foreground">31%</div>
                   </div>
                 </div>
               </CardContent>
@@ -325,14 +325,14 @@ export function LandingPage() {
           {trustItems.map((item) => {
             const Icon = item.icon;
             return (
-              <Card key={item.title} className="border-slate-200">
+              <Card key={item.title} className="border-border">
                 <CardContent className="flex gap-4 pt-6">
-                  <div className="rounded-lg bg-slate-100 p-3">
-                    <Icon className="h-5 w-5 text-slate-700" />
+                  <div className="rounded-lg bg-muted p-3">
+                    <Icon className="h-5 w-5 text-foreground" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-900">{item.title}</h3>
-                    <p className="mt-1 text-sm text-slate-600">{item.description}</p>
+                    <h3 className="font-semibold text-foreground">{item.title}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">{item.description}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -342,14 +342,14 @@ export function LandingPage() {
       </section>
 
       {/* Features */}
-      <section id="features" className="bg-white py-20">
+      <section id="features" className="bg-card py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <Badge className="mb-4">Fonctionnalités</Badge>
-            <h2 className="mb-4 text-3xl font-bold text-slate-900 lg:text-5xl">
+            <h2 className="mb-4 text-3xl font-bold text-foreground lg:text-5xl">
               Tout ce dont vous avez besoin
             </h2>
-            <p className="mx-auto max-w-2xl text-xl text-slate-600">
+            <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
               Une suite complète d’outils pour gérer les opérations clés de votre entreprise.
             </p>
           </div>
@@ -376,14 +376,14 @@ export function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="bg-slate-50 py-20">
+      <section id="pricing" className="bg-background py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <Badge className="mb-4">Tarifs</Badge>
-            <h2 className="mb-4 text-3xl font-bold text-slate-900 lg:text-5xl">
+            <h2 className="mb-4 text-3xl font-bold text-foreground lg:text-5xl">
               Choisissez votre plan
             </h2>
-            <p className="mx-auto max-w-2xl text-xl text-slate-600">
+            <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
               Des tarifs clairs, évolutifs et adaptés à la taille de votre entreprise.
             </p>
           </div>
@@ -395,7 +395,7 @@ export function LandingPage() {
                 <CardDescription>Pour les petites entreprises</CardDescription>
                 <div className="mt-4">
                   <span className="text-4xl font-bold">49 TND</span>
-                  <span className="text-slate-600">/mois</span>
+                  <span className="text-muted-foreground">/mois</span>
                 </div>
               </CardHeader>
               <CardContent>
@@ -432,7 +432,7 @@ export function LandingPage() {
                 <CardDescription>Pour les entreprises en croissance</CardDescription>
                 <div className="mt-4">
                   <span className="text-4xl font-bold">99 TND</span>
-                  <span className="text-slate-600">/mois</span>
+                  <span className="text-muted-foreground">/mois</span>
                 </div>
               </CardHeader>
               <CardContent>
@@ -497,14 +497,14 @@ export function LandingPage() {
       </section>
 
       {/* Signup form */}
-      <section id="signup" className="bg-white py-20">
+      <section id="signup" className="bg-card py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
             <Badge className="mb-4">Commencer maintenant</Badge>
-            <h2 className="mb-4 text-3xl font-bold text-slate-900 lg:text-5xl">
+            <h2 className="mb-4 text-3xl font-bold text-foreground lg:text-5xl">
               Demandez une démo personnalisée
             </h2>
-            <p className="text-xl text-slate-600">
+            <p className="text-xl text-muted-foreground">
               Remplissez ce formulaire et notre équipe vous contactera sous 24 heures.
             </p>
           </div>
@@ -635,9 +635,9 @@ export function LandingPage() {
                   </div>
                 </div>
 
-                <div className="rounded-lg border bg-slate-50 p-4 text-sm text-slate-600">
+                <div className="rounded-lg border bg-background p-4 text-sm text-muted-foreground">
                   Progression du formulaire :{" "}
-                  <span className="font-medium text-slate-900">{filledFields}/7 champs remplis</span>
+                  <span className="font-medium text-foreground">{filledFields}/7 champs remplis</span>
                 </div>
 
                 <Button type="submit" size="lg" className="w-full" disabled={submitting}>
@@ -649,7 +649,7 @@ export function LandingPage() {
                   Envoyer ma demande
                 </Button>
 
-                <p className="text-center text-sm text-slate-600">
+                <p className="text-center text-sm text-muted-foreground">
                   En soumettant ce formulaire, vous acceptez nos conditions d’utilisation
                   et notre politique de confidentialité.
                 </p>
@@ -739,7 +739,7 @@ export function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-950 py-12 text-slate-400">
+      <footer className="bg-slate-950 py-12 text-muted-foreground">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8 grid gap-8 md:grid-cols-4">
             <div>

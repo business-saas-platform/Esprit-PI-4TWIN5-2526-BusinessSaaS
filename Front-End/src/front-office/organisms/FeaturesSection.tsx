@@ -43,14 +43,14 @@ export function FeaturesSection() {
   ];
 
   return (
-    <section id="features" className="py-20 bg-white">
+    <section id="features" className="py-20 bg-card">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <Badge className="mb-4">Fonctionnalités</Badge>
-          <h2 className="text-3xl lg:text-5xl font-bold text-slate-900 mb-4">
+          <h2 className="text-3xl lg:text-5xl font-bold text-foreground mb-4">
             Tout ce dont vous avez besoin
           </h2>
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Une suite complète d'outils pour gérer tous les aspects de votre entreprise
           </p>
         </div>

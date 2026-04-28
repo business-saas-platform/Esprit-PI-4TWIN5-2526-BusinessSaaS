@@ -179,7 +179,7 @@ export function ClientDetails() {
       paid: "border-green-200 bg-green-50 text-green-700",
       sent: "border-blue-200 bg-blue-50 text-blue-700",
       overdue: "border-red-200 bg-red-50 text-red-700",
-      draft: "border-slate-200 bg-slate-50 text-slate-700",
+      draft: "border-border bg-background text-foreground",
       cancelled: "border-yellow-200 bg-yellow-50 text-yellow-700",
       viewed: "border-purple-200 bg-purple-50 text-purple-700",
     };
@@ -317,7 +317,7 @@ export function ClientDetails() {
       default:
         return {
           label: "New Client",
-          className: "border-slate-200 bg-slate-50 text-slate-700",
+          className: "border-border bg-background text-foreground",
           icon: <UserRound className="h-4 w-4" />,
         };
     }
@@ -406,15 +406,15 @@ export function ClientDetails() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground">
               Loading client...
             </h1>
-            <p className="mt-1 text-sm text-slate-500">Please wait</p>
+            <p className="mt-1 text-sm text-muted-foreground">Please wait</p>
           </div>
         </div>
 
-        <Card className="rounded-[24px] border-slate-200 shadow-sm">
-          <CardContent className="flex items-center gap-3 p-8 text-slate-500">
+        <Card className="rounded-[24px] border-border shadow-sm">
+          <CardContent className="flex items-center gap-3 p-8 text-muted-foreground">
             <Loader2 className="h-5 w-5 animate-spin" />
             Loading client details and invoice history...
           </CardContent>
@@ -426,11 +426,11 @@ export function ClientDetails() {
   if (!client) {
     return (
       <div className="mx-auto max-w-4xl py-12">
-        <Card className="rounded-[28px] border-slate-200 shadow-sm">
+        <Card className="rounded-[28px] border-border shadow-sm">
           <CardContent className="flex flex-col items-center justify-center py-16 text-center">
             <UserRound className="mb-4 h-12 w-12 text-slate-300" />
-            <h2 className="text-xl font-semibold text-slate-900">Client not found</h2>
-            <p className="mt-2 text-sm text-slate-500">
+            <h2 className="text-xl font-semibold text-foreground">Client not found</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
               The client does not exist or is not accessible in this business.
             </p>
             <Button className="mt-6 rounded-xl" onClick={() => navigate("/dashboard/clients")}>
@@ -445,25 +445,25 @@ export function ClientDetails() {
   return (
     <div className="mx-auto max-w-7xl space-y-8">
       {/* Hero Header */}
-      <section className="rounded-[28px] border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50 p-6 shadow-sm md:p-8">
+      <section className="rounded-[28px] border border-border bg-gradient-to-br from-background dark:from-background via-background dark:via-background to-slate-50 p-6 shadow-sm md:p-8">
         <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
           <div className="flex items-start gap-4">
             <Button
               variant="outline"
               size="icon"
-              className="mt-1 rounded-xl border-slate-200"
+              className="mt-1 rounded-xl border-border"
               onClick={() => navigate("/dashboard/clients")}
             >
               <ArrowLeft className="h-4 w-4" />
             </Button>
 
             <div className="flex items-start gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-lg font-semibold text-slate-700">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-muted text-lg font-semibold text-foreground">
                 {getInitials(client.name)}
               </div>
 
               <div className="space-y-3">
-                <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-sm">
+                <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground shadow-sm">
                   <Sparkles className="h-3.5 w-3.5" />
                   Client profile
                 </div>
@@ -478,7 +478,7 @@ export function ClientDetails() {
                   </Badge>
                 </div>
 
-                <p className="text-sm text-slate-500 md:text-base">
+                <p className="text-sm text-muted-foreground md:text-base">
                   Professional client profile, payment health and billing history
                 </p>
               </div>
@@ -497,19 +497,19 @@ export function ClientDetails() {
               }}
             >
               <DialogTrigger asChild>
-                <Button variant="outline" className="h-11 rounded-xl border-slate-200 px-4">
+                <Button variant="outline" className="h-11 rounded-xl border-border px-4">
                   <Pencil className="mr-2 h-4 w-4" />
                   Edit Client
                 </Button>
               </DialogTrigger>
 
-              <DialogContent className="max-h-[92vh] overflow-y-auto rounded-[28px] border-slate-200 p-0 sm:max-w-3xl">
-                <div className="border-b border-slate-100 bg-slate-50 px-6 py-5">
+              <DialogContent className="max-h-[92vh] overflow-y-auto rounded-[28px] border-border p-0 sm:max-w-3xl">
+                <div className="border-b border-border bg-background px-6 py-5">
                   <DialogHeader>
-                    <DialogTitle className="text-xl font-semibold text-slate-900">
+                    <DialogTitle className="text-xl font-semibold text-foreground">
                       Edit client profile
                     </DialogTitle>
-                    <DialogDescription className="text-slate-500">
+                    <DialogDescription className="text-muted-foreground">
                       Update contact info and billing identity with proper input control.
                     </DialogDescription>
                   </DialogHeader>
@@ -631,7 +631,7 @@ export function ClientDetails() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-end gap-3 border-t border-slate-100 px-6 py-5">
+                <div className="flex items-center justify-end gap-3 border-t border-border px-6 py-5">
                   <Button
                     variant="outline"
                     className="rounded-xl"
@@ -668,27 +668,27 @@ export function ClientDetails() {
 
       {/* KPI Cards */}
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="rounded-[24px] border-slate-200 shadow-sm">
+        <Card className="rounded-[24px] border-border shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-500">Total Invoiced</p>
+                <p className="text-sm font-medium text-muted-foreground">Total Invoiced</p>
                 <p className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
                   {formatMoney(totals.totalInvoiced)}
                 </p>
               </div>
-              <div className="rounded-2xl bg-slate-100 p-3">
-                <TrendingUp className="h-5 w-5 text-slate-700" />
+              <div className="rounded-2xl bg-muted p-3">
+                <TrendingUp className="h-5 w-5 text-foreground" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="rounded-[24px] border-slate-200 shadow-sm">
+        <Card className="rounded-[24px] border-border shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-500">Total Paid</p>
+                <p className="text-sm font-medium text-muted-foreground">Total Paid</p>
                 <p className="mt-2 text-3xl font-semibold tracking-tight text-green-600">
                   {formatMoney(totals.totalPaid)}
                 </p>
@@ -700,11 +700,11 @@ export function ClientDetails() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[24px] border-slate-200 shadow-sm">
+        <Card className="rounded-[24px] border-border shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-500">Outstanding</p>
+                <p className="text-sm font-medium text-muted-foreground">Outstanding</p>
                 <p
                   className={`mt-2 text-3xl font-semibold tracking-tight ${
                     totals.outstanding > 0 ? "text-orange-600" : "text-green-600"
@@ -720,15 +720,15 @@ export function ClientDetails() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[24px] border-slate-200 shadow-sm">
+        <Card className="rounded-[24px] border-border shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-500">Invoices</p>
+                <p className="text-sm font-medium text-muted-foreground">Invoices</p>
                 <p className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
                   {invoices.length}
                 </p>
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-muted-foreground">
                   {totals.paidInvoices} paid • {totals.overdueInvoices} overdue
                 </p>
               </div>
@@ -742,33 +742,33 @@ export function ClientDetails() {
 
       {/* Main Info Grid */}
       <section className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-        <Card className="rounded-[24px] border-slate-200 shadow-sm">
+        <Card className="rounded-[24px] border-border shadow-sm">
           <CardHeader>
             <CardTitle>Contact Information</CardTitle>
             <CardDescription>Main identity and communication details</CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
             <div className="flex items-start gap-3">
-              <Mail className="mt-0.5 h-4 w-4 text-slate-400" />
+              <Mail className="mt-0.5 h-4 w-4 text-muted-foreground" />
               <div>
-                <p className="text-sm text-slate-500">Email</p>
-                <p className="font-medium text-slate-900">{client.email || "-"}</p>
+                <p className="text-sm text-muted-foreground">Email</p>
+                <p className="font-medium text-foreground">{client.email || "-"}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
-              <Phone className="mt-0.5 h-4 w-4 text-slate-400" />
+              <Phone className="mt-0.5 h-4 w-4 text-muted-foreground" />
               <div>
-                <p className="text-sm text-slate-500">Phone</p>
-                <p className="font-medium text-slate-900">{client.phone || "-"}</p>
+                <p className="text-sm text-muted-foreground">Phone</p>
+                <p className="font-medium text-foreground">{client.phone || "-"}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
-              <MapPin className="mt-0.5 h-4 w-4 text-slate-400" />
+              <MapPin className="mt-0.5 h-4 w-4 text-muted-foreground" />
               <div>
-                <p className="text-sm text-slate-500">Address</p>
-                <p className="font-medium text-slate-900">
+                <p className="text-sm text-muted-foreground">Address</p>
+                <p className="font-medium text-foreground">
                   {client.address || client.city || client.country
                     ? [client.address, client.city, client.postalCode, client.country]
                         .filter(Boolean)
@@ -779,38 +779,38 @@ export function ClientDetails() {
             </div>
 
             <div className="flex items-start gap-3">
-              <Building2 className="mt-0.5 h-4 w-4 text-slate-400" />
+              <Building2 className="mt-0.5 h-4 w-4 text-muted-foreground" />
               <div>
-                <p className="text-sm text-slate-500">Tax ID</p>
-                <p className="font-medium text-slate-900">{client.taxId || "-"}</p>
+                <p className="text-sm text-muted-foreground">Tax ID</p>
+                <p className="font-medium text-foreground">{client.taxId || "-"}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="rounded-[24px] border-slate-200 shadow-sm">
+        <Card className="rounded-[24px] border-border shadow-sm">
           <CardHeader>
             <CardTitle>Client Summary</CardTitle>
             <CardDescription>Commercial and financial overview</CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
             <div>
-              <p className="text-sm text-slate-500">Client Since</p>
-              <p className="mt-1 font-medium text-slate-900">
+              <p className="text-sm text-muted-foreground">Client Since</p>
+              <p className="mt-1 font-medium text-foreground">
                 {formatMonthYear(client.createdAt)}
               </p>
             </div>
 
             <div>
-              <p className="text-sm text-slate-500">Paid Invoices</p>
-              <p className="mt-1 font-medium text-slate-900">{totals.paidInvoices}</p>
+              <p className="text-sm text-muted-foreground">Paid Invoices</p>
+              <p className="mt-1 font-medium text-foreground">{totals.paidInvoices}</p>
             </div>
 
             <div>
-              <p className="text-sm text-slate-500">Overdue Invoices</p>
+              <p className="text-sm text-muted-foreground">Overdue Invoices</p>
               <p
                 className={`mt-1 font-medium ${
-                  totals.overdueInvoices > 0 ? "text-red-600" : "text-slate-900"
+                  totals.overdueInvoices > 0 ? "text-red-600" : "text-foreground"
                 }`}
               >
                 {totals.overdueInvoices}
@@ -818,12 +818,12 @@ export function ClientDetails() {
             </div>
 
             <div>
-              <p className="text-sm text-slate-500">Draft Invoices</p>
-              <p className="mt-1 font-medium text-slate-900">{totals.draftInvoices}</p>
+              <p className="text-sm text-muted-foreground">Draft Invoices</p>
+              <p className="mt-1 font-medium text-foreground">{totals.draftInvoices}</p>
             </div>
 
             <div>
-              <p className="text-sm text-slate-500">Current Status</p>
+              <p className="text-sm text-muted-foreground">Current Status</p>
               <div className="mt-2">
                 <Badge variant="outline" className={`rounded-full px-3 py-1 ${clientStatusBadge.className}`}>
                   <span className="mr-1 inline-flex">{clientStatusBadge.icon}</span>
@@ -834,7 +834,7 @@ export function ClientDetails() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[24px] border-slate-200 shadow-sm">
+        <Card className="rounded-[24px] border-border shadow-sm">
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
             <CardDescription>Fast navigation for daily workflow</CardDescription>
@@ -850,7 +850,7 @@ export function ClientDetails() {
 
             <Button
               variant="outline"
-              className="w-full justify-start rounded-xl border-slate-200"
+              className="w-full justify-start rounded-xl border-border"
               onClick={() => setIsEditOpen(true)}
             >
               <Pencil className="mr-2 h-4 w-4" />
@@ -859,7 +859,7 @@ export function ClientDetails() {
 
             <Button
               variant="outline"
-              className="w-full justify-start rounded-xl border-slate-200"
+              className="w-full justify-start rounded-xl border-border"
               onClick={() => navigate("/dashboard/invoices")}
             >
               <Receipt className="mr-2 h-4 w-4" />
@@ -868,16 +868,16 @@ export function ClientDetails() {
 
             <Button
               variant="outline"
-              className="w-full justify-start rounded-xl border-slate-200"
+              className="w-full justify-start rounded-xl border-border"
               onClick={() => navigate("/dashboard/clients")}
             >
               <UserRound className="mr-2 h-4 w-4" />
               Back to Clients
             </Button>
 
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+            <div className="rounded-2xl border border-border bg-background p-4 text-sm text-muted-foreground">
               This page links all invoices by
-              <span className="mx-1 font-medium text-slate-900">clientId</span>
+              <span className="mx-1 font-medium text-foreground">clientId</span>
               and gives a quick financial health view.
             </div>
           </CardContent>
@@ -886,7 +886,7 @@ export function ClientDetails() {
 
       {/* Tabs */}
       <Tabs defaultValue="invoices" className="space-y-6">
-        <TabsList className="rounded-xl border border-slate-200 bg-white p-1">
+        <TabsList className="rounded-xl border border-border bg-card p-1">
           <TabsTrigger value="invoices" className="rounded-lg">
             Invoices
           </TabsTrigger>
@@ -899,16 +899,16 @@ export function ClientDetails() {
         </TabsList>
 
         <TabsContent value="invoices" className="mt-0">
-          <Card className="rounded-[24px] border-slate-200 shadow-sm">
+          <Card className="rounded-[24px] border-border shadow-sm">
             <CardHeader>
               <CardTitle>Invoice History</CardTitle>
               <CardDescription>All invoices linked to this client</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto rounded-2xl border border-slate-200">
+              <div className="overflow-x-auto rounded-2xl border border-border">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-slate-50/70 hover:bg-slate-50/70">
+                    <TableRow className="bg-background/70 hover:bg-background/70">
                       <TableHead>Invoice #</TableHead>
                       <TableHead>Issue Date</TableHead>
                       <TableHead>Due Date</TableHead>
@@ -922,7 +922,7 @@ export function ClientDetails() {
                   <TableBody>
                     {invoices.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={7} className="py-12 text-center text-slate-500">
+                        <TableCell colSpan={7} className="py-12 text-center text-muted-foreground">
                           No invoices yet
                         </TableCell>
                       </TableRow>
@@ -932,8 +932,8 @@ export function ClientDetails() {
                         const status = getDisplayStatus(inv);
 
                         return (
-                          <TableRow key={inv.id} className="hover:bg-slate-50/60">
-                            <TableCell className="font-medium text-slate-900">
+                          <TableRow key={inv.id} className="hover:bg-background/60">
+                            <TableCell className="font-medium text-foreground">
                               {inv.invoiceNumber}
                             </TableCell>
                             <TableCell>{formatDate(inv.issueDate)}</TableCell>
@@ -970,7 +970,7 @@ export function ClientDetails() {
         </TabsContent>
 
         <TabsContent value="activity" className="mt-0">
-          <Card className="rounded-[24px] border-slate-200 shadow-sm">
+          <Card className="rounded-[24px] border-border shadow-sm">
             <CardHeader>
               <CardTitle>Recent Activity</CardTitle>
               <CardDescription>Latest invoice-related client activity</CardDescription>
@@ -978,7 +978,7 @@ export function ClientDetails() {
             <CardContent>
               <div className="space-y-4">
                 {recentActivity.length === 0 ? (
-                  <p className="py-8 text-center text-slate-500">No activity yet</p>
+                  <p className="py-8 text-center text-muted-foreground">No activity yet</p>
                 ) : (
                   recentActivity.map((inv) => {
                     const amount = getDisplayInvoiceAmount(inv);
@@ -987,15 +987,15 @@ export function ClientDetails() {
                     return (
                       <div
                         key={inv.id}
-                        className="flex items-center gap-4 rounded-2xl border border-slate-200 p-4"
+                        className="flex items-center gap-4 rounded-2xl border border-border p-4"
                       >
                         <div className="rounded-xl bg-indigo-50 p-3">
                           <DollarSign className="h-4 w-4 text-indigo-600" />
                         </div>
 
                         <div className="flex-1">
-                          <p className="font-medium text-slate-900">{inv.invoiceNumber}</p>
-                          <p className="text-sm text-slate-500">
+                          <p className="font-medium text-foreground">{inv.invoiceNumber}</p>
+                          <p className="text-sm text-muted-foreground">
                             {(inv.createdAt ? new Date(inv.createdAt) : new Date(inv.issueDate)).toLocaleDateString("fr-FR")}
                             {" — "}
                             {status}
@@ -1003,7 +1003,7 @@ export function ClientDetails() {
                         </div>
 
                         <div className="text-right">
-                          <p className="font-medium text-slate-900">{formatMoney(amount)}</p>
+                          <p className="font-medium text-foreground">{formatMoney(amount)}</p>
                         </div>
                       </div>
                     );
@@ -1016,28 +1016,28 @@ export function ClientDetails() {
 
         <TabsContent value="overview" className="mt-0">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <Card className="rounded-[24px] border-slate-200 shadow-sm">
+            <Card className="rounded-[24px] border-border shadow-sm">
               <CardHeader>
                 <CardTitle>Billing Overview</CardTitle>
                 <CardDescription>Key financial numbers for this client</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between rounded-2xl border border-slate-200 p-4">
-                  <span className="text-sm text-slate-500">Total invoiced</span>
-                  <span className="font-semibold text-slate-900">
+                <div className="flex items-center justify-between rounded-2xl border border-border p-4">
+                  <span className="text-sm text-muted-foreground">Total invoiced</span>
+                  <span className="font-semibold text-foreground">
                     {formatMoney(totals.totalInvoiced)}
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between rounded-2xl border border-slate-200 p-4">
-                  <span className="text-sm text-slate-500">Total paid</span>
+                <div className="flex items-center justify-between rounded-2xl border border-border p-4">
+                  <span className="text-sm text-muted-foreground">Total paid</span>
                   <span className="font-semibold text-green-600">
                     {formatMoney(totals.totalPaid)}
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between rounded-2xl border border-slate-200 p-4">
-                  <span className="text-sm text-slate-500">Outstanding balance</span>
+                <div className="flex items-center justify-between rounded-2xl border border-border p-4">
+                  <span className="text-sm text-muted-foreground">Outstanding balance</span>
                   <span
                     className={`font-semibold ${
                       totals.outstanding > 0 ? "text-orange-600" : "text-green-600"
@@ -1049,33 +1049,33 @@ export function ClientDetails() {
               </CardContent>
             </Card>
 
-            <Card className="rounded-[24px] border-slate-200 shadow-sm">
+            <Card className="rounded-[24px] border-border shadow-sm">
               <CardHeader>
                 <CardTitle>Client Metadata</CardTitle>
                 <CardDescription>Administrative and profile information</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <CalendarDays className="mt-0.5 h-4 w-4 text-slate-400" />
+                  <CalendarDays className="mt-0.5 h-4 w-4 text-muted-foreground" />
                   <div>
-                    <p className="text-sm text-slate-500">Created At</p>
-                    <p className="font-medium text-slate-900">{formatDate(client.createdAt)}</p>
+                    <p className="text-sm text-muted-foreground">Created At</p>
+                    <p className="font-medium text-foreground">{formatDate(client.createdAt)}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <Building2 className="mt-0.5 h-4 w-4 text-slate-400" />
+                  <Building2 className="mt-0.5 h-4 w-4 text-muted-foreground" />
                   <div>
-                    <p className="text-sm text-slate-500">Country</p>
-                    <p className="font-medium text-slate-900">{client.country || "-"}</p>
+                    <p className="text-sm text-muted-foreground">Country</p>
+                    <p className="font-medium text-foreground">{client.country || "-"}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <FileText className="mt-0.5 h-4 w-4 text-slate-400" />
+                  <FileText className="mt-0.5 h-4 w-4 text-muted-foreground" />
                   <div>
-                    <p className="text-sm text-slate-500">Notes</p>
-                    <p className="font-medium text-slate-900">{client.notes || "-"}</p>
+                    <p className="text-sm text-muted-foreground">Notes</p>
+                    <p className="font-medium text-foreground">{client.notes || "-"}</p>
                   </div>
                 </div>
               </CardContent>

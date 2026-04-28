@@ -44,15 +44,15 @@ function StatCard({
   subtitle?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
+    <div className="rounded-2xl border border-border bg-card p-5 shadow-sm transition hover:shadow-md">
       <div className="mb-4 flex items-center justify-between">
-        <div className="text-sm font-medium text-slate-500">{title}</div>
-        <div className="rounded-xl bg-slate-100 p-2 text-slate-700">{icon}</div>
+        <div className="text-sm font-medium text-muted-foreground">{title}</div>
+        <div className="rounded-xl bg-muted p-2 text-foreground">{icon}</div>
       </div>
-      <div className="text-2xl font-bold tracking-tight text-slate-900">
+      <div className="text-2xl font-bold tracking-tight text-foreground">
         {value}
       </div>
-      {subtitle ? <p className="mt-2 text-sm text-slate-500">{subtitle}</p> : null}
+      {subtitle ? <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p> : null}
     </div>
   );
 }
@@ -163,10 +163,10 @@ export function AIInsights() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-3xl border border-slate-200 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-6 text-white shadow-sm">
+      <div className="rounded-3xl border border-border bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-6 text-white shadow-sm">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-2xl">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium text-slate-100">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-card/10 px-3 py-1 text-xs font-medium text-slate-100">
               <Brain className="h-4 w-4" />
               AI Business Intelligence
             </div>
@@ -181,7 +181,7 @@ export function AIInsights() {
             </p>
 
             {data ? (
-              <p className="mt-3 text-xs text-slate-400">
+              <p className="mt-3 text-xs text-muted-foreground">
                 Business : <span className="font-semibold text-white">{data.businessName}</span>
                 {" • "}Dernière génération : {formatDate(data.generatedAt)}
               </p>
@@ -191,7 +191,7 @@ export function AIInsights() {
           <button
             onClick={() => runAnalysis(true)}
             disabled={loading || !currentBusinessId}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 font-semibold text-slate-900 shadow-sm transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-card px-5 py-3 font-semibold text-foreground shadow-sm transition hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60"
           >
             <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
             {loading ? "Analyse en cours..." : "Relancer l’analyse"}
@@ -210,7 +210,7 @@ export function AIInsights() {
           {Array.from({ length: 8 }).map((_, i) => (
             <div
               key={i}
-              className="h-32 animate-pulse rounded-2xl border border-slate-200 bg-slate-100"
+              className="h-32 animate-pulse rounded-2xl border border-border bg-muted"
             />
           ))}
         </div>
@@ -273,16 +273,16 @@ export function AIInsights() {
           </div>
 
           <div className="grid gap-6 xl:grid-cols-3">
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm xl:col-span-2">
+            <div className="rounded-3xl border border-border bg-card p-6 shadow-sm xl:col-span-2">
               <div className="mb-5 flex items-center gap-3">
                 <div className="rounded-2xl bg-blue-50 p-3 text-blue-700">
                   <Sparkles className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-900">
+                  <h2 className="text-lg font-bold text-foreground">
                     Recommandations AI
                   </h2>
-                  <p className="text-sm text-slate-500">
+                  <p className="text-sm text-muted-foreground">
                     Actions prioritaires proposées automatiquement.
                   </p>
                 </div>
@@ -293,33 +293,33 @@ export function AIInsights() {
                   {recommendationList.map((item, index) => (
                     <div
                       key={`${item}-${index}`}
-                      className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                      className="flex items-start gap-3 rounded-2xl border border-border bg-background p-4"
                     >
                       <div className="mt-0.5 rounded-full bg-slate-900 px-2 py-1 text-xs font-bold text-white">
                         {index + 1}
                       </div>
-                      <p className="text-sm leading-6 text-slate-700">{item}</p>
+                      <p className="text-sm leading-6 text-foreground">{item}</p>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-500">
+                <div className="rounded-2xl border border-dashed border-border bg-background p-6 text-sm text-muted-foreground">
                   Aucune recommandation disponible pour le moment.
                 </div>
               )}
             </div>
 
             <div className="space-y-6">
-              <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
                 <div className="mb-5 flex items-center gap-3">
                   <div className="rounded-2xl bg-amber-50 p-3 text-amber-700">
                     <AlertTriangle className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-bold text-slate-900">
+                    <h2 className="text-lg font-bold text-foreground">
                       Risk Snapshot
                     </h2>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-muted-foreground">
                       Résumé instantané des alertes.
                     </p>
                   </div>
@@ -349,16 +349,16 @@ export function AIInsights() {
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
                 <div className="mb-5 flex items-center gap-3">
                   <div className="rounded-2xl bg-emerald-50 p-3 text-emerald-700">
                     <Target className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-bold text-slate-900">
+                    <h2 className="text-lg font-bold text-foreground">
                       Client Segments
                     </h2>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-muted-foreground">
                       Répartition calculée par l’AI.
                     </p>
                   </div>
@@ -369,9 +369,9 @@ export function AIInsights() {
                     {segmentEntries.map(([segment, count]) => (
                       <div
                         key={segment}
-                        className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3"
+                        className="flex items-center justify-between rounded-2xl bg-background px-4 py-3"
                       >
-                        <span className="text-sm font-medium text-slate-700">
+                        <span className="text-sm font-medium text-foreground">
                           {segment}
                         </span>
                         <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">
@@ -381,7 +381,7 @@ export function AIInsights() {
                     ))}
                   </div>
                 ) : (
-                  <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-5 text-sm text-slate-500">
+                  <div className="rounded-2xl border border-dashed border-border bg-background p-5 text-sm text-muted-foreground">
                     Aucun segment client disponible pour ce business.
                   </div>
                 )}
@@ -390,20 +390,20 @@ export function AIInsights() {
           </div>
 
           <div className="grid gap-6 lg:grid-cols-2">
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-lg font-bold text-slate-900">
+            <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+              <h2 className="mb-4 text-lg font-bold text-foreground">
                 Financial Overview
               </h2>
 
               <div className="space-y-4">
                 <div>
                   <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="text-slate-600">Revenue</span>
-                    <span className="font-semibold text-slate-900">
+                    <span className="text-muted-foreground">Revenue</span>
+                    <span className="font-semibold text-foreground">
                       {formatMoney(data.totalRevenue)} TND
                     </span>
                   </div>
-                  <div className="h-3 overflow-hidden rounded-full bg-slate-100">
+                  <div className="h-3 overflow-hidden rounded-full bg-muted">
                     <div
                       className="h-full rounded-full bg-emerald-500"
                       style={{
@@ -415,12 +415,12 @@ export function AIInsights() {
 
                 <div>
                   <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="text-slate-600">Expenses</span>
-                    <span className="font-semibold text-slate-900">
+                    <span className="text-muted-foreground">Expenses</span>
+                    <span className="font-semibold text-foreground">
                       {formatMoney(data.totalExpenses)} TND
                     </span>
                   </div>
-                  <div className="h-3 overflow-hidden rounded-full bg-slate-100">
+                  <div className="h-3 overflow-hidden rounded-full bg-muted">
                     <div
                       className="h-full rounded-full bg-red-400"
                       style={{
@@ -438,12 +438,12 @@ export function AIInsights() {
 
                 <div>
                   <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="text-slate-600">Forecast 30d</span>
-                    <span className="font-semibold text-slate-900">
+                    <span className="text-muted-foreground">Forecast 30d</span>
+                    <span className="font-semibold text-foreground">
                       {formatMoney(data.forecast30d)} TND
                     </span>
                   </div>
-                  <div className="h-3 overflow-hidden rounded-full bg-slate-100">
+                  <div className="h-3 overflow-hidden rounded-full bg-muted">
                     <div
                       className={`h-full rounded-full ${
                         data.forecast30d >= 0 ? "bg-blue-500" : "bg-amber-500"
@@ -463,41 +463,41 @@ export function AIInsights() {
               </div>
             </div>
 
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-lg font-bold text-slate-900">
+            <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+              <h2 className="mb-4 text-lg font-bold text-foreground">
                 AI Summary
               </h2>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="rounded-2xl bg-slate-50 p-4">
-                  <div className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                <div className="rounded-2xl bg-background p-4">
+                  <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     Business
                   </div>
-                  <div className="mt-2 text-base font-bold text-slate-900">
+                  <div className="mt-2 text-base font-bold text-foreground">
                     {data.businessName}
                   </div>
                 </div>
 
-                <div className="rounded-2xl bg-slate-50 p-4">
-                  <div className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                <div className="rounded-2xl bg-background p-4">
+                  <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     Generated At
                   </div>
-                  <div className="mt-2 text-base font-bold text-slate-900">
+                  <div className="mt-2 text-base font-bold text-foreground">
                     {formatDate(data.generatedAt)}
                   </div>
                 </div>
 
-                <div className="rounded-2xl bg-slate-50 p-4">
-                  <div className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                <div className="rounded-2xl bg-background p-4">
+                  <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     Cash Delta
                   </div>
-                  <div className="mt-2 text-base font-bold text-slate-900">
+                  <div className="mt-2 text-base font-bold text-foreground">
                     {formatMoney(data.cashIn - data.cashOut)} TND
                   </div>
                 </div>
 
-                <div className="rounded-2xl bg-slate-50 p-4">
-                  <div className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                <div className="rounded-2xl bg-background p-4">
+                  <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     AI Status
                   </div>
                   <div className="mt-2 text-base font-bold text-emerald-600">
@@ -511,12 +511,12 @@ export function AIInsights() {
       ) : null}
 
       {!bootLoading && !data && !error ? (
-        <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center shadow-sm">
-          <Brain className="mx-auto mb-4 h-10 w-10 text-slate-400" />
-          <h3 className="text-lg font-bold text-slate-900">
+        <div className="rounded-3xl border border-dashed border-border bg-card p-10 text-center shadow-sm">
+          <Brain className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
+          <h3 className="text-lg font-bold text-foreground">
             Aucun résultat AI disponible
           </h3>
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-muted-foreground">
             Lance l’analyse pour générer les premiers insights de ce business.
           </p>
         </div>

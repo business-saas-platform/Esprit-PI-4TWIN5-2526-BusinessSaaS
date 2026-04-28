@@ -4,7 +4,7 @@ import { Button } from "@/shared/ui";
 
 export function NavigationBar() {
   return (
-    <nav className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+    <nav className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center gap-2">
@@ -12,13 +12,13 @@ export function NavigationBar() {
             <span className="text-xl font-semibold">BizManager Pro</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-slate-600 hover:text-slate-900 transition-colors">
+            <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
               Fonctionnalités
             </a>
-            <a href="#pricing" className="text-slate-600 hover:text-slate-900 transition-colors">
+            <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">
               Tarifs
             </a>
-            <a href="#contact" className="text-slate-600 hover:text-slate-900 transition-colors">
+            <a href="#contact" className="text-muted-foreground hover:text-foreground transition-colors">
               Contact
             </a>
             <Link to="/auth/login">

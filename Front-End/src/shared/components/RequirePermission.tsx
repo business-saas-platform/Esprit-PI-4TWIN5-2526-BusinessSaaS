@@ -23,21 +23,21 @@ export function RequirePermission({
     // ✅ show forbidden page instead of silent redirect
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="max-w-md w-full bg-white border rounded-xl p-6">
+        <div className="max-w-md w-full bg-card border rounded-xl p-6">
           <h2 className="text-lg font-semibold">Access denied</h2>
-          <p className="text-sm text-gray-600 mt-2">
+          <p className="text-sm text-muted-foreground mt-2">
             You don&apos;t have permission to access this page.
           </p>
 
-          <div className="mt-4 text-xs text-gray-500">
+          <div className="mt-4 text-xs text-muted-foreground">
             Required: <span className="font-mono">{permission}</span>
           </div>
 
-          <div className="mt-4 text-xs text-gray-500">
+          <div className="mt-4 text-xs text-muted-foreground">
             Your role: <span className="font-mono">{user.role}</span>
           </div>
 
-          <div className="mt-4 text-xs text-gray-500">
+          <div className="mt-4 text-xs text-muted-foreground">
             Your permissions:
             <div className="mt-2 font-mono whitespace-pre-wrap">
               {(user.permissions ?? []).join(", ") || "(none)"}

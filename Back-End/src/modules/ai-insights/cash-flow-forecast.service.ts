@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { InvoiceEntity } from '../invoices/entities/invoice.entity';
 import { ExpenseEntity } from '../expenses/entities/expense.entity';
 import { AIInsightEntity } from './entities/ai-insight.entity';
+import { WhatIfScenarioEntity } from './entities/what-if-scenario.entity';
 
 type NetPoint = {
   date: string;
@@ -42,7 +43,9 @@ export class CashFlowForecastService {
     @InjectRepository(ExpenseEntity)
     private readonly expensesRepo: Repository<ExpenseEntity>,
     @InjectRepository(AIInsightEntity)
-    private readonly aiInsightsRepo: Repository<AIInsightEntity>
+    private readonly aiInsightsRepo: Repository<AIInsightEntity>,
+    @InjectRepository(WhatIfScenarioEntity)
+    private readonly whatIfRepo: Repository<WhatIfScenarioEntity>
   ) {}
 
   async forecast(businessId: string, horizonInput: number) {
@@ -101,6 +104,9 @@ export class CashFlowForecastService {
       ? historicalOutflow / historicalWindow.length
       : 0;
 
+    // suppress unused variable warning
+    void dailyBaseInflow;
+
     let projectedBalance = 0;
     const points = predictedNetSeries.map((p) => {
       const net = this.round2(p.predictedNet);
@@ -130,7 +136,7 @@ export class CashFlowForecastService {
     const expectedNet = this.round2(points.reduce((sum, p) => sum + p.predictedNet, 0));
     const negativeDays = points.filter((p) => p.predictedNet < 0).length;
 
-    const risk =
+    const risk: 'low' | 'medium' | 'high' =
       negativeDays > horizon * 0.6 ? 'high' : negativeDays > horizon * 0.35 ? 'medium' : 'low';
     const confidence = this.round2(
       Math.max(0.4, Math.min(0.95, history.length / 365 + (this.hasMlService() ? 0.05 : 0)))
@@ -170,6 +176,184 @@ export class CashFlowForecastService {
       },
       points,
     };
+  }
+
+  async runWhatIfSimulation(
+    businessId: string,
+    input: {
+      horizon?: number;
+      collectionAccelerationPct?: number;
+      collectionDelayPct?: number;
+      expenseReductionPct?: number;
+      expenseIncreasePct?: number;
+    }
+  ) {
+    const horizon = [30, 60, 90].includes(Number(input.horizon)) ? Number(input.horizon) : 30;
+    const baseline = await this.forecast(businessId, horizon);
+
+    const collectionAccelerationPct = this.clampPct(input.collectionAccelerationPct);
+    const collectionDelayPct = this.clampPct(input.collectionDelayPct);
+    const expenseReductionPct = this.clampPct(input.expenseReductionPct);
+    const expenseIncreasePct = this.clampPct(input.expenseIncreasePct);
+
+    const inflowMultiplier = 1 + collectionAccelerationPct / 100 - collectionDelayPct / 100;
+    const outflowMultiplier = 1 - expenseReductionPct / 100 + expenseIncreasePct / 100;
+
+    let projectedBalance = 0;
+    const points = baseline.points.map((p) => {
+      const simulatedInflow = this.round2(Math.max(0, p.predictedInflow * inflowMultiplier));
+      const simulatedOutflow = this.round2(Math.max(0, p.predictedOutflow * outflowMultiplier));
+      const simulatedNet = this.round2(simulatedInflow - simulatedOutflow);
+      projectedBalance = this.round2(projectedBalance + simulatedNet);
+      return {
+        date: p.date,
+        baselineInflow: p.predictedInflow,
+        baselineOutflow: p.predictedOutflow,
+        baselineNet: p.predictedNet,
+        simulatedInflow,
+        simulatedOutflow,
+        simulatedNet,
+        deltaNet: this.round2(simulatedNet - p.predictedNet),
+        projectedBalance,
+      };
+    });
+
+    const baselineExpectedNet = this.round2(
+      baseline.points.reduce((sum, p) => sum + Number(p.predictedNet || 0), 0)
+    );
+    const simulatedExpectedNet = this.round2(points.reduce((sum, p) => sum + p.simulatedNet, 0));
+
+    const baselineRisk = (baseline.summary?.risk ?? 'low') as 'low' | 'medium' | 'high';
+    const simulatedRisk = this.simulateRisk(
+      points.length,
+      points.filter((p) => p.simulatedNet < 0).length
+    );
+
+    return {
+      horizon,
+      generatedAt: new Date().toISOString(),
+      scenario: {
+        collectionAccelerationPct,
+        collectionDelayPct,
+        expenseReductionPct,
+        expenseIncreasePct,
+      },
+      baseline: {
+        modelSource: baseline.modelSource,
+        expectedInflow: baseline.summary?.expectedInflow ?? 0,
+        expectedOutflow: baseline.summary?.expectedOutflow ?? 0,
+        expectedNet: baselineExpectedNet,
+        risk: baselineRisk,
+        confidence: baseline.summary?.confidence ?? 0,
+      },
+      simulated: {
+        expectedInflow: this.round2(points.reduce((sum, p) => sum + p.simulatedInflow, 0)),
+        expectedOutflow: this.round2(points.reduce((sum, p) => sum + p.simulatedOutflow, 0)),
+        expectedNet: simulatedExpectedNet,
+        risk: simulatedRisk,
+      },
+      impact: {
+        deltaExpectedNet: this.round2(simulatedExpectedNet - baselineExpectedNet),
+        improvementPct:
+          baselineExpectedNet === 0
+            ? 0
+            : this.round2(
+                ((simulatedExpectedNet - baselineExpectedNet) / Math.abs(baselineExpectedNet)) * 100
+              ),
+      },
+      points,
+    };
+  }
+
+  async saveWhatIfScenario(
+    businessId: string,
+    input: {
+      name: string;
+      horizon: number;
+      collectionAccelerationPct: number;
+      collectionDelayPct: number;
+      expenseReductionPct: number;
+      expenseIncreasePct: number;
+    }
+  ) {
+    const sim = await this.runWhatIfSimulation(businessId, input);
+    const entity = this.whatIfRepo.create({
+      businessId,
+      name: String(input.name || '').trim(),
+      horizon: sim.horizon,
+      collectionAccelerationPct: sim.scenario.collectionAccelerationPct,
+      collectionDelayPct: sim.scenario.collectionDelayPct,
+      expenseReductionPct: sim.scenario.expenseReductionPct,
+      expenseIncreasePct: sim.scenario.expenseIncreasePct,
+      baselineExpectedNet: sim.baseline.expectedNet,
+      simulatedExpectedNet: sim.simulated.expectedNet,
+      deltaExpectedNet: sim.impact.deltaExpectedNet,
+      improvementPct: sim.impact.improvementPct,
+      baselineRisk: sim.baseline.risk as 'low' | 'medium' | 'high',
+      simulatedRisk: sim.simulated.risk as 'low' | 'medium' | 'high',
+    } as any);
+
+    // FIX 1: save() on a single entity returns a single entity, but TS infers
+    // the overload as returning an array. Cast explicitly to resolve the mismatch.
+    const saved = (await this.whatIfRepo.save(entity)) as unknown as WhatIfScenarioEntity;
+    return this.mapScenario(saved);
+  }
+
+  async listWhatIfScenarios(businessId: string) {
+    const rows = await this.whatIfRepo.find({
+      where: { businessId } as any,
+      order: { createdAt: 'DESC' } as any,
+    });
+    return rows.map((x) => this.mapScenario(x));
+  }
+
+  async updateWhatIfScenario(
+    businessId: string,
+    scenarioId: string,
+    input: {
+      name?: string;
+      horizon: number;
+      collectionAccelerationPct: number;
+      collectionDelayPct: number;
+      expenseReductionPct: number;
+      expenseIncreasePct: number;
+    }
+  ) {
+    const existing = await this.whatIfRepo.findOne({
+      where: { id: scenarioId, businessId } as any,
+    });
+    if (!existing) {
+      throw new NotFoundException('Scenario not found');
+    }
+
+    const sim = await this.runWhatIfSimulation(businessId, input);
+    existing.name = String(input.name || existing.name || '').trim();
+    existing.horizon = sim.horizon;
+    existing.collectionAccelerationPct = sim.scenario.collectionAccelerationPct;
+    existing.collectionDelayPct = sim.scenario.collectionDelayPct;
+    existing.expenseReductionPct = sim.scenario.expenseReductionPct;
+    existing.expenseIncreasePct = sim.scenario.expenseIncreasePct;
+    existing.baselineExpectedNet = sim.baseline.expectedNet;
+    existing.simulatedExpectedNet = sim.simulated.expectedNet;
+    existing.deltaExpectedNet = sim.impact.deltaExpectedNet;
+    existing.improvementPct = sim.impact.improvementPct;
+    // FIX 2: cast risk strings to the required literal union type
+    existing.baselineRisk = sim.baseline.risk as 'low' | 'medium' | 'high';
+    existing.simulatedRisk = sim.simulated.risk as 'low' | 'medium' | 'high';
+
+    const saved = await this.whatIfRepo.save(existing);
+    return this.mapScenario(saved);
+  }
+
+  async deleteWhatIfScenario(businessId: string, scenarioId: string) {
+    const existing = await this.whatIfRepo.findOne({
+      where: { id: scenarioId, businessId } as any,
+    });
+    if (!existing) {
+      throw new NotFoundException('Scenario not found');
+    }
+    await this.whatIfRepo.remove(existing);
+    return { deleted: true, id: scenarioId };
   }
 
   private computeHistorySignal(history: NetPoint[]): HistorySignal {
@@ -467,5 +651,44 @@ export class CashFlowForecastService {
 
   private isQuarterEnd(d: Date) {
     return this.isMonthEnd(d) && [3, 6, 9, 12].includes(d.getMonth() + 1);
+  }
+
+  private clampPct(v?: number) {
+    const n = Number.isFinite(Number(v)) ? Number(v) : 0;
+    return Math.min(100, Math.max(0, this.round2(n)));
+  }
+
+  private simulateRisk(horizon: number, negativeDays: number): 'low' | 'medium' | 'high' {
+    if (negativeDays > horizon * 0.6) return 'high';
+    if (negativeDays > horizon * 0.35) return 'medium';
+    return 'low';
+  }
+
+  private mapScenario(x: WhatIfScenarioEntity) {
+    return {
+      id: x.id,
+      name: x.name,
+      horizon: x.horizon as 30 | 60 | 90,
+      scenario: {
+        collectionAccelerationPct: this.round2(Number(x.collectionAccelerationPct || 0)),
+        collectionDelayPct: this.round2(Number(x.collectionDelayPct || 0)),
+        expenseReductionPct: this.round2(Number(x.expenseReductionPct || 0)),
+        expenseIncreasePct: this.round2(Number(x.expenseIncreasePct || 0)),
+      },
+      baseline: {
+        expectedNet: this.round2(Number(x.baselineExpectedNet || 0)),
+        risk: x.baselineRisk,
+      },
+      simulated: {
+        expectedNet: this.round2(Number(x.simulatedExpectedNet || 0)),
+        risk: x.simulatedRisk,
+      },
+      impact: {
+        deltaExpectedNet: this.round2(Number(x.deltaExpectedNet || 0)),
+        improvementPct: this.round2(Number(x.improvementPct || 0)),
+      },
+      createdAt: x.createdAt?.toISOString?.() ?? null,
+      updatedAt: x.updatedAt?.toISOString?.() ?? null,
+    };
   }
 }

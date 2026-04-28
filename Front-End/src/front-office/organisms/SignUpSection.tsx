@@ -35,14 +35,14 @@ export function SignUpSection() {
   };
 
   return (
-    <section id="signup" className="py-20 bg-white">
+    <section id="signup" className="py-20 bg-card">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <Badge className="mb-4">Commencer maintenant</Badge>
-          <h2 className="text-3xl lg:text-5xl font-bold text-slate-900 mb-4">
+          <h2 className="text-3xl lg:text-5xl font-bold text-foreground mb-4">
             Demandez une démo personnalisée
           </h2>
-          <p className="text-xl text-slate-600">
+          <p className="text-xl text-muted-foreground">
             Remplissez le formulaire ci-dessous et notre équipe vous contactera sous 24 heures
           </p>
         </div>
@@ -165,7 +165,7 @@ export function SignUpSection() {
                 <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
 
-              <p className="text-sm text-center text-slate-600">
+              <p className="text-sm text-center text-muted-foreground">
                 En soumettant ce formulaire, vous acceptez nos conditions d'utilisation et notre politique de confidentialité.
               </p>
             </form>

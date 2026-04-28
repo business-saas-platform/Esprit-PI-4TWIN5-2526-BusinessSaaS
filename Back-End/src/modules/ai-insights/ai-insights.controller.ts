@@ -17,6 +17,11 @@ import { BusinessAccessGuard } from '../../common/guards/business-access.guard';
 import { BusinessId } from '../../common/decorators/business-id.decorator';
 import { CashFlowForecastService } from './cash-flow-forecast.service';
 import { InvoiceLateRiskService } from './invoice-late-risk.service';
+import { InvoiceCollectionCopilotService } from './invoice-collection-copilot.service';
+import { UpdateInvoiceCollectionActionDto } from './dto/update-invoice-collection-action.dto';
+import { RunWhatIfSimulationDto } from './dto/run-what-if-simulation.dto';
+import { SaveWhatIfScenarioDto } from './dto/save-what-if-scenario.dto';
+import { UpdateWhatIfScenarioDto } from './dto/update-what-if-scenario.dto';
 
 @Controller('ai-insights')
 @UseGuards(JwtAuthGuard, BusinessAccessGuard)
@@ -24,7 +29,8 @@ export class AIInsightsController {
   constructor(
     private readonly s: AIInsightsService,
     private readonly cashFlowForecast: CashFlowForecastService,
-    private readonly invoiceLateRisk: InvoiceLateRiskService
+    private readonly invoiceLateRisk: InvoiceLateRiskService,
+    private readonly invoiceCollectionCopilot: InvoiceCollectionCopilotService
   ) {}
 
   @Get('cash-flow/forecast')
@@ -32,9 +38,58 @@ export class AIInsightsController {
     return this.cashFlowForecast.forecast(businessId, Number(horizon || 30));
   }
 
+  @Post('cash-flow/what-if')
+  runCashFlowWhatIf(@BusinessId() businessId: string, @Body() dto: RunWhatIfSimulationDto) {
+    return this.cashFlowForecast.runWhatIfSimulation(businessId, dto);
+  }
+
+  @Post('cash-flow/what-if/scenarios')
+  saveCashFlowWhatIfScenario(@BusinessId() businessId: string, @Body() dto: SaveWhatIfScenarioDto) {
+    return this.cashFlowForecast.saveWhatIfScenario(businessId, dto);
+  }
+
+  @Get('cash-flow/what-if/scenarios')
+  listCashFlowWhatIfScenarios(@BusinessId() businessId: string) {
+    return this.cashFlowForecast.listWhatIfScenarios(businessId);
+  }
+
+  @Patch('cash-flow/what-if/scenarios/:scenarioId')
+  updateCashFlowWhatIfScenario(
+    @BusinessId() businessId: string,
+    @Param('scenarioId') scenarioId: string,
+    @Body() dto: UpdateWhatIfScenarioDto
+  ) {
+    return this.cashFlowForecast.updateWhatIfScenario(businessId, scenarioId, dto);
+  }
+
+  @Delete('cash-flow/what-if/scenarios/:scenarioId')
+  deleteCashFlowWhatIfScenario(
+    @BusinessId() businessId: string,
+    @Param('scenarioId') scenarioId: string
+  ) {
+    return this.cashFlowForecast.deleteWhatIfScenario(businessId, scenarioId);
+  }
+
   @Get('invoices/late-payment-risk')
   getInvoiceLatePaymentRisk(@BusinessId() businessId: string) {
     return this.invoiceLateRisk.scoreLatePaymentRisk(businessId);
+  }
+
+  @Get('invoices/collection-copilot')
+  getInvoiceCollectionCopilot(
+    @BusinessId() businessId: string,
+    @Query('limit') limit?: string
+  ) {
+    return this.invoiceCollectionCopilot.generateCollectionPlan(businessId, Number(limit || 10));
+  }
+
+  @Patch('invoices/collection-copilot/:invoiceId')
+  updateInvoiceCollectionCopilotAction(
+    @BusinessId() businessId: string,
+    @Param('invoiceId') invoiceId: string,
+    @Body() dto: UpdateInvoiceCollectionActionDto
+  ) {
+    return this.invoiceCollectionCopilot.updateActionWorkflow(businessId, invoiceId, dto);
   }
 
   @Post()

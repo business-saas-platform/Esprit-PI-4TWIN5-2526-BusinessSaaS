@@ -16,6 +16,8 @@ import {
   Sparkles,
   Activity,
   ShieldAlert,
+  HandCoins,
+  SlidersHorizontal,
   ChevronRight,
   Building2,
   PanelLeftClose,
@@ -59,6 +61,20 @@ const navigation: NavItem[] = [
     href: '/dashboard/invoice-late-risk',
     icon: ShieldAlert,
     perm: 'ai.read',
+  },
+  {
+    name: 'Collection Copilot',
+    href: '/dashboard/invoice-collection-copilot',
+    icon: HandCoins,
+    perm: 'ai.read',
+    badge: 'AI',
+  },
+  {
+    name: 'What-if Simulator',
+    href: '/dashboard/what-if-simulator',
+    icon: SlidersHorizontal,
+    perm: 'ai.read',
+    badge: 'AI',
   },
   { name: 'Invoices', href: '/dashboard/invoices', icon: FileText, perm: 'invoices.read' },
   { name: 'Expenses', href: '/dashboard/expenses', icon: Receipt, perm: 'expenses.read' },
@@ -180,7 +196,7 @@ export function DashboardLayout() {
   const desktopSidebarWidth = sidebarCollapsed ? 'lg:pl-24' : 'lg:pl-72';
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Mobile Sidebar */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
@@ -188,15 +204,15 @@ export function DashboardLayout() {
             className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"
             onClick={() => setSidebarOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 w-[88%] max-w-[320px] overflow-y-auto border-r border-slate-200 bg-white shadow-2xl">
-            <div className="flex h-20 items-center justify-between border-b border-slate-200 px-5">
+          <div className="fixed inset-y-0 left-0 w-[88%] max-w-[320px] overflow-y-auto border-r border-border bg-card shadow-2xl">
+            <div className="flex h-20 items-center justify-between border-b border-border px-5">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-600 text-white shadow-md">
                   <Building2 className="h-5 w-5" />
                 </div>
                 <div className="min-w-0">
-                  <p className="truncate text-base font-bold text-slate-900">{brandTitle}</p>
-                  <p className="text-xs text-slate-500">Business Workspace</p>
+                  <p className="truncate text-base font-bold text-foreground">{brandTitle}</p>
+                  <p className="text-xs text-muted-foreground">Business Workspace</p>
                 </div>
               </div>
 
@@ -210,7 +226,7 @@ export function DashboardLayout() {
               </Button>
             </div>
 
-            <div className="border-b border-slate-100 px-4 py-4">
+            <div className="border-b border-border px-4 py-4">
               <BusinessSwitcher />
             </div>
 
@@ -230,7 +246,7 @@ export function DashboardLayout() {
                       'group flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition-all',
                       isActive
                         ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md'
-                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground',
                     ].join(' ')}
                   >
                     <item.icon className="h-5 w-5 shrink-0" />
@@ -239,7 +255,7 @@ export function DashboardLayout() {
                       <span
                         className={[
                           'rounded-full px-2 py-0.5 text-[10px] font-semibold',
-                          isActive ? 'bg-white/20 text-white' : 'bg-indigo-100 text-indigo-700',
+                          isActive ? 'bg-card/20 text-white' : 'bg-indigo-100 text-indigo-700',
                         ].join(' ')}
                       >
                         {item.badge}
@@ -250,7 +266,7 @@ export function DashboardLayout() {
               })}
             </nav>
 
-            <div className="border-t border-slate-100 p-4">
+            <div className="border-t border-border p-4">
               <button
                 onClick={handleLogout}
                 className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-red-600 transition hover:bg-red-50"
@@ -266,11 +282,11 @@ export function DashboardLayout() {
       {/* Desktop Sidebar */}
       <aside
         className={[
-          'hidden lg:fixed lg:inset-y-0 lg:flex lg:flex-col border-r border-slate-200 bg-white/95 backdrop-blur-sm transition-all duration-300',
+          'hidden lg:fixed lg:inset-y-0 lg:flex lg:flex-col border-r border-border bg-card/95 backdrop-blur-sm transition-all duration-300',
           sidebarCollapsed ? 'lg:w-24' : 'lg:w-72',
         ].join(' ')}
       >
-        <div className="flex h-20 items-center justify-between border-b border-slate-200 px-4">
+        <div className="flex h-20 items-center justify-between border-b border-border px-4">
           <div className="flex items-center gap-3 min-w-0">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-600 text-white shadow-lg">
               <Building2 className="h-5 w-5" />
@@ -278,8 +294,8 @@ export function DashboardLayout() {
 
             {!sidebarCollapsed && (
               <div className="min-w-0">
-                <p className="truncate text-base font-bold text-slate-900">{brandTitle}</p>
-                <p className="text-xs text-slate-500">Business Workspace</p>
+                <p className="truncate text-base font-bold text-foreground">{brandTitle}</p>
+                <p className="text-xs text-muted-foreground">Business Workspace</p>
               </div>
             )}
           </div>
@@ -299,7 +315,7 @@ export function DashboardLayout() {
         </div>
 
         {!sidebarCollapsed && (
-          <div className="border-b border-slate-100 px-4 py-4">
+          <div className="border-b border-border px-4 py-4">
             <BusinessSwitcher />
           </div>
         )}
@@ -319,7 +335,7 @@ export function DashboardLayout() {
                     sidebarCollapsed ? 'justify-center px-2 py-3' : 'gap-3 px-4 py-3',
                     isActive
                       ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+                      : 'text-muted-foreground hover:bg-muted hover:text-foreground',
                   ].join(' ')}
                   title={item.name}
                 >
@@ -332,7 +348,7 @@ export function DashboardLayout() {
                         <span
                           className={[
                             'rounded-full px-2 py-0.5 text-[10px] font-semibold',
-                            isActive ? 'bg-white/20 text-white' : 'bg-indigo-100 text-indigo-700',
+                            isActive ? 'bg-card/20 text-white' : 'bg-indigo-100 text-indigo-700',
                           ].join(' ')}
                         >
                           {item.badge}
@@ -343,7 +359,7 @@ export function DashboardLayout() {
                             'h-4 w-4 transition-transform',
                             isActive
                               ? 'text-white/80'
-                              : 'text-slate-400 group-hover:translate-x-0.5',
+                              : 'text-muted-foreground group-hover:translate-x-0.5',
                           ].join(' ')}
                         />
                       )}
@@ -355,7 +371,7 @@ export function DashboardLayout() {
           </nav>
         </div>
 
-        <div className="border-t border-slate-100 p-3">
+        <div className="border-t border-border p-3">
           <button
             onClick={handleLogout}
             className={[
@@ -373,7 +389,7 @@ export function DashboardLayout() {
       {/* Main Area */}
       <div className={desktopSidebarWidth}>
         {/* Topbar */}
-        <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur-md">
+        <header className="sticky top-0 z-30 border-b border-border bg-card/80 backdrop-blur-md">
           <div className="flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
             <div className="flex items-center gap-3">
               <Button
@@ -385,8 +401,8 @@ export function DashboardLayout() {
               </Button>
 
               <div>
-                <h1 className="text-xl font-bold tracking-tight text-slate-900">{pageTitle}</h1>
-                <p className="text-sm text-slate-500">
+                <h1 className="text-xl font-bold tracking-tight text-foreground">{pageTitle}</h1>
+                <p className="text-sm text-muted-foreground">
                   Welcome back{user?.name ? `, ${user.name}` : ''}
                 </p>
               </div>
@@ -396,37 +412,37 @@ export function DashboardLayout() {
               <button
                 type="button"
                 onClick={() => setUserMenuOpen((v) => !v)}
-                className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm transition hover:border-slate-300 hover:shadow-md"
+                className="flex items-center gap-3 rounded-2xl border border-border bg-card px-3 py-2 shadow-sm transition hover:border-border hover:shadow-md"
               >
-                <Avatar className="h-10 w-10 ring-2 ring-slate-100">
+                <Avatar className="h-10 w-10 ring-2 ring-border">
                   <AvatarFallback className="bg-gradient-to-br from-slate-800 to-slate-600 text-white">
                     {initials(user?.name)}
                   </AvatarFallback>
                 </Avatar>
 
                 <div className="hidden md:flex flex-col items-start leading-tight">
-                  <span className="max-w-[160px] truncate text-sm font-semibold text-slate-900">
+                  <span className="max-w-[160px] truncate text-sm font-semibold text-foreground">
                     {user?.name ?? 'User'}
                   </span>
-                  <span className="max-w-[160px] truncate text-xs text-slate-500">
+                  <span className="max-w-[160px] truncate text-xs text-muted-foreground">
                     {user?.email ?? ''}
                   </span>
                 </div>
               </button>
 
               {userMenuOpen && (
-                <div className="absolute right-0 top-full mt-3 z-50 w-72 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
+                <div className="absolute right-0 top-full mt-3 z-50 w-72 overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
                   <div className="bg-gradient-to-r from-indigo-600 to-violet-600 p-5 text-white">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-12 w-12 ring-2 ring-white/30">
-                        <AvatarFallback className="bg-white/20 text-white">
+                        <AvatarFallback className="bg-card/20 text-white">
                           {initials(user?.name)}
                         </AvatarFallback>
                       </Avatar>
                       <div className="min-w-0">
                         <div className="truncate text-sm font-bold">{user?.name ?? 'User'}</div>
                         <div className="truncate text-xs text-white/80">{user?.email ?? ''}</div>
-                        <div className="mt-1 inline-flex rounded-full bg-white/15 px-2 py-1 text-[11px] font-medium">
+                        <div className="mt-1 inline-flex rounded-full bg-card/15 px-2 py-1 text-[11px] font-medium">
                           {user?.role ?? '-'}
                         </div>
                       </div>
@@ -440,7 +456,7 @@ export function DashboardLayout() {
                         setUserMenuOpen(false);
                         navigate('/dashboard/settings');
                       }}
-                      className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+                      className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium text-foreground transition hover:bg-muted"
                     >
                       <Settings className="h-4 w-4" />
                       Settings
@@ -465,9 +481,9 @@ export function DashboardLayout() {
         </header>
 
         {/* Content */}
-        <main className="min-h-[calc(100vh-5rem)] bg-slate-50">
+        <main className="min-h-[calc(100vh-5rem)] bg-background">
           <div className="px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-            <div className="min-h-[calc(100vh-9rem)] rounded-[28px] border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:p-8">
+            <div className="min-h-[calc(100vh-9rem)] rounded-[28px] border border-border bg-card p-4 shadow-sm sm:p-6 lg:p-8">
               <Outlet />
             </div>
           </div>

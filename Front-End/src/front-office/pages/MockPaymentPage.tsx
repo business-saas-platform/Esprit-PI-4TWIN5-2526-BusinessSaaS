@@ -116,10 +116,10 @@ export function MockPaymentPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-        <div className="flex items-center gap-3 rounded-2xl border bg-white px-6 py-4 shadow-sm">
+      <div className="flex min-h-screen items-center justify-center bg-background px-4">
+        <div className="flex items-center gap-3 rounded-2xl border bg-card px-6 py-4 shadow-sm">
           <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
-          <span className="text-sm font-medium text-slate-700">
+          <span className="text-sm font-medium text-foreground">
             Chargement du paiement test...
           </span>
         </div>
@@ -129,7 +129,7 @@ export function MockPaymentPage() {
 
   if (!request) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+      <div className="flex min-h-screen items-center justify-center bg-background px-4">
         <Card className="w-full max-w-lg rounded-3xl">
           <CardHeader>
             <CardTitle>Demande introuvable</CardTitle>
@@ -151,20 +151,20 @@ export function MockPaymentPage() {
   const isFailed = request.paymentStatus === "failed";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white px-4 py-10">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-background dark:to-background px-4 py-10">
       <div className="mx-auto max-w-2xl">
         <div className="mb-6">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900"
+            className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
             Retour à l’accueil
           </Link>
         </div>
 
-        <Card className="overflow-hidden rounded-3xl border border-slate-200 shadow-xl">
-          <CardHeader className="border-b bg-white">
+        <Card className="overflow-hidden rounded-3xl border border-border shadow-xl">
+          <CardHeader className="border-b bg-card">
             <div className="mb-4 flex items-center justify-between gap-3">
               <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
                 Test Mode
@@ -191,7 +191,7 @@ export function MockPaymentPage() {
               </div>
 
               <div>
-                <CardTitle className="text-2xl text-slate-900">
+                <CardTitle className="text-2xl text-foreground">
                   Paiement test
                 </CardTitle>
                 <CardDescription className="mt-1">
@@ -201,58 +201,58 @@ export function MockPaymentPage() {
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-6 bg-white p-6">
-            <div className="grid gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5 md:grid-cols-2">
+          <CardContent className="space-y-6 bg-card p-6">
+            <div className="grid gap-4 rounded-2xl border border-border bg-background p-5 md:grid-cols-2">
               <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   Entreprise
                 </p>
-                <p className="mt-1 text-sm font-semibold text-slate-900">
+                <p className="mt-1 text-sm font-semibold text-foreground">
                   {request.companyName}
                 </p>
               </div>
 
               <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   Propriétaire
                 </p>
-                <p className="mt-1 text-sm font-semibold text-slate-900">
+                <p className="mt-1 text-sm font-semibold text-foreground">
                   {request.ownerName}
                 </p>
               </div>
 
               <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   Email
                 </p>
-                <p className="mt-1 text-sm text-slate-700">
+                <p className="mt-1 text-sm text-foreground">
                   {request.ownerEmail}
                 </p>
               </div>
 
               <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   Plan
                 </p>
-                <p className="mt-1 text-sm text-slate-700">
+                <p className="mt-1 text-sm text-foreground">
                   {request.selectedPlan || "Non défini"}
                 </p>
               </div>
 
               <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   Méthode
                 </p>
-                <p className="mt-1 text-sm text-slate-700">
+                <p className="mt-1 text-sm text-foreground">
                   {request.paymentMethod || "mock_online"}
                 </p>
               </div>
 
               <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   Référence
                 </p>
-                <p className="mt-1 text-sm text-slate-700">
+                <p className="mt-1 text-sm text-foreground">
                   {request.paymentReference || "—"}
                 </p>
               </div>

@@ -54,6 +54,8 @@ import RegistrationRequestsAdmin from '@/app/pages/admin/RegistrationRequestsAdm
 import { AIInsights } from '@/app/pages/ai/AIInsights';
 import { CashFlowForecast } from '@/app/pages/ai/CashFlowForecast';
 import { InvoiceLateRisk } from '@/app/pages/ai/InvoiceLateRisk';
+import { InvoiceCollectionCopilot } from '@/app/pages/ai/InvoiceCollectionCopilot';
+import { WhatIfSimulator } from '@/app/pages/ai/WhatIfSimulator';
 
 // Company setup
 import CompanySetup from '@/app/pages/businesses/CompanySetup';
@@ -186,6 +188,26 @@ export const router = createBrowserRouter([
           <RequireCompanySetup>
             <RequirePermission permission="ai:read">
               <InvoiceLateRisk />
+            </RequirePermission>
+          </RequireCompanySetup>
+        ),
+      },
+      {
+        path: 'invoice-collection-copilot',
+        element: (
+          <RequireCompanySetup>
+            <RequirePermission permission="ai:read">
+              <InvoiceCollectionCopilot />
+            </RequirePermission>
+          </RequireCompanySetup>
+        ),
+      },
+      {
+        path: 'what-if-simulator',
+        element: (
+          <RequireCompanySetup>
+            <RequirePermission permission="ai:read">
+              <WhatIfSimulator />
             </RequirePermission>
           </RequireCompanySetup>
         ),

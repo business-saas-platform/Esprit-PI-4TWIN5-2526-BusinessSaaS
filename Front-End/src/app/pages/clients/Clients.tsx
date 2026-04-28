@@ -433,16 +433,16 @@ export function Clients() {
   if (!currentBusiness) {
     return (
       <div className="space-y-6">
-        <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center shadow-sm">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100">
-            <Building2 className="h-6 w-6 text-slate-600" />
+        <div className="rounded-3xl border border-dashed border-border bg-card p-10 text-center shadow-sm">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-muted">
+            <Building2 className="h-6 w-6 text-muted-foreground" />
           </div>
 
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
             No business selected
           </h1>
 
-          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">
             Sélectionne ou crée une entreprise avant de gérer tes clients.
           </p>
 
@@ -461,10 +461,10 @@ export function Clients() {
   return (
     <div className="space-y-8">
       {/* Top header */}
-      <section className="rounded-[28px] border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50 p-6 shadow-sm md:p-8">
+      <section className="rounded-[28px] border border-border bg-gradient-to-br from-background dark:from-background via-background dark:via-background to-slate-50 p-6 shadow-sm md:p-8">
         <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
           <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-sm">
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground shadow-sm">
               <Sparkles className="h-3.5 w-3.5" />
               Customer management
             </div>
@@ -473,9 +473,9 @@ export function Clients() {
               <h1 className="text-3xl font-semibold tracking-tight text-slate-950 md:text-4xl">
                 Clients
               </h1>
-              <p className="mt-2 text-sm text-slate-500 md:text-base">
+              <p className="mt-2 text-sm text-muted-foreground md:text-base">
                 Gère les relations clients, les revenus et les soldes impayés pour{" "}
-                <span className="font-semibold text-slate-700">
+                <span className="font-semibold text-foreground">
                   {currentBusiness.name}
                 </span>
               </p>
@@ -485,7 +485,7 @@ export function Clients() {
           <div className="flex flex-wrap gap-3">
             <Button
               variant="outline"
-              className="h-11 rounded-xl border-slate-200 px-4"
+              className="h-11 rounded-xl border-border px-4"
               onClick={loadClients}
               disabled={isLoading}
             >
@@ -499,7 +499,7 @@ export function Clients() {
 
             <Button
               variant="outline"
-              className="h-11 rounded-xl border-slate-200 px-4"
+              className="h-11 rounded-xl border-border px-4"
               onClick={exportCSV}
             >
               <Download className="mr-2 h-4 w-4" />
@@ -520,13 +520,13 @@ export function Clients() {
                 </Button>
               </DialogTrigger>
 
-              <DialogContent className="max-h-[92vh] overflow-y-auto rounded-[28px] border-slate-200 p-0 sm:max-w-4xl">
-                <div className="border-b border-slate-100 bg-slate-50 px-6 py-5">
+              <DialogContent className="max-h-[92vh] overflow-y-auto rounded-[28px] border-border p-0 sm:max-w-4xl">
+                <div className="border-b border-border bg-background px-6 py-5">
                   <DialogHeader>
-                    <DialogTitle className="text-xl font-semibold text-slate-900">
+                    <DialogTitle className="text-xl font-semibold text-foreground">
                       Create new client
                     </DialogTitle>
-                    <DialogDescription className="text-slate-500">
+                    <DialogDescription className="text-muted-foreground">
                       Add a new customer with structured business information and professional validation.
                     </DialogDescription>
                   </DialogHeader>
@@ -534,10 +534,10 @@ export function Clients() {
 
                 <div className="space-y-6 px-6 py-6">
                   <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
-                    <div className="rounded-2xl border border-slate-200 bg-white p-5">
+                    <div className="rounded-2xl border border-border bg-card p-5">
                       <div className="mb-4 flex items-center gap-2">
-                        <Briefcase className="h-4 w-4 text-slate-500" />
-                        <h3 className="text-sm font-semibold text-slate-900">
+                        <Briefcase className="h-4 w-4 text-muted-foreground" />
+                        <h3 className="text-sm font-semibold text-foreground">
                           Identity & contact
                         </h3>
                       </div>
@@ -565,7 +565,7 @@ export function Clients() {
                           <Label htmlFor="name">Display name *</Label>
                           <Input
                             id="name"
-                            className={`h-11 rounded-xl ${visibleError("name") ? "border-red-300 focus-visible:ring-red-200" : "border-slate-200"}`}
+                            className={`h-11 rounded-xl ${visibleError("name") ? "border-red-300 focus-visible:ring-red-200" : "border-border"}`}
                             placeholder={
                               newClient.type === "company"
                                 ? "Acme SARL"
@@ -585,7 +585,7 @@ export function Clients() {
                           <Input
                             id="email"
                             type="email"
-                            className={`h-11 rounded-xl ${visibleError("email") ? "border-red-300 focus-visible:ring-red-200" : "border-slate-200"}`}
+                            className={`h-11 rounded-xl ${visibleError("email") ? "border-red-300 focus-visible:ring-red-200" : "border-border"}`}
                             placeholder="client@example.com"
                             value={newClient.email}
                             onChange={(e) => handleFieldChange("email", e.target.value)}
@@ -600,7 +600,7 @@ export function Clients() {
                           <Label htmlFor="phone">Phone</Label>
                           <Input
                             id="phone"
-                            className={`h-11 rounded-xl ${visibleError("phone") ? "border-red-300 focus-visible:ring-red-200" : "border-slate-200"}`}
+                            className={`h-11 rounded-xl ${visibleError("phone") ? "border-red-300 focus-visible:ring-red-200" : "border-border"}`}
                             placeholder="+216 12 345 678"
                             value={newClient.phone}
                             onChange={(e) => handleFieldChange("phone", e.target.value)}
@@ -615,7 +615,7 @@ export function Clients() {
                           <Label htmlFor="companyName">Legal company name</Label>
                           <Input
                             id="companyName"
-                            className={`h-11 rounded-xl ${visibleError("companyName") ? "border-red-300 focus-visible:ring-red-200" : "border-slate-200"}`}
+                            className={`h-11 rounded-xl ${visibleError("companyName") ? "border-red-300 focus-visible:ring-red-200" : "border-border"}`}
                             placeholder="Acme Trading LLC"
                             value={newClient.companyName}
                             onChange={(e) => handleFieldChange("companyName", e.target.value)}
@@ -632,7 +632,7 @@ export function Clients() {
                           <Label htmlFor="contactPerson">Primary contact</Label>
                           <Input
                             id="contactPerson"
-                            className={`h-11 rounded-xl ${visibleError("contactPerson") ? "border-red-300 focus-visible:ring-red-200" : "border-slate-200"}`}
+                            className={`h-11 rounded-xl ${visibleError("contactPerson") ? "border-red-300 focus-visible:ring-red-200" : "border-border"}`}
                             placeholder="Salah Trabelsi"
                             value={newClient.contactPerson}
                             onChange={(e) => handleFieldChange("contactPerson", e.target.value)}
@@ -647,32 +647,32 @@ export function Clients() {
                       </div>
                     </div>
 
-                    <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-5">
+                    <div className="rounded-2xl border border-border bg-background/70 p-5">
                       <div className="mb-4 flex items-center gap-2">
-                        <ShieldCheck className="h-4 w-4 text-slate-500" />
-                        <h3 className="text-sm font-semibold text-slate-900">
+                        <ShieldCheck className="h-4 w-4 text-muted-foreground" />
+                        <h3 className="text-sm font-semibold text-foreground">
                           Form quality
                         </h3>
                       </div>
 
-                      <div className="space-y-3 text-sm text-slate-600">
-                        <div className="rounded-xl border border-slate-200 bg-white p-3">
-                          <p className="font-medium text-slate-900">Required fields</p>
-                          <p className="mt-1 text-slate-500">
+                      <div className="space-y-3 text-sm text-muted-foreground">
+                        <div className="rounded-xl border border-border bg-card p-3">
+                          <p className="font-medium text-foreground">Required fields</p>
+                          <p className="mt-1 text-muted-foreground">
                             Display name, email and country must be valid before saving.
                           </p>
                         </div>
 
-                        <div className="rounded-xl border border-slate-200 bg-white p-3">
-                          <p className="font-medium text-slate-900">Validation</p>
-                          <p className="mt-1 text-slate-500">
+                        <div className="rounded-xl border border-border bg-card p-3">
+                          <p className="font-medium text-foreground">Validation</p>
+                          <p className="mt-1 text-muted-foreground">
                             Email, phone, postal code and tax ID are checked for clean business data.
                           </p>
                         </div>
 
-                        <div className="rounded-xl border border-slate-200 bg-white p-3">
-                          <p className="font-medium text-slate-900">Business ready</p>
-                          <p className="mt-1 text-slate-500">
+                        <div className="rounded-xl border border-border bg-card p-3">
+                          <p className="font-medium text-foreground">Business ready</p>
+                          <p className="mt-1 text-muted-foreground">
                             Ideal for invoicing, CRM follow-up and multi-tenant SaaS workflows.
                           </p>
                         </div>
@@ -682,10 +682,10 @@ export function Clients() {
 
                   <Separator />
 
-                  <div className="rounded-2xl border border-slate-200 bg-white p-5">
+                  <div className="rounded-2xl border border-border bg-card p-5">
                     <div className="mb-4 flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-slate-500" />
-                      <h3 className="text-sm font-semibold text-slate-900">
+                      <MapPin className="h-4 w-4 text-muted-foreground" />
+                      <h3 className="text-sm font-semibold text-foreground">
                         Address & compliance
                       </h3>
                     </div>
@@ -695,7 +695,7 @@ export function Clients() {
                         <Label htmlFor="address">Address</Label>
                         <Input
                           id="address"
-                          className={`h-11 rounded-xl ${visibleError("address") ? "border-red-300 focus-visible:ring-red-200" : "border-slate-200"}`}
+                          className={`h-11 rounded-xl ${visibleError("address") ? "border-red-300 focus-visible:ring-red-200" : "border-border"}`}
                           placeholder="Street, avenue, building..."
                           value={newClient.address}
                           onChange={(e) => handleFieldChange("address", e.target.value)}
@@ -710,7 +710,7 @@ export function Clients() {
                         <Label htmlFor="city">City</Label>
                         <Input
                           id="city"
-                          className={`h-11 rounded-xl ${visibleError("city") ? "border-red-300 focus-visible:ring-red-200" : "border-slate-200"}`}
+                          className={`h-11 rounded-xl ${visibleError("city") ? "border-red-300 focus-visible:ring-red-200" : "border-border"}`}
                           placeholder="Tunis"
                           value={newClient.city}
                           onChange={(e) => handleFieldChange("city", e.target.value)}
@@ -725,7 +725,7 @@ export function Clients() {
                         <Label htmlFor="postalCode">Postal code</Label>
                         <Input
                           id="postalCode"
-                          className={`h-11 rounded-xl ${visibleError("postalCode") ? "border-red-300 focus-visible:ring-red-200" : "border-slate-200"}`}
+                          className={`h-11 rounded-xl ${visibleError("postalCode") ? "border-red-300 focus-visible:ring-red-200" : "border-border"}`}
                           placeholder="1000"
                           value={newClient.postalCode}
                           onChange={(e) => handleFieldChange("postalCode", e.target.value)}
@@ -740,7 +740,7 @@ export function Clients() {
                         <Label htmlFor="country">Country *</Label>
                         <Input
                           id="country"
-                          className={`h-11 rounded-xl ${visibleError("country") ? "border-red-300 focus-visible:ring-red-200" : "border-slate-200"}`}
+                          className={`h-11 rounded-xl ${visibleError("country") ? "border-red-300 focus-visible:ring-red-200" : "border-border"}`}
                           placeholder="Tunisia"
                           value={newClient.country}
                           onChange={(e) => handleFieldChange("country", e.target.value)}
@@ -755,7 +755,7 @@ export function Clients() {
                         <Label htmlFor="taxId">Tax ID / VAT / MF</Label>
                         <Input
                           id="taxId"
-                          className={`h-11 rounded-xl ${visibleError("taxId") ? "border-red-300 focus-visible:ring-red-200" : "border-slate-200"}`}
+                          className={`h-11 rounded-xl ${visibleError("taxId") ? "border-red-300 focus-visible:ring-red-200" : "border-border"}`}
                           placeholder="TN123456 / MF..."
                           value={newClient.taxId}
                           onChange={(e) => handleFieldChange("taxId", e.target.value)}
@@ -768,10 +768,10 @@ export function Clients() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-slate-200 bg-white p-5">
+                  <div className="rounded-2xl border border-border bg-card p-5">
                     <div className="mb-4 flex items-center gap-2">
-                      <Globe className="h-4 w-4 text-slate-500" />
-                      <h3 className="text-sm font-semibold text-slate-900">
+                      <Globe className="h-4 w-4 text-muted-foreground" />
+                      <h3 className="text-sm font-semibold text-foreground">
                         Internal notes
                       </h3>
                     </div>
@@ -780,7 +780,7 @@ export function Clients() {
                       <Label htmlFor="notes">Notes</Label>
                       <Textarea
                         id="notes"
-                        className={`min-h-[110px] rounded-2xl ${visibleError("notes") ? "border-red-300 focus-visible:ring-red-200" : "border-slate-200"}`}
+                        className={`min-h-[110px] rounded-2xl ${visibleError("notes") ? "border-red-300 focus-visible:ring-red-200" : "border-border"}`}
                         placeholder="Payment preferences, contact details, internal reminders..."
                         value={newClient.notes}
                         onChange={(e) => handleFieldChange("notes", e.target.value)}
@@ -790,11 +790,11 @@ export function Clients() {
                         {visibleError("notes") ? (
                           <p className="text-xs text-red-600">{visibleError("notes")}</p>
                         ) : (
-                          <p className="text-xs text-slate-500">
+                          <p className="text-xs text-muted-foreground">
                             Optional internal information for your team.
                           </p>
                         )}
-                        <p className="text-xs text-slate-400">
+                        <p className="text-xs text-muted-foreground">
                           {newClient.notes.length}/500
                         </p>
                       </div>
@@ -802,8 +802,8 @@ export function Clients() {
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-3 border-t border-slate-100 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="text-sm text-slate-500">
+                <div className="flex flex-col gap-3 border-t border-border px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="text-sm text-muted-foreground">
                     {isFormValid ? (
                       <span className="text-emerald-600">Form ready to submit</span>
                     ) : (
@@ -841,27 +841,27 @@ export function Clients() {
 
       {/* Stats cards */}
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <Card className="rounded-[24px] border-slate-200 shadow-sm">
+        <Card className="rounded-[24px] border-border shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
               <div className="space-y-2">
-                <p className="text-sm font-medium text-slate-500">Total clients</p>
+                <p className="text-sm font-medium text-muted-foreground">Total clients</p>
                 <p className="text-3xl font-semibold tracking-tight text-slate-950">
                   {summary.totalClients}
                 </p>
               </div>
-              <div className="rounded-2xl bg-slate-100 p-3">
-                <Users className="h-5 w-5 text-slate-700" />
+              <div className="rounded-2xl bg-muted p-3">
+                <Users className="h-5 w-5 text-foreground" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="rounded-[24px] border-slate-200 shadow-sm">
+        <Card className="rounded-[24px] border-border shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
               <div className="space-y-2">
-                <p className="text-sm font-medium text-slate-500">Total revenue</p>
+                <p className="text-sm font-medium text-muted-foreground">Total revenue</p>
                 <p className="text-3xl font-semibold tracking-tight text-slate-950">
                   {formatMoney(summary.totalRevenue)}
                 </p>
@@ -873,11 +873,11 @@ export function Clients() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[24px] border-slate-200 shadow-sm">
+        <Card className="rounded-[24px] border-border shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
               <div className="space-y-2">
-                <p className="text-sm font-medium text-slate-500">Collected</p>
+                <p className="text-sm font-medium text-muted-foreground">Collected</p>
                 <p className="text-3xl font-semibold tracking-tight text-emerald-600">
                   {formatMoney(summary.paid)}
                 </p>
@@ -889,15 +889,15 @@ export function Clients() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[24px] border-slate-200 shadow-sm">
+        <Card className="rounded-[24px] border-border shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
               <div className="space-y-2">
-                <p className="text-sm font-medium text-slate-500">Outstanding</p>
+                <p className="text-sm font-medium text-muted-foreground">Outstanding</p>
                 <p className="text-3xl font-semibold tracking-tight text-amber-600">
                   {formatMoney(summary.outstanding)}
                 </p>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-muted-foreground">
                   {summary.clientsWithOutstanding} client(s) concerné(s)
                 </p>
               </div>
@@ -910,15 +910,15 @@ export function Clients() {
       </section>
 
       {/* Filters */}
-      <section className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm md:p-6">
+      <section className="rounded-[24px] border border-border bg-card p-5 shadow-sm md:p-6">
         <div className="flex flex-col gap-4 xl:flex-row">
           <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search clients by name, email, phone, city..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="h-12 rounded-xl border-slate-200 pl-11"
+              className="h-12 rounded-xl border-border pl-11"
             />
           </div>
 
@@ -927,7 +927,7 @@ export function Clients() {
               value={statusFilter}
               onValueChange={(value) => setStatusFilter(value as ClientStatusFilter)}
             >
-              <SelectTrigger className="h-12 rounded-xl border-slate-200">
+              <SelectTrigger className="h-12 rounded-xl border-border">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -943,7 +943,7 @@ export function Clients() {
               value={sortBy}
               onValueChange={(value) => setSortBy(value as SortOption)}
             >
-              <SelectTrigger className="h-12 rounded-xl border-slate-200">
+              <SelectTrigger className="h-12 rounded-xl border-border">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
@@ -957,7 +957,7 @@ export function Clients() {
 
           <Button
             variant="outline"
-            className="h-12 rounded-xl border-slate-200"
+            className="h-12 rounded-xl border-border"
             onClick={clearFilters}
           >
             Clear
@@ -966,11 +966,11 @@ export function Clients() {
       </section>
 
       {/* Data table */}
-      <section className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm">
-        <div className="flex items-center justify-between border-b border-slate-100 px-6 py-5">
+      <section className="overflow-hidden rounded-[28px] border border-border bg-card shadow-sm">
+        <div className="flex items-center justify-between border-b border-border px-6 py-5">
           <div>
-            <h2 className="text-lg font-semibold text-slate-900">Client directory</h2>
-            <p className="mt-1 text-sm text-slate-500">
+            <h2 className="text-lg font-semibold text-foreground">Client directory</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
               {isLoading
                 ? "Loading clients..."
                 : `${filteredClients.length} client(s) affiché(s)`}
@@ -981,13 +981,13 @@ export function Clients() {
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="border-slate-100 bg-slate-50/70 hover:bg-slate-50/70">
-                <TableHead className="h-14 min-w-[260px] text-slate-500">Client</TableHead>
-                <TableHead className="min-w-[220px] text-slate-500">Contact</TableHead>
-                <TableHead className="min-w-[150px] text-slate-500">Revenue</TableHead>
-                <TableHead className="min-w-[150px] text-slate-500">Outstanding</TableHead>
-                <TableHead className="min-w-[130px] text-slate-500">Status</TableHead>
-                <TableHead className="min-w-[180px] text-right text-slate-500">
+              <TableRow className="border-border bg-background/70 hover:bg-background/70">
+                <TableHead className="h-14 min-w-[260px] text-muted-foreground">Client</TableHead>
+                <TableHead className="min-w-[220px] text-muted-foreground">Contact</TableHead>
+                <TableHead className="min-w-[150px] text-muted-foreground">Revenue</TableHead>
+                <TableHead className="min-w-[150px] text-muted-foreground">Outstanding</TableHead>
+                <TableHead className="min-w-[130px] text-muted-foreground">Status</TableHead>
+                <TableHead className="min-w-[180px] text-right text-muted-foreground">
                   Actions
                 </TableHead>
               </TableRow>
@@ -997,7 +997,7 @@ export function Clients() {
               {isLoading ? (
                 <TableRow>
                   <TableCell colSpan={6} className="h-32 text-center">
-                    <div className="flex items-center justify-center gap-2 text-sm text-slate-500">
+                    <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                       <Loader2 className="h-4 w-4 animate-spin" />
                       Loading clients...
                     </div>
@@ -1007,15 +1007,15 @@ export function Clients() {
                 <TableRow>
                   <TableCell colSpan={6} className="h-40">
                     <div className="flex flex-col items-center justify-center text-center">
-                      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100">
-                        <Users className="h-6 w-6 text-slate-500" />
+                      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-muted">
+                        <Users className="h-6 w-6 text-muted-foreground" />
                       </div>
 
-                      <h3 className="text-lg font-semibold text-slate-900">
+                      <h3 className="text-lg font-semibold text-foreground">
                         No clients found
                       </h3>
 
-                      <p className="mt-2 max-w-md text-sm text-slate-500">
+                      <p className="mt-2 max-w-md text-sm text-muted-foreground">
                         Ma fama hata client ymatchi el recherche wela les filtres. Zid client jdid
                         wela clear les filtres.
                       </p>
@@ -1046,19 +1046,19 @@ export function Clients() {
                   return (
                     <TableRow
                       key={client.id}
-                      className="border-slate-100 transition-colors hover:bg-slate-50/60"
+                      className="border-border transition-colors hover:bg-background/60"
                     >
                       <TableCell className="py-4">
                         <div className="flex items-center gap-4">
-                          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100 text-sm font-semibold text-slate-700">
+                          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-muted text-sm font-semibold text-foreground">
                             {getInitials(client.name)}
                           </div>
 
                           <div className="min-w-0">
-                            <p className="truncate font-semibold text-slate-900">
+                            <p className="truncate font-semibold text-foreground">
                               {client.name}
                             </p>
-                            <p className="mt-1 truncate text-xs text-slate-500">
+                            <p className="mt-1 truncate text-xs text-muted-foreground">
                               {client.taxId || "No Tax ID"}
                             </p>
                           </div>
@@ -1067,20 +1067,20 @@ export function Clients() {
 
                       <TableCell className="py-4">
                         <div className="space-y-1.5">
-                          <div className="flex items-center gap-2 text-sm text-slate-700">
-                            <Mail className="h-3.5 w-3.5 text-slate-400" />
+                          <div className="flex items-center gap-2 text-sm text-foreground">
+                            <Mail className="h-3.5 w-3.5 text-muted-foreground" />
                             <span className="truncate">{client.email}</span>
                           </div>
 
-                          <div className="flex items-center gap-2 text-sm text-slate-500">
-                            <Phone className="h-3.5 w-3.5 text-slate-400" />
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Phone className="h-3.5 w-3.5 text-muted-foreground" />
                             <span>{client.phone || "-"}</span>
                           </div>
                         </div>
                       </TableCell>
 
                       <TableCell className="py-4">
-                        <span className="font-semibold text-slate-900">
+                        <span className="font-semibold text-foreground">
                           {formatMoney(totalRevenue)}
                         </span>
                       </TableCell>
@@ -1115,7 +1115,7 @@ export function Clients() {
                           <Button
                             variant="outline"
                             size="sm"
-                            className="rounded-xl border-slate-200"
+                            className="rounded-xl border-border"
                             onClick={() =>
                               navigate(`/dashboard/invoices/create?clientId=${client.id}`)
                             }

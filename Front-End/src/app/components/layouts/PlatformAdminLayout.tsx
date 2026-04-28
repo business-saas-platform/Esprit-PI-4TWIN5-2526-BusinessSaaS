@@ -52,7 +52,7 @@ export function PlatformAdminLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Sidebar for desktop */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
         <div className="flex flex-col flex-grow bg-gradient-to-b from-purple-900 to-indigo-900 pt-5 pb-4 overflow-y-auto">
@@ -62,7 +62,7 @@ export function PlatformAdminLayout() {
           </div>
 
           <div className="px-4 mb-6">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20">
+            <div className="bg-card/10 backdrop-blur-sm rounded-lg p-3 border border-white/20">
               <p className="text-xs text-purple-200 mb-1">Admin Panel</p>
               <p className="text-sm font-medium text-white">
                 Business Management SaaS
@@ -82,8 +82,8 @@ export function PlatformAdminLayout() {
                     w-full group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors
                     ${
                       active
-                        ? "bg-white/20 text-white"
-                        : "text-purple-100 hover:bg-white/10 hover:text-white"
+                        ? "bg-card/20 text-white"
+                        : "text-purple-100 hover:bg-card/10 hover:text-white"
                     }
                   `}
                 >
@@ -134,8 +134,8 @@ export function PlatformAdminLayout() {
                         w-full group flex items-center px-3 py-2 text-sm font-medium rounded-md
                         ${
                           active
-                            ? "bg-white/20 text-white"
-                            : "text-purple-100 hover:bg-white/10 hover:text-white"
+                            ? "bg-card/20 text-white"
+                            : "text-purple-100 hover:bg-card/10 hover:text-white"
                         }
                       `}
                     >
@@ -158,9 +158,9 @@ export function PlatformAdminLayout() {
       {/* Main content */}
       <div className="lg:pl-64 flex flex-col flex-1">
         {/* Top header */}
-        <div className="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white shadow">
+        <div className="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-card shadow">
           <button
-            className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500 lg:hidden"
+            className="px-4 border-r border-border text-muted-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500 lg:hidden"
             onClick={() => setSidebarOpen(true)}
           >
             <Menu className="h-6 w-6" />
@@ -178,10 +178,10 @@ export function PlatformAdminLayout() {
                       </AvatarFallback>
                     </Avatar>
                     <div className="hidden md:block text-left">
-                      <p className="text-sm font-medium text-gray-700">{platformAdminUser.name}</p>
-                      <p className="text-xs text-gray-500">Platform Administrator</p>
+                      <p className="text-sm font-medium text-foreground">{platformAdminUser.name}</p>
+                      <p className="text-xs text-muted-foreground">Platform Administrator</p>
                     </div>
-                    <ChevronDown className="h-4 w-4 text-gray-400" />
+                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">

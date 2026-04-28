@@ -2,13 +2,19 @@
   "name": "nest-saas-backend",
   "version": "1.0.0",
   "description": "NestJS + PostgreSQL + TypeORM backend (MVC) for Business Management SaaS Platform",
+  "main": "electron.js",
   "scripts": {
     "start": "nest start",
     "start:dev": "nest start --watch",
-    "start:dev:ml": "powershell -ExecutionPolicy Bypass -File .\\scripts\\start-dev-ml.ps1",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    
     "build": "nest build",
+    
+    "frontend": "vite",
+    "electron": "electron .",
+    "desktop": "concurrently \"npm run frontend\" \"npm run electron\"",
+
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.ts\""
   },
@@ -52,6 +58,8 @@
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "electron": "^30.0.0",
+    "concurrently": "^9.0.0"
   }
 }

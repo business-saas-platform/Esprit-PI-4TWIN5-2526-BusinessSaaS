@@ -313,8 +313,8 @@ export function Reports() {
   if (!currentBusiness) {
     return (
       <div className="space-y-4">
-        <h1 className="text-3xl font-bold text-gray-900">Reports & Analytics</h1>
-        <p className="text-sm text-gray-500">
+        <h1 className="text-3xl font-bold text-foreground">Reports & Analytics</h1>
+        <p className="text-sm text-muted-foreground">
           Aucune entreprise sélectionnée. Créez ou sélectionnez une entreprise.
         </p>
       </div>
@@ -326,8 +326,8 @@ export function Reports() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between print:hidden">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Reports & Analytics</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-3xl font-bold text-foreground">Reports & Analytics</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             Financial reports and business insights —{" "}
             <span className="font-medium">{currentBusiness.name}</span>
           </p>
@@ -360,7 +360,7 @@ export function Reports() {
 
       {loading ? (
         <Card>
-          <CardContent className="flex items-center gap-3 p-8 text-gray-500">
+          <CardContent className="flex items-center gap-3 p-8 text-muted-foreground">
             <Loader2 className="h-5 w-5 animate-spin" />
             Loading reports...
           </CardContent>
@@ -373,14 +373,14 @@ export function Reports() {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-500">Total Revenue</p>
+                    <p className="text-sm text-muted-foreground">Total Revenue</p>
                     <p className="mt-1 text-2xl font-bold">{formatMoney(totalRevenue)}</p>
                   </div>
                   <div className="rounded-lg bg-green-50 p-3">
                     <TrendingUp className="h-6 w-6 text-green-600" />
                   </div>
                 </div>
-                <p className="mt-2 text-xs text-gray-500">Paid invoices only</p>
+                <p className="mt-2 text-xs text-muted-foreground">Paid invoices only</p>
               </CardContent>
             </Card>
 
@@ -388,14 +388,14 @@ export function Reports() {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-500">Total Expenses</p>
+                    <p className="text-sm text-muted-foreground">Total Expenses</p>
                     <p className="mt-1 text-2xl font-bold">{formatMoney(totalExpenses)}</p>
                   </div>
                   <div className="rounded-lg bg-red-50 p-3">
                     <TrendingDown className="h-6 w-6 text-red-600" />
                   </div>
                 </div>
-                <p className="mt-2 text-xs text-gray-500">Approved expenses only</p>
+                <p className="mt-2 text-xs text-muted-foreground">Approved expenses only</p>
               </CardContent>
             </Card>
 
@@ -403,7 +403,7 @@ export function Reports() {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-500">Net Profit</p>
+                    <p className="text-sm text-muted-foreground">Net Profit</p>
                     <p className="mt-1 text-2xl font-bold">{formatMoney(profitLoss)}</p>
                   </div>
                   <div className="rounded-lg bg-blue-50 p-3">
@@ -424,14 +424,14 @@ export function Reports() {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-500">Profit Margin</p>
+                    <p className="text-sm text-muted-foreground">Profit Margin</p>
                     <p className="mt-1 text-2xl font-bold">{profitMargin.toFixed(1)}%</p>
                   </div>
                   <div className="rounded-lg bg-indigo-50 p-3">
                     <BarChart3 className="h-6 w-6 text-indigo-600" />
                   </div>
                 </div>
-                <p className="mt-2 text-xs text-gray-500">Profit / Revenue</p>
+                <p className="mt-2 text-xs text-muted-foreground">Profit / Revenue</p>
               </CardContent>
             </Card>
           </div>
@@ -482,7 +482,7 @@ export function Reports() {
               </CardHeader>
               <CardContent>
                 {expenseByCategory.length === 0 ? (
-                  <div className="py-12 text-center text-gray-500">
+                  <div className="py-12 text-center text-muted-foreground">
                     No approved expenses in this period
                   </div>
                 ) : (
@@ -514,7 +514,7 @@ export function Reports() {
               </CardHeader>
               <CardContent>
                 {revenueByClient.length === 0 ? (
-                  <div className="py-12 text-center text-gray-500">
+                  <div className="py-12 text-center text-muted-foreground">
                     No paid invoices in this period
                   </div>
                 ) : (
@@ -567,7 +567,7 @@ export function Reports() {
 
                 <div className="space-y-2 pl-4">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Paid Invoices</span>
+                    <span className="text-muted-foreground">Paid Invoices</span>
                     <span>{formatMoney(totalRevenue)}</span>
                   </div>
                 </div>
@@ -581,11 +581,11 @@ export function Reports() {
 
                 <div className="space-y-2 pl-4">
                   {expenseByCategory.length === 0 ? (
-                    <div className="text-sm text-gray-500">No approved expenses</div>
+                    <div className="text-sm text-muted-foreground">No approved expenses</div>
                   ) : (
                     expenseByCategory.map((cat) => (
                       <div key={cat.name} className="flex justify-between text-sm">
-                        <span className="text-gray-600">{cat.name}</span>
+                        <span className="text-muted-foreground">{cat.name}</span>
                         <span>{formatMoney(cat.value)}</span>
                       </div>
                     ))
