@@ -35,7 +35,7 @@ async function bootstrap() {
     prefix: "/uploads",
   });
 
-  await app.listen(Number(process.env.PORT || 3000));
-}
+// Explicitly bind to 0.0.0.0 for Railway/Production environments
+await app.listen(Number(process.env.PORT || 3000), '0.0.0.0');}
 
 bootstrap();
