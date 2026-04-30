@@ -463,12 +463,12 @@ export function Team() {
 
         <div className="flex flex-col gap-2 sm:flex-row">
           <Button
-            onClick={() => navigate('/dashboard/team/ai-insights')}
+            onClick={() => navigate('/dashboard/team/hr-risk')}
             variant="outline"
-            className="shadow-sm"
+            className="shadow-sm border-purple-200 text-purple-700 hover:bg-purple-50"
           >
-            <Brain className="mr-2 h-4 w-4" />
-            AI Insights
+            <Brain className="mr-2 h-4 w-4 text-purple-600" />
+            HR Risk Analytics
           </Button>
 
           <Dialog

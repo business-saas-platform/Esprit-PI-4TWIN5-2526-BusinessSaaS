@@ -22,6 +22,10 @@ export type SupportTicket = {
   createdAt: string;
   updatedAt: string;
   resolvedAt?: string;
+  // Enriched admin fields (optional)
+  ownerName?: string;
+  ownerEmail?: string;
+  businessName?: string;
 };
 
 export const SupportChatApi = {
@@ -86,6 +90,15 @@ export const SupportChatApi = {
     return api<SupportTicket>(`/support-chat/admin/tickets/${ticketId}/reply`, {
       method: "POST",
       body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * Delete a ticket
+   */
+  deleteTicket: async (ticketId: string) => {
+    return api<{ success: boolean }>(`/support-chat/tickets/${ticketId}`, {
+      method: "DELETE",
     });
   },
 };

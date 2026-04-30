@@ -45,4 +45,11 @@ findAll(@Req() req: any, @BusinessId() businessId: string) {
   remove(@Req() req: any, @Param("id") id: string) {
     return this.s.removeForOwner(req.user, id);
   }
+
+  // ── HR Profile (for ML risk scoring) ─────────────────────────────────────
+  @UseGuards(OwnerGuard)
+  @Patch(":id/hr-profile")
+  updateHrProfile(@Req() req: any, @Param("id") id: string, @Body() dto: any) {
+    return this.s.updateHrProfile(req.user, id, dto);
+  }
 }

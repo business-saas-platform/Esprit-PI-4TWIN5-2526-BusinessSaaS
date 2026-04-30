@@ -165,8 +165,19 @@ export const AdminSupportTickets = () => {
                     {ticket.title}
                   </p>
                   <p className="text-xs text-gray-600">
-                    User ID: <span className="font-mono">{ticket.userId.slice(0, 8)}</span>
+                    {ticket.ownerName ? (
+                      <>
+                        {ticket.ownerName} <span className="text-xs text-gray-400">• {ticket.ownerEmail}</span>
+                      </>
+                    ) : (
+                      <>
+                        User ID: <span className="font-mono">{ticket.userId.slice(0, 8)}</span>
+                      </>
+                    )}
                   </p>
+                  {ticket.businessName && (
+                    <p className="text-xs text-gray-500">Société: {ticket.businessName}</p>
+                  )}
                   <div className="flex items-center gap-2 mt-2">
                     <Badge className={`text-xs ${getStatusColor(ticket.status)}`}>
                       {getStatusLabel(ticket.status)}
@@ -196,8 +207,14 @@ export const AdminSupportTickets = () => {
               <div>
                 <h2 className="font-bold text-gray-800">{selectedTicket.title}</h2>
                 <p className="text-xs text-gray-600 mt-1">
-                  De: {selectedTicket.userId.slice(0, 12)}... • Créé le{" "}
-                  {new Date(selectedTicket.createdAt).toLocaleDateString("fr-FR")}
+                  {selectedTicket.ownerName ? (
+                    <>
+                      De: {selectedTicket.ownerName} <span className="text-xs text-gray-400">• {selectedTicket.ownerEmail}</span>
+                    </>
+                  ) : (
+                    <>De: {selectedTicket.userId.slice(0, 12)}...</>
+                  )}{" "}
+                  • Créé le {new Date(selectedTicket.createdAt).toLocaleDateString("fr-FR")}
                 </p>
               </div>
               <Badge className={`${getStatusColor(selectedTicket.status)}`}>

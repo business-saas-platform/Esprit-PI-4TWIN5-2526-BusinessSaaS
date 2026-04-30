@@ -3,6 +3,11 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { SupportTicketEntity } from "./entities/support-ticket.entity";
 import { SupportMessageEntity } from "./entities/support-message.entity";
+import { BusinessEntity } from "../businesses/entities/business.entity";
+import { InvoiceEntity } from "../invoices/entities/invoice.entity";
+import { ExpenseEntity } from "../expenses/entities/expense.entity";
+import { ClientEntity } from "../clients/entities/client.entity";
+import { UserEntity } from "../users/entities/user.entity";
 import {
   CreateSupportMessageDto,
   UpdateSupportTicketDto,
@@ -11,7 +16,7 @@ import {
 import { toIso } from "../../common/api-mapper";
 
 const OLLAMA_API_URL = process.env.OLLAMA_URL || "http://localhost:11434";
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "llama3:latest";
+const OLLAMA_MODEL   = process.env.OLLAMA_MODEL || "llama3:latest";
 
 @Injectable()
 export class SupportChatService {
@@ -19,27 +24,51 @@ export class SupportChatService {
     @InjectRepository(SupportTicketEntity)
     private ticketRepo: Repository<SupportTicketEntity>,
     @InjectRepository(SupportMessageEntity)
-    private messageRepo: Repository<SupportMessageEntity>
+    private messageRepo: Repository<SupportMessageEntity>,
+    @InjectRepository(BusinessEntity)
+    private businessRepo: Repository<BusinessEntity>,
+    @InjectRepository(InvoiceEntity)
+    private invoiceRepo: Repository<InvoiceEntity>,
+    @InjectRepository(ExpenseEntity)
+    private expenseRepo: Repository<ExpenseEntity>,
+    @InjectRepository(ClientEntity)
+    private clientRepo: Repository<ClientEntity>,
+    @InjectRepository(UserEntity)
+    private userRepo: Repository<UserEntity>
   ) {}
 
+  // Read at runtime so .env is loaded
+  private get groqKey()  { return process.env.GROQ_API_KEY || ""; }
+  private get groqModel(){ return process.env.GROQ_MODEL || "llama-3.1-8b-instant"; }
+  private get useGroq()  { const k = this.groqKey; return !!k && k !== "your_groq_api_key_here"; }
+
   /**
-   * Check if Ollama is running
+   * Close all open tickets for a user (start fresh)
+   */
+  async closeOpenTickets(businessId: string, userId: string) {
+    await this.ticketRepo.update(
+      { businessId, userId, status: "open" },
+      { status: "closed", resolvedAt: new Date() }
+    );
+    return { success: true };
+  }
+
+  /**
+   * Check if AI service is available
    */
   private async isOllamaAvailable(): Promise<boolean> {
+    if (this.useGroq) return true;
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
-      
+      const timeoutId  = setTimeout(() => controller.abort(), 5000);
       try {
-        const response = await fetch(`${OLLAMA_API_URL}/api/tags`, {
-          signal: controller.signal,
-        });
+        const response = await fetch(`${OLLAMA_API_URL}/api/tags`, { signal: controller.signal });
         clearTimeout(timeoutId);
         return response.ok;
       } finally {
         clearTimeout(timeoutId);
       }
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -96,78 +125,115 @@ Entreprise: ${businessName}`;
   }
 
   /**
-   * Call Ollama API for AI response (streaming)
+   * Call AI — uses Groq if API key set, otherwise falls back to Ollama
    */
   private async callOllama(
     messages: { role: string; content: string }[],
     systemPrompt: string
   ): Promise<string> {
+    if (this.useGroq) {
+      console.log(`[Groq] Using Groq API with model: ${this.groqModel}`);
+      return this.callGroq(messages, systemPrompt);
+    }
+    console.log(`[Ollama] Using local Ollama with model: ${OLLAMA_MODEL}`);
+    return this.callOllamaLocal(messages, systemPrompt);
+  }
+
+  /**
+   * Call Groq API (fast, cloud-based)
+   */
+  private async callGroq(
+    messages: { role: string; content: string }[],
+    systemPrompt: string
+  ): Promise<string> {
+    const controller = new AbortController();
+    const timeoutId  = setTimeout(() => controller.abort(), 30000);
+
     try {
-      console.log(`[Ollama] Calling model: ${OLLAMA_MODEL}`);
-      console.log(`[Ollama] URL: ${OLLAMA_API_URL}/api/chat`);
-      console.log(`[Ollama] Messages count: ${messages.length}`);
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type":  "application/json",
+          "Authorization": `Bearer ${this.groqKey}`,
+        },
+        body: JSON.stringify({
+          model:       this.groqModel,
+          messages:    [{ role: "system", content: systemPrompt }, ...messages],
+          temperature: 0.7,
+          max_tokens:  1024,
+        }),
+        signal: controller.signal,
+      });
 
-      const payload = {
-        model: OLLAMA_MODEL,
-        messages: [{ role: "system", content: systemPrompt }, ...messages],
-        stream: false,
-        temperature: 0.7,
-      };
+      clearTimeout(timeoutId);
 
-      console.log("[Ollama] Payload:", JSON.stringify(payload).substring(0, 200));
-
-      // Add timeout for Ollama request
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
-
-      try {
-        const response = await fetch(`${OLLAMA_API_URL}/api/chat`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-          signal: controller.signal,
-        });
-
-        clearTimeout(timeoutId);
-
-        console.log(`[Ollama] Response status: ${response.status}`);
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error(`[Ollama] Error response: ${errorText}`);
-          throw new Error(`Ollama returned ${response.status}: ${errorText}`);
-        }
-
-        const data = await response.json();
-        console.log("[Ollama] Raw response:", JSON.stringify(data).substring(0, 500));
-
-        // Handle multiple possible response formats
-        const content =
-          data.message?.content ||
-          data.response ||
-          data.choices?.[0]?.message?.content ||
-          data.text ||
-          "Je n'ai pas pu générer une réponse.";
-
-        if (!content || content.length === 0) {
-          throw new Error("Empty response from Ollama");
-        }
-
-        console.log("[Ollama] Extracted content:", content.substring(0, 200));
-        return content;
-      } finally {
-        clearTimeout(timeoutId);
+      if (!response.ok) {
+        const err = await response.text();
+        console.error(`[Groq] Error ${response.status}: ${err}`);
+        // Fall back to Ollama on Groq error
+        return this.callOllamaLocal(messages, systemPrompt);
       }
+
+      const data    = await response.json();
+      const content = data.choices?.[0]?.message?.content;
+
+      if (!content) throw new Error("Empty response from Groq");
+
+      console.log(`[Groq] Response received (${content.length} chars)`);
+      return content;
     } catch (error: any) {
-      console.error("[Ollama] Call failed:", error.message);
-      
-      // FALLBACK: Return mock response for testing if Ollama is slow/unavailable
+      clearTimeout(timeoutId);
       if (error.name === "AbortError") {
-        console.warn("[Ollama] Request timeout - using fallback mock response");
+        return "Je suis en train de traiter votre demande. Veuillez réessayer dans quelques secondes.";
+      }
+      console.error("[Groq] Failed, falling back to Ollama:", error.message);
+      return this.callOllamaLocal(messages, systemPrompt);
+    }
+  }
+
+  /**
+   * Call Ollama local (fallback)
+   */
+  private async callOllamaLocal(
+    messages: { role: string; content: string }[],
+    systemPrompt: string
+  ): Promise<string> {
+    console.log(`[Ollama] Calling model: ${OLLAMA_MODEL}`);
+
+    const controller = new AbortController();
+    const timeoutId  = setTimeout(() => controller.abort(), 60000);
+
+    try {
+      const response = await fetch(`${OLLAMA_API_URL}/api/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model:       OLLAMA_MODEL,
+          messages:    [{ role: "system", content: systemPrompt }, ...messages],
+          stream:      false,
+          temperature: 0.7,
+        }),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`Ollama returned ${response.status}`);
+      }
+
+      const data    = await response.json();
+      const content = data.message?.content || data.response;
+
+      if (!content) throw new Error("Empty response from Ollama");
+
+      return content;
+    } catch (error: any) {
+      clearTimeout(timeoutId);
+      if (error.name === "AbortError") {
         return "Je suis en train de traiter votre demande. Le service IA est actuellement occupé. Veuillez réessayer dans quelques secondes.";
       }
-      
-      throw new Error(`Ollama API error: ${error.message}`);
+      throw error;
     }
   }
 
@@ -175,12 +241,23 @@ Entreprise: ${businessName}`;
    * Detect if user wants to escalate to human
    */
   private shouldEscalate(userMessage: string, failedCount: number): boolean {
-    // Only escalate if explicitly requested for human/admin
     const escalationKeywords = [
       "parler à un humain",
       "contacter admin",
+      "contacter l'admin",
       "parlez avec un agent",
       "agent humain",
+      "je veux contacter",
+      "parler à quelqu'un",
+      "support humain",
+      "un vrai humain",
+      "parler à une personne",
+      "besoin d'aide humaine",
+      "transfert admin",
+      "escalade",
+      "speak to human",
+      "contact admin",
+      "human agent",
     ];
 
     const lowerMessage = userMessage.toLowerCase();
@@ -188,10 +265,16 @@ Entreprise: ${businessName}`;
       lowerMessage.includes(kw)
     );
 
-    // Escalate if:
-    // 1. User explicitly requested a human/agent
-    // 2. After 3 consecutive failed AI responses
     return hasEscalationKeyword || failedCount >= 3;
+  }
+
+  /**
+   * Generate a short title from the first user message
+   */
+  private generateTitle(message: string): string {
+    const cleaned = message.trim();
+    if (cleaned.length <= 60) return cleaned;
+    return cleaned.substring(0, 57) + '...';
   }
 
   /**
@@ -213,18 +296,22 @@ Entreprise: ${businessName}`;
       };
     }
 
-    // Find or create ticket
+    // Find or create ticket — look for open OR in_progress (not closed/resolved)
     let ticket = await this.ticketRepo.findOne({
-      where: { businessId, userId, status: "open" },
+      where: [
+        { businessId, userId, status: "open" },
+        { businessId, userId, status: "in_progress" },
+      ],
       relations: ["messages"],
+      order: { createdAt: "DESC" },
     });
 
     if (!ticket) {
-      // Create new ticket
+      // Create new ticket with meaningful title from first message
       ticket = this.ticketRepo.create({
         businessId,
         userId,
-        title: dto.title || "Nouvelle demande de support",
+        title: this.generateTitle(dto.content),
         description: dto.description || undefined,
         status: "open",
         escalatedToAdmin: false,
@@ -258,25 +345,82 @@ Entreprise: ${businessName}`;
       const escalationMsg = this.messageRepo.create({
         ticketId: ticket.id,
         content:
-          "Votre demande a été transmise à l'administrateur. Vous recevrez une réponse bientôt.",
+          "👤 Transfert vers un administrateur en cours...\n\n✅ Votre conversation a été transmise à notre équipe. Un administrateur vous répondra directement très bientôt.\n\nVous pouvez continuer à envoyer des messages.",
         sender: "ai",
         isAIResponse: false,
       });
       await this.messageRepo.save(escalationMsg);
 
+      const reloaded = await this.ticketRepo.findOne({ where: { id: ticket.id }, relations: ["messages"] });
       return {
         success: true,
         ticketId: ticket.id,
         escalated: true,
-        message:
-          "Votre demande a été transmise à l'administrateur. Vous recevrez une réponse bientôt.",
+        message: "Votre demande a été transmise à l'administrateur.",
         aiResponse: false,
+        messages: reloaded?.messages.map((m) => this.toApi(m)) ?? [],
+      };
+    }
+
+    // If already escalated — save user message and wait for admin (no AI response)
+    if (ticket.escalatedToAdmin) {
+      const reloaded = await this.ticketRepo.findOne({ where: { id: ticket.id }, relations: ["messages"] });
+      return {
+        success: true,
+        ticketId: ticket.id,
+        escalated: true,
+        aiResponse: false,
+        messages: reloaded?.messages.map((m) => this.toApi(m)) ?? [],
       };
     }
 
     // Get AI response
     try {
-      const systemPrompt = await this.buildSystemPrompt(businessId, businessName);
+      // Fetch real data for system prompt (invoices, expenses, clients)
+      let invoices: InvoiceEntity[] = [];
+      let expenses: ExpenseEntity[] = [];
+      let clients: ClientEntity[] = [];
+
+      try {
+        [expenses, clients, invoices] = await Promise.all([
+          this.expenseRepo.find({ where: { businessId } }),
+          this.clientRepo.find({ where: { businessId } }),
+          this.invoiceRepo.find({ where: { businessId } }),
+        ]);
+      } catch (e: any) {
+        console.error("DB fetch error:", e.message);
+      }
+
+      const totalRevenue = invoices
+        .filter((i) => (i as any).status === "paid")
+        .reduce((s, i) => s + Number((i as any).totalAmount || 0), 0);
+      const totalExpenses = expenses.reduce((s, e) => s + Number((e as any).amount || 0), 0);
+      const pendingInvoices = invoices.filter(
+        (i) => (i as any).status !== "paid" || Number((i as any).paidAmount || 0) < Number((i as any).totalAmount || 0)
+      );
+
+      const systemPrompt = `Tu es ARIA, un assistant business expert.
+Tu parles TOUJOURS en français.
+Tu donnes des conseils CONCRETS basés sur les données réelles.
+Tu ne mentionnes JAMAIS les IDs techniques.
+Tu es professionnel et bienveillant.
+
+DONNÉES RÉELLES DE L'ENTREPRISE:
+━━━━━━━━━━━━━━━━━━━━━━━━
+👥 Clients: ${clients.length}
+📋 Factures totales: ${invoices.length}
+💰 Revenus: ${totalRevenue.toFixed(2)} TND
+💸 Dépenses: ${totalExpenses.toFixed(2)} TND
+📈 Bénéfice net: ${(totalRevenue - totalExpenses).toFixed(2)} TND
+⏳ Factures en attente: ${pendingInvoices.length}
+   (${pendingInvoices.reduce((s,i) => s + Number((i as any).totalAmount||0),0).toFixed(2)} TND à récupérer)
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+Tu peux générer:
+- Plans marketing personnalisés avec ces chiffres
+- Analyse des dépenses et recommandations
+- Stratégies pour augmenter les revenus
+- Conseils pour récupérer les factures impayées`;
 
       const conversationMessages = ticket.messages.map((msg) => ({
         role: msg.sender === "user" ? "user" : "assistant",
@@ -314,36 +458,37 @@ Entreprise: ${businessName}`;
     } catch (error: any) {
       console.error("AI Error:", error.message);
 
-      // Increment failed count
-      ticket.failedAIResponseCount = (ticket.failedAIResponseCount || 0) + 1;
-      ticket = await this.ticketRepo.save(ticket);
-
-      // If too many failures, escalate
-      if (ticket.failedAIResponseCount >= 3) {
-        ticket.escalatedToAdmin = true;
-        ticket.status = "in_progress";
+      // Increment failed count — only if ticket has a valid id
+      if (ticket?.id) {
+        ticket.failedAIResponseCount = (ticket.failedAIResponseCount || 0) + 1;
         ticket = await this.ticketRepo.save(ticket);
 
-        const escalationMsg = this.messageRepo.create({
-          ticketId: ticket.id,
-          content:
-            "Désolé, le service IA est temporairement indisponible. Votre demande a été transmise à un agent humain.",
-          sender: "ai",
-          isAIResponse: false,
-        });
-        await this.messageRepo.save(escalationMsg);
+        // If too many failures, escalate
+        if (ticket.failedAIResponseCount >= 3) {
+          ticket.escalatedToAdmin = true;
+          ticket.status = "in_progress";
+          ticket = await this.ticketRepo.save(ticket);
 
-        return {
-          success: false,
-          ticketId: ticket.id,
-          escalated: true,
-          error:
-            "Désolé, je n\'ai pas pu répondre à votre question. Un agent humain vous aidera bientôt.",
-        };
+          const escalationMsg = this.messageRepo.create({
+            ticketId: ticket.id,
+            content: "Désolé, le service IA est temporairement indisponible. Votre demande a été transmise à un agent humain.",
+            sender: "ai",
+            isAIResponse: false,
+          });
+          await this.messageRepo.save(escalationMsg);
+
+          return {
+            success: false,
+            ticketId: ticket.id,
+            escalated: true,
+            error: "Désolé, je n'ai pas pu répondre à votre question. Un agent humain vous aidera bientôt.",
+          };
+        }
       }
 
       return {
         success: false,
+        ticketId: ticket?.id,
         error: "Erreur lors du traitement. Veuillez réessayer.",
       };
     }
@@ -396,6 +541,58 @@ Entreprise: ${businessName}`;
       order: { createdAt: "DESC" },
     });
     return tickets.map((t) => this.toApiTicket(t));
+  }
+
+  /**
+   * Get all escalated tickets with owner/business info for admin UI
+   */
+  async getAllTicketsWithOwnerInfo() {
+    const tickets = await this.ticketRepo.find({
+      where: { escalatedToAdmin: true },
+      relations: ["messages"],
+      order: { createdAt: "DESC" },
+    });
+
+    const ticketsWithOwner = await Promise.all(
+      tickets.map(async (ticket) => {
+        let ownerName = "Client inconnu";
+        let ownerEmail = "";
+        let businessName = "";
+
+        try {
+          if (ticket.businessId) {
+            const business = await this.businessRepo.findOne({ where: { id: ticket.businessId } });
+            if (business) {
+              businessName = (business as any).name || '';
+              if ((business as any).ownerId) {
+                const owner = await this.userRepo.findOne({ where: { id: (business as any).ownerId } });
+                if (owner) {
+                  ownerName = owner.name || owner.email || owner.id;
+                  ownerEmail = owner.email || '';
+                }
+              }
+            }
+          }
+        } catch (e: any) {
+          console.error('Error fetching owner:', e.message);
+        }
+
+        const firstUserMessage = ticket.messages?.find(m => m.sender === 'user');
+        const title = firstUserMessage?.content
+          ? (firstUserMessage.content.length > 50 ? firstUserMessage.content.substring(0,50) + '...' : firstUserMessage.content)
+          : 'Demande de support humain';
+
+        return {
+          ...this.toApiTicket(ticket),
+          ownerName,
+          ownerEmail,
+          businessName,
+          title,
+        };
+      })
+    );
+
+    return ticketsWithOwner;
   }
 
   /**
@@ -492,6 +689,22 @@ Entreprise: ${businessName}`;
 
     ticket.status = status;
     if (status === "resolved" || status === "closed") {
+      ticket.resolvedAt = new Date();
+    }
+
+    const saved = await this.ticketRepo.save(ticket);
+    return this.toApiTicket(saved);
+  }
+
+  /**
+   * Admin: update ticket status by ticket id (no businessId check)
+   */
+  async updateTicketStatusById(ticketId: string, status: string) {
+    let ticket = await this.ticketRepo.findOne({ where: { id: ticketId } });
+    if (!ticket) throw new NotFoundException('Ticket not found');
+
+    ticket.status = status as any;
+    if (status === 'resolved' || status === 'closed') {
       ticket.resolvedAt = new Date();
     }
 

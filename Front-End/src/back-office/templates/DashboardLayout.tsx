@@ -25,7 +25,6 @@ import {
 import { Button, Avatar, AvatarFallback } from '@/shared/ui';
 import { BusinessSwitcher } from '../molecules/BusinessSwitcher';
 import { AIAssistant } from '../organisms/AIAssistant';
-import ChatWidget from '@/shared/components/ChatWidget';
 import { useBusinessContext } from '@/shared/contexts/BusinessContext';
 import { useAuth } from '@/shared/contexts/AuthContext';
 
@@ -476,7 +475,6 @@ export function DashboardLayout() {
       </div>
 
       <AIAssistant />
-      <ChatWidget />
     </div>
   );
 }

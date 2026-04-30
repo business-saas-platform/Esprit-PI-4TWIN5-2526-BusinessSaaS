@@ -30,4 +30,24 @@ export class TeamMemberEntity {
 
   @CreateDateColumn()
   createdAt!: Date;
+
+  // ── HR Analytics fields (filled by manager) ──────────────────────────────
+
+  @Column({ type: "float", nullable: true })
+  satisfactionLevel!: number | null;
+
+  @Column({ type: "float", nullable: true })
+  lastEvaluation!: number | null;
+
+  @Column({ type: "int", nullable: true })
+  numberOfProjects!: number | null;
+
+  @Column({ type: "int", nullable: true })
+  averageMonthlyHours!: number | null;
+
+  @Column({ type: "int", default: 0 })
+  workAccident!: number;
+
+  @Column({ type: "int", default: 0 })
+  promotionLast5years!: number;
 }

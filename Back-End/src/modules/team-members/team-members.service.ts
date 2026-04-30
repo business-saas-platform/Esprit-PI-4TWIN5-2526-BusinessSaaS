@@ -215,6 +215,30 @@ export class TeamMembersService {
     return { deleted: true, id };
   }
 
+  // ── HR Profile ────────────────────────────────────────────────────────────
+  async updateHrProfile(user: JwtUser, id: string, dto: {
+    satisfactionLevel?:    number;
+    lastEvaluation?:       number;
+    numberOfProjects?:     number;
+    averageMonthlyHours?:  number;
+    workAccident?:         number;
+    promotionLast5years?:  number;
+  }) {
+    const m = await this.membersRepo.findOne({ where: { id } });
+    if (!m) throw new NotFoundException("Team member not found");
+
+    await this.assertOwnerOwnsBusiness(user.sub, m.businessId);
+
+    if (dto.satisfactionLevel   !== undefined) m.satisfactionLevel   = dto.satisfactionLevel;
+    if (dto.lastEvaluation      !== undefined) m.lastEvaluation      = dto.lastEvaluation;
+    if (dto.numberOfProjects    !== undefined) m.numberOfProjects    = dto.numberOfProjects;
+    if (dto.averageMonthlyHours !== undefined) m.averageMonthlyHours = dto.averageMonthlyHours;
+    if (dto.workAccident        !== undefined) m.workAccident        = dto.workAccident;
+    if (dto.promotionLast5years !== undefined) m.promotionLast5years = dto.promotionLast5years;
+
+    return this.membersRepo.save(m);
+  }
+
   // =============================
   // READ actions
   // =============================

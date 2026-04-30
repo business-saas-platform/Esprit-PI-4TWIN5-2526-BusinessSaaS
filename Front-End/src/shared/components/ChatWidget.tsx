@@ -15,6 +15,7 @@ const OLLAMA_URL = "http://localhost:11434";
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [currentTicketId, setCurrentTicketId] = useState<string | null>(null);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<"idle" | "connecting" | "connected" | "error">("idle");
@@ -62,6 +63,7 @@ export default function ChatWidget() {
 
       // Use the most recent ticket
       const latestTicket = tickets[0];
+      setCurrentTicketId(latestTicket.id || null);
       setMessages(latestTicket.messages || []);
       setEscalated(latestTicket.escalatedToAdmin || false);
       setStatus("connected");
@@ -152,11 +154,18 @@ En attendant, y a-t-il autre chose que je peux faire ?`,
 
         // Send to backend
         try {
+          const conversationHistory = [...messages, userMsg].map((m) => ({
+            sender: m.sender,
+            content: m.content,
+            createdAt: m.createdAt,
+          }));
+
           const result = await api(`/support-chat/escalate`, {
             method: "POST",
             body: JSON.stringify({
+              ticketId: currentTicketId,
               message: userMessage,
-              conversationHistory: [...messages, userMsg],
+              conversationHistory,
             }),
           });
           console.log("[ChatWidget] Escalation result:", result);
@@ -170,11 +179,18 @@ En attendant, y a-t-il autre chose que je peux faire ?`,
 
       // 🤖 TRY AI RESPONSE (Ollama)
       console.log("[ChatWidget] Sending message to AI");
+      const conversationHistory = [...messages, userMsg].map((m) => ({
+        sender: m.sender,
+        content: m.content,
+        createdAt: m.createdAt,
+      }));
+
       const result = await api(`/support-chat/messages`, {
         method: "POST",
         body: JSON.stringify({
+          ticketId: currentTicketId,
           content: userMessage,
-          title: "Support Chat",
+          conversationHistory,
         }),
       });
 

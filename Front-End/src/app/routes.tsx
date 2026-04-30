@@ -44,6 +44,7 @@ import { Clients } from '@/app/pages/clients/Clients';
 import { ClientDetails } from '@/app/pages/clients/ClientDetails';
 import { Team } from '@/app/pages/team/Team';
 import { TeamAIInsights } from '@/app/pages/team/TeamAIInsights';
+import { HRRiskAnalytics } from '@/app/pages/team/HRRiskAnalytics';
 import { Reports } from '@/app/pages/reports/Reports';
 import { Settings } from '@/app/pages/settings/Settings';
 
@@ -119,7 +120,22 @@ export const router = createBrowserRouter([
       { path: 'settings', element: <Settings /> },
       { path: 'registration-requests', element: <RegistrationRequestsAdmin /> },
       { path: 'support', element: <PlatformSupport /> },
-    ]}
+    ],
+  },
+
+  // DASHBOARD (Business Owner / Team Members)
+  {
+    path: '/dashboard',
+    element: (
+      <ProtectedRoute
+        roles={[
+          'business_owner',
+          'business_admin',
+          'accountant',
+          'team_member',
+          'client',
+          'platform_admin',
+        ]}
       >
         <DashboardLayout />
       </ProtectedRoute>
@@ -284,6 +300,18 @@ export const router = createBrowserRouter([
           <RequireCompanySetup>
             <RequirePermission permission="team:read">
               <TeamAIInsights />
+            </RequirePermission>
+          </RequireCompanySetup>
+        ),
+      },
+
+      // HR RISK ANALYTICS (Real ML)
+      {
+        path: "team/hr-risk",
+        element: (
+          <RequireCompanySetup>
+            <RequirePermission permission="team:read">
+              <HRRiskAnalytics />
             </RequirePermission>
           </RequireCompanySetup>
         ),

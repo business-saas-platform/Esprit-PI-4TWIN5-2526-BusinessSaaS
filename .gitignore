@@ -2,7 +2,7 @@
 .env
 .env.local
 .env.*.local
-
+Back-End\.env
 # Build Artifacts & Dependencies
 dist/
 build/
@@ -62,3 +62,5 @@ Front-End/**/*.tsbuildinfo
 # Back-End specific
 Back-End/.vite/
 Back-End/**/*.tsbuildinfo
+Back-End/.env
+Back-End/.env
