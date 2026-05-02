@@ -26,6 +26,7 @@ const registration_requests_module_1 = require("./modules/registration-requests/
 const tenant_module_1 = require("./common/tenant/tenant.module");
 const security_questions_module_1 = require("./modules/security-questions/security-questions.module");
 const ai_module_1 = require("./modules/IA/ai.module");
+const nestjs_prometheus_1 = require("@willsoto/nestjs-prometheus");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer.apply(tenant_middleware_1.TenantMiddleware).forRoutes('*');
@@ -50,7 +51,8 @@ exports.AppModule = AppModule = __decorate([
             ai_insights_module_1.AIInsightsModule,
             registration_requests_module_1.RegistrationRequestsModule,
             auth_module_1.AuthModule,
-            security_questions_module_1.SecurityQuestionsModule
+            security_questions_module_1.SecurityQuestionsModule,
+            nestjs_prometheus_1.PrometheusModule.register()
         ],
     })
 ], AppModule);
