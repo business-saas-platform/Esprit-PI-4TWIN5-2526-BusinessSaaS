@@ -12,6 +12,7 @@ import { InvoicesModule } from "./modules/invoices/invoices.module";
 import { ExpensesModule } from "./modules/expenses/expenses.module";
 import { TeamMembersModule } from "./modules/team-members/team-members.module";
 import { AIInsightsModule } from "./modules/ai-insights/ai-insights.module";
+import { FinanceAiModule } from "../finance-rag/finance-rag/nestjs/src/finance-ai/finance-ai.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { MailModule } from "./modules/mail/mail.module";
 import { RegistrationRequestsModule } from "./modules/registration-requests/registration-requests.module";
@@ -32,6 +33,7 @@ import { SecurityQuestionsModule } from "./modules/security-questions/security-q
     ExpensesModule,
     TeamMembersModule,
     AIInsightsModule,
+    FinanceAiModule,
     RegistrationRequestsModule,
     AuthModule,
     SecurityQuestionsModule

@@ -1,0 +1,50 @@
+[
+  {
+    "question": "What does a high Days Sales Outstanding (DSO) mean?",
+    "answer": "A high DSO means customers are taking longer than expected to pay their invoices. A DSO above 45 days typically signals cash flow risk. It may indicate poor credit controls, ineffective collections, or customers in financial difficulty. Action: tighten payment terms, send earlier reminders, and flag high-DSO clients for credit review."
+  },
+  {
+    "question": "How do you detect a duplicate invoice?",
+    "answer": "Duplicate invoices share the same vendor, amount, and invoice date but have different invoice numbers. Detection steps: (1) check for identical (vendor_id, amount, date) combinations; (2) flag invoice numbers that differ by only one character; (3) watch for round amounts (10000, 5000) submitted twice within 30 days from the same supplier."
+  },
+  {
+    "question": "What is accounts receivable aging?",
+    "answer": "Accounts receivable aging groups unpaid invoices by how long they have been outstanding: 0–30 days (current), 31–60 days (slightly overdue), 61–90 days (at risk), 90+ days (critical). Invoices in the 90+ bucket are at high risk of becoming bad debt and should trigger immediate collection action or provisioning."
+  },
+  {
+    "question": "What payment delay indicators suggest fraud risk?",
+    "answer": "Fraud risk indicators include: invoices submitted just below approval thresholds (e.g., $9,999 when limit is $10,000), payments to new vendors with no purchase order, invoices with round numbers, payments outside business hours, multiple invoices from the same vendor on the same day, and vendor bank account changes just before payment."
+  },
+  {
+    "question": "How do you calculate gross profit margin?",
+    "answer": "Gross profit margin = (Revenue - Cost of Goods Sold) / Revenue × 100. Example: Revenue = 500,000 DZD, COGS = 320,000 DZD → Gross margin = (180,000 / 500,000) × 100 = 36%. A declining gross margin over time signals rising costs or pricing pressure."
+  },
+  {
+    "question": "What is working capital and why does it matter?",
+    "answer": "Working capital = Current Assets - Current Liabilities. It measures a company's short-term liquidity. Positive working capital means the business can cover its short-term obligations. Negative working capital is a danger sign — the company may struggle to pay suppliers or employees. Target: working capital ratio (current assets / current liabilities) above 1.5."
+  },
+  {
+    "question": "What does retard_paiement mean in an invoice dataset?",
+    "answer": "Retard_paiement (payment delay) is a binary flag: 1 = the invoice was paid late (after the due date), 0 = paid on time. It is the primary classification target in payment risk models. High retard_paiement rates from a specific client or product category signal a need for tighter credit controls or upfront payment requirements."
+  },
+  {
+    "question": "What is score_credit and how is it used?",
+    "answer": "Score_credit is a numerical creditworthiness score assigned to a client, typically on a scale of 0–1000. Higher scores indicate lower payment risk. In invoice anomaly models, score_credit is one of the strongest predictors of payment delay. Clients with scores below 400 should be flagged for prepayment or shorter credit terms."
+  },
+  {
+    "question": "What is cash flow forecasting?",
+    "answer": "Cash flow forecasting predicts how much cash will flow in and out of the business over a future period (weekly, monthly, quarterly). It uses: expected invoice payments (accounts receivable), scheduled supplier payments (accounts payable), payroll dates, and tax obligations. Accurate forecasting prevents liquidity crises and informs investment decisions."
+  },
+  {
+    "question": "What are common anomalies in invoice data?",
+    "answer": "Common invoice anomalies: (1) Duplicate invoices — same amount, vendor, date submitted twice; (2) Round-number invoices — suspicious amounts like 10,000 or 5,000 with no itemization; (3) Off-hours invoices — submitted at 2am or on weekends; (4) New vendor spikes — sudden large invoices from recently onboarded suppliers; (5) Threshold manipulation — amounts just below approval limits; (6) Missing PO — invoice with no matching purchase order."
+  },
+  {
+    "question": "What is the difference between montant_ht and montant_ttc?",
+    "answer": "Montant_ht (Hors Taxes) is the pre-tax invoice amount. Montant_ttc (Toutes Taxes Comprises) is the total including VAT/taxes. The difference is the tax amount. In Algeria, standard VAT (TVA) is 19%. Formula: montant_ttc = montant_ht × 1.19. Anomaly: if montant_ttc ÷ montant_ht does not equal the expected tax rate, the invoice may be incorrect or fraudulent."
+  },
+  {
+    "question": "How does anciennete_mois (client seniority) affect payment risk?",
+    "answer": "Anciennete_mois measures how many months a client has been active. New clients (under 6 months) have no payment history and carry higher risk — they should receive shorter payment terms (15–30 days max). Long-standing clients (over 24 months) with a clean payment record can receive extended terms (60–90 days). This feature is a strong predictor in payment delay models."
+  }
+]

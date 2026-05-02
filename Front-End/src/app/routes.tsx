@@ -57,6 +57,7 @@ import { InvoiceLateRisk } from '@/app/pages/ai/InvoiceLateRisk';
 import { InvoiceCollectionCopilot } from '@/app/pages/ai/InvoiceCollectionCopilot';
 import { WhatIfSimulator } from '@/app/pages/ai/WhatIfSimulator';
 import AIReport from "@/app/pages/ai/AIReport";
+import { FinanceAIPage } from '../../finance-rag-frontend/finance-rag-frontend/src/pages/FinanceAIPage';
 // Company setup
 import CompanySetup from '@/app/pages/businesses/CompanySetup';
 
@@ -193,6 +194,16 @@ export const router = createBrowserRouter([
     </RequireCompanySetup>
   ),
 },
+      {
+        path: 'finance-ai',
+        element: (
+          <RequireCompanySetup>
+            <RequirePermission permission="ai:read">
+              <FinanceAIPage />
+            </RequirePermission>
+          </RequireCompanySetup>
+        ),
+      },
       {
         path: 'cash-flow-forecast',
         element: (
